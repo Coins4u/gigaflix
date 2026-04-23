@@ -12,8 +12,11 @@ const GlobalClients = dynamic(
         className="global-clients-section"
         style={{ minHeight: 420 }}
         role="status"
-        aria-label="Loading map"
-      />
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <span className="visually-hidden">Loading map</span>
+      </section>
     ),
   },
 );

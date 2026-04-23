@@ -87,9 +87,8 @@ export default function GlobalClientsSection({
                 </Group>
               </Stack>
 
-              <div
+              <section
                 className="global-clients-globeWrap"
-                role="region"
                 aria-label="GiGa FliX global clients map"
               >
                 <Globe3D
@@ -106,7 +105,7 @@ export default function GlobalClientsSection({
                 <div className="global-clients-label">
                   <GlobeMarkerLabel marker={hovered} />
                 </div>
-              </div>
+              </section>
             </div>
           </Card>
         </div>
