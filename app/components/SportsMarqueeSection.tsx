@@ -36,7 +36,11 @@ export default function SportsMarqueeSection({
       <div className="sports-slider-ui">
         <div className="sports-slider-ui__glow" aria-hidden />
         <div className="sports-slider-ui__scan" aria-hidden />
-        <div className="sports-marquee" aria-label={marqueeAriaLabel}>
+        <div
+          className="sports-marquee"
+          role="region"
+          aria-label={marqueeAriaLabel}
+        >
           <div className="sports-marquee__track" aria-hidden="true">
             {loop.map((item, idx) => (
               <div key={`${item.label}-${idx}`} className="sports-marquee__item">

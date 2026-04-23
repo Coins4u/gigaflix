@@ -3,7 +3,7 @@ import { siteLogoAbsoluteUrl } from "@/lib/site-images";
 import { Outfit } from "next/font/google";
 import { SetLang } from "./components/SetLang";
 import ThirdPartyScripts from "./components/ThirdPartyScripts";
-import ScrollEffects from "./components/ScrollEffects";
+import ScrollEffectsDeferred from "./components/ScrollEffectsDeferred";
 import Providers from "./providers";
 import "./globals.css";
 import "./catchontv-style.css";
@@ -185,7 +185,7 @@ export default function RootLayout({
         <Providers>
           <SetLang />
           <ThirdPartyScripts />
-          <ScrollEffects />
+          <ScrollEffectsDeferred />
           {children}
         </Providers>
       </body>
