@@ -1,9 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  heroImageSrc,
+  HERO_IMAGE_SIZES,
+  logoImageSrc,
+  paymentsImageSrc,
+  sportsFootballImageSrc,
+} from "@/lib/site-images";
 import Icon from "../components/Icon";
 import CatchonTVUIClient from "../components/CatchonTVUIClient";
+import GlobalClientsSectionLazy from "../components/GlobalClientsSectionLazy";
 import MobileMenuToggle from "../components/MobileMenuToggle";
 import HeroStats from "../components/HeroStats";
+import SportsMarqueeSection, {
+  type SportsMarqueeItem,
+} from "../components/SportsMarqueeSection";
 
 const GRID_SIZES =
   "(max-width: 900px) 50vw, (max-width: 1200px) 25vw, 280px";
@@ -22,12 +33,11 @@ export default function ItHomePage() {
           <div className="nav-wrapper">
             <a href="#" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
-                priority
               />
             </a>
             <MobileMenuToggle />
@@ -59,12 +69,12 @@ export default function ItHomePage() {
         <section id="hero" className="hero">
           <div className="container hero-grid">
             <div className="hero-text">
-              <span className="hero-badge">Catchon TV</span>
+              <span className="hero-badge">GiGa FliX</span>
               <h1 className="hero-title">
-                Catchon TV IPTV: <span>migliore IPTV Italia</span>
+                GiGa FliX IPTV: <span>IPTV Premium Italia</span>
               </h1>
               <p className="hero-subtitle">
-                Catchon TV è pensato per chi cerca un <strong>abbonamento IPTV Italia</strong>
+                GiGa FliX è pensato per chi cerca un <strong>abbonamento IPTV Italia</strong>
                 affidabile. Offriamo <strong>canali TV italiani</strong>, sport in 4K e <strong>liste IPTV funzionanti</strong>
                 con <strong>IPTV senza buffering</strong>. Se vuoi <strong>iptv in Italia</strong> con qualità e assistenza,
                 sei nel posto giusto.
@@ -92,11 +102,11 @@ export default function ItHomePage() {
             <div className="hero-media">
               <div className="hero-card hero-card-main">
                 <Image
-                  src="/img/hero_sports_center_clean_1769521080817.png"
-                  alt="Catchon TV streaming preview"
+                  src={heroImageSrc}
+                  alt="GiGa FliX streaming preview"
                   width={600}
                   height={400}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes={HERO_IMAGE_SIZES}
                   priority
                   fetchPriority="high"
                 />
@@ -143,7 +153,7 @@ export default function ItHomePage() {
               <div className="sports-media">
                 <div className="sports-card">
                   <Image
-                    src="/img/sports/football.png"
+                    src={sportsFootballImageSrc}
                     alt="Live sports streaming"
                     width={600}
                     height={400}
@@ -199,8 +209,43 @@ export default function ItHomePage() {
                 </div>
               </div>
             </div>
+
+            <SportsMarqueeSection
+              title="Grandi sport, PPV ed eventi live"
+              pillKicker="LIVE + VOD"
+              pillMeta="HD/4K · multi-dispositivo"
+              marqueeAriaLabel="Categorie sportive"
+              items={
+                [
+                  { id: "football", label: "Calcio" },
+                  { id: "basketball", label: "Pallacanestro" },
+                  { id: "tennis", label: "Tennis" },
+                  { id: "equestrian", label: "Equitazione" },
+                  { id: "rugby", label: "Rugby" },
+                  { id: "moto", label: "Moto" },
+                  { id: "formula", label: "Formula" },
+                  { id: "mma", label: "MMA" },
+                  { id: "combat", label: "Sport da combattimento" },
+                  { id: "ppv", label: "Tutti i PPV" },
+                ] satisfies SportsMarqueeItem[]
+              }
+            />
           </div>
         </section>
+
+        <GlobalClientsSectionLazy
+          title="Clienti globali. Un’esperienza IPTV stabile."
+          description={
+            <>
+              GiGa FliX segue spettatori in tutto il mondo con streaming <strong>4K</strong>,{" "}
+              <strong>server stabili</strong> e configurazione rapida su Firestick, Smart TV,
+              mobile e app IPTV. Dove sei, canali ed eventi PPV restano fluidi.
+            </>
+          }
+          ctaPrimary="Inizia ora"
+          ctaSecondary="Contatta il supporto"
+          supportHref="/it/contact"
+        />
 
         <section id="movies" className="movies-section">
           <div className="container">
@@ -377,16 +422,16 @@ export default function ItHomePage() {
 
             <div id="standard-plans" className="pricing-container active">
               {[
-                { name: "1 Mese", price: "€14.32", period: "/Mese" },
+                { name: "1 Mese", price: "€13.45", period: "/Mese" },
                 {
                   name: "3 Mesi",
-                  price: "€26.34",
+                  price: "€23.36",
                   period: "/3 Mesi",
                   popular: true,
                   badge: "Miglior Valore",
                 },
-                { name: "6 Mesi", price: "€36.78", period: "/6 Mesi" },
-                { name: "12 Mesi", price: "€48.98", period: "/Anno" },
+                { name: "6 Mesi", price: "€35.97", period: "/6 Mesi" },
+                { name: "12 Mesi", price: "€49.13", period: "/Anno" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -433,7 +478,7 @@ export default function ItHomePage() {
                     Ordina Ora
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -449,16 +494,16 @@ export default function ItHomePage() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Mese Premium", price: "€24.89", period: "/Mese" },
+                { name: "1 Mese Premium", price: "€24.23", period: "/Mese" },
                 {
                   name: "3 Mesi Premium",
-                  price: "€36.49",
+                  price: "€33.54",
                   period: "/3 Mesi",
                   popular: true,
                   badge: "Top Scelta",
                 },
-                { name: "6 Mesi Premium", price: "€45.09", period: "/6 Mesi" },
-                { name: "12 Mesi Premium", price: "€68.24", period: "/Anno" },
+                { name: "6 Mesi Premium", price: "€45.47", period: "/6 Mesi" },
+                { name: "12 Mesi Premium", price: "€66.62", period: "/Anno" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -505,7 +550,7 @@ export default function ItHomePage() {
                     Ordina Ora
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -524,7 +569,7 @@ export default function ItHomePage() {
         <section id="features" className="features-section">
           <div className="container">
             <h2 className="section-title">
-              Miglior IPTV Italia | Catchon TV
+              Miglior IPTV Italia | GiGa FliX
             </h2>
             <p
               style={{
@@ -534,7 +579,7 @@ export default function ItHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Catchon TV è un <strong>fornitore IPTV</strong> pensato per un uso semplice e affidabile in Italia.
+              GiGa FliX è un <strong>fornitore IPTV</strong> pensato per un uso semplice e affidabile in Italia.
               Il nostro <strong>abbonamento IPTV premium</strong> combina stabilità, 4K e <strong>liste IPTV M3U aggiornate</strong>
               per Smart TV, Firestick e le migliori applicazioni IPTV.
             </p>
@@ -661,7 +706,7 @@ export default function ItHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Queste recensioni riflettono perché Catchon TV è una scelta <strong>IPTV top rated</strong> e una delle
+              Queste recensioni riflettono perché GiGa FliX è una scelta <strong>IPTV top rated</strong> e una delle
               opzioni <strong>migliori IPTV</strong>, spesso il <strong>migliore per IPTV</strong> per chi vuole
               <strong>streaming IPTV</strong> fluido e qualità <strong>stream IPTV</strong> affidabile.
             </p>
@@ -709,7 +754,7 @@ export default function ItHomePage() {
 
         <section id="faq" className="faq-section">
           <div className="container">
-            <h2 className="section-title">FAQ IPTV | Servizio IPTV Catchon TV</h2>
+            <h2 className="section-title">FAQ IPTV | Servizio IPTV GiGa FliX</h2>
             <div className="faq-grid">
               {[
                 {
@@ -753,8 +798,8 @@ export default function ItHomePage() {
             <div className="footer-brand">
               <a href="#" className="footer-logo">
                 <Image
-                  src="/img/logo.png"
-                  alt="Catchon TV Logo"
+                  src={logoImageSrc}
+                  alt="GiGa FliX Logo"
                   width={160}
                   height={40}
                   sizes="160px"
@@ -800,7 +845,7 @@ export default function ItHomePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Tutti i diritti riservati.</p>
+            <p>&copy; 2026 GiGa FliX. Tutti i diritti riservati.</p>
           </div>
         </div>
       </footer>

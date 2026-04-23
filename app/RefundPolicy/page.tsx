@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../components/Icon";
 import CatchonTVUIClient from "../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function RefundPolicyPage() {
           <div className="nav-wrapper">
             <Link href="/" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -110,7 +111,7 @@ export default function RefundPolicyPage() {
             <div className="legal-item">
               <h3>Refund Policy Changes</h3>
               <p>
-                Catchon TV reserves the right to modify or update this refund policy at any time. Any changes will become
+                GiGa FliX reserves the right to modify or update this refund policy at any time. Any changes will become
                 effective immediately upon being posted on the website.
               </p>
             </div>
@@ -123,7 +124,7 @@ export default function RefundPolicyPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">
                 The most reliable <strong>IPTV service provider</strong> for <strong>premium IPTV subscriptions</strong>{" "}
@@ -163,7 +164,7 @@ export default function RefundPolicyPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. All rights reserved.</p>
+            <p>&copy; 2026 GiGa FliX. All rights reserved.</p>
           </div>
         </div>
       </footer>

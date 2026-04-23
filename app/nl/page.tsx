@@ -1,9 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  heroImageSrc,
+  HERO_IMAGE_SIZES,
+  logoImageSrc,
+  paymentsImageSrc,
+  sportsFootballImageSrc,
+} from "@/lib/site-images";
 import Icon from "../components/Icon";
 import CatchonTVUIClient from "../components/CatchonTVUIClient";
+import GlobalClientsSectionLazy from "../components/GlobalClientsSectionLazy";
 import MobileMenuToggle from "../components/MobileMenuToggle";
 import HeroStats from "../components/HeroStats";
+import SportsMarqueeSection, {
+  type SportsMarqueeItem,
+} from "../components/SportsMarqueeSection";
 
 const GRID_SIZES =
   "(max-width: 900px) 50vw, (max-width: 1200px) 25vw, 280px";
@@ -22,12 +33,11 @@ export default function NlHomePage() {
           <div className="nav-wrapper">
             <a href="#" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
-                priority
               />
             </a>
             <MobileMenuToggle />
@@ -59,12 +69,12 @@ export default function NlHomePage() {
         <section id="hero" className="hero">
           <div className="container hero-grid">
             <div className="hero-text">
-              <span className="hero-badge">Catchon TV</span>
+              <span className="hero-badge">GiGa FliX</span>
               <h1 className="hero-title">
-                Catchon TV IPTV: <span>beste IPTV kopen</span>
+                GiGa FliX IPTV: <span>IPTV abonnement</span>
               </h1>
               <p className="hero-subtitle">
-                Catchon TV is er voor wie <strong>IPTV kopen</strong>
+                GiGa FliX is er voor wie <strong>IPTV kopen</strong>
                 in Nederland eenvoudig wil houden. Je krijgt <strong>Nederlandse IPTV</strong>, 4K‑kwaliteit en
                 <strong>IPTV met abonnement</strong> dat stabiel blijft. Zoek je <strong>legale IPTV aanbieders</strong> in
                 Nederland? Dan zit je hier goed.
@@ -92,11 +102,11 @@ export default function NlHomePage() {
             <div className="hero-media">
               <div className="hero-card hero-card-main">
                 <Image
-                  src="/img/hero_sports_center_clean_1769521080817.png"
-                  alt="Catchon TV streaming preview"
+                  src={heroImageSrc}
+                  alt="GiGa FliX streaming preview"
                   width={600}
                   height={400}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes={HERO_IMAGE_SIZES}
                   priority
                   fetchPriority="high"
                 />
@@ -134,7 +144,7 @@ export default function NlHomePage() {
                   color: "var(--text-gray)",
                 }}
               >
-                Kijk Eredivisie, Champions League, F1 en MotoGP in HD en 4K. Met <strong>IPTV Nederland</strong> van Catchon TV
+                Kijk Eredivisie, Champions League, F1 en MotoGP in HD en 4K. Met <strong>IPTV Nederland</strong> van GiGa FliX
                 krijg je stabiele streams en <strong>IPTV m3u lijsten</strong> die goed werken op elk apparaat.
               </p>
             </div>
@@ -198,8 +208,43 @@ export default function NlHomePage() {
                 </div>
               </div>
             </div>
+
+            <SportsMarqueeSection
+              title="Grote sporten, PPV & live events"
+              pillKicker="LIVE + VOD"
+              pillMeta="HD/4K · meerdere apparaten"
+              marqueeAriaLabel="Sportcategorieën"
+              items={
+                [
+                  { id: "football", label: "Voetbal" },
+                  { id: "basketball", label: "Basketbal" },
+                  { id: "tennis", label: "Tennis" },
+                  { id: "equestrian", label: "Paardensport" },
+                  { id: "rugby", label: "Rugby" },
+                  { id: "moto", label: "Moto" },
+                  { id: "formula", label: "Formule" },
+                  { id: "mma", label: "MMA" },
+                  { id: "combat", label: "Vechtsport" },
+                  { id: "ppv", label: "Alle PPV-events" },
+                ] satisfies SportsMarqueeItem[]
+              }
+            />
           </div>
         </section>
+
+        <GlobalClientsSectionLazy
+          title="Wereldwijde klanten. Eén stabiele IPTV-ervaring."
+          description={
+            <>
+              GiGa FliX bedient kijkers wereldwijd met <strong>4K-klaar</strong> streaming,{" "}
+              <strong>stabiele servers</strong> en snelle setup op Firestick, smart-tv, mobiel
+              en IPTV-apps. Kijk overal soepel naar zenders en PPV.
+            </>
+          }
+          ctaPrimary="Aan de slag"
+          ctaSecondary="Neem contact op"
+          supportHref="/nl/contact"
+        />
 
         <section id="movies" className="movies-section">
           <div className="container">
@@ -376,16 +421,16 @@ export default function NlHomePage() {
 
             <div id="standard-plans" className="pricing-container active">
               {[
-                { name: "1 Maand", price: "€14.32", period: "/maand" },
+                { name: "1 Maand", price: "€13.45", period: "/maand" },
                 {
                   name: "3 Maanden",
-                  price: "€26.34",
+                  price: "€23.36",
                   period: "/3 maanden",
                   popular: true,
                   badge: "Beste Waarde",
                 },
-                { name: "6 Maanden", price: "€36.78", period: "/6 maanden" },
-                { name: "12 Maanden", price: "€48.98", period: "/jaar" },
+                { name: "6 Maanden", price: "€35.97", period: "/6 maanden" },
+                { name: "12 Maanden", price: "€49.13", period: "/jaar" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -432,7 +477,7 @@ export default function NlHomePage() {
                     Bestel Nu
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -448,16 +493,16 @@ export default function NlHomePage() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Maand Premium", price: "€24.89", period: "/maand" },
+                { name: "1 Maand Premium", price: "€24.23", period: "/maand" },
                 {
                   name: "3 Maanden Premium",
-                  price: "€36.49",
+                  price: "€33.54",
                   period: "/3 maanden",
                   popular: true,
                   badge: "Top Keuze",
                 },
-                { name: "6 Maanden Premium", price: "€45.09", period: "/6 maanden" },
-                { name: "12 Maanden Premium", price: "€68.24", period: "/jaar" },
+                { name: "6 Maanden Premium", price: "€45.47", period: "/6 maanden" },
+                { name: "12 Maanden Premium", price: "€66.62", period: "/jaar" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -504,7 +549,7 @@ export default function NlHomePage() {
                     Bestel Nu
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -533,7 +578,7 @@ export default function NlHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Op zoek naar de <strong>beste IPTV services</strong> en <strong>beste IPTV service</strong> prestaties? Catchon TV valt op
+              Op zoek naar de <strong>beste IPTV services</strong> en <strong>beste IPTV service</strong> prestaties? GiGa FliX valt op
               onder <strong>IPTV service providers</strong> en <strong>IPTV providers</strong> als een
               <strong>premium IPTV provider</strong> met <strong>anti-freeze IPTV</strong> technologie, <strong>IPTV service 4K</strong>,
               en ondersteuning voor <strong>Smart IPTV</strong>, <strong>IPTV Smarters</strong>, <strong>Xtream IPTV</strong> en <strong>IPTV m3u playlist</strong> toegang.
@@ -661,7 +706,7 @@ export default function NlHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Deze reviews tonen waarom Catchon TV een <strong>top rated IPTV</strong> keuze is en een van de
+              Deze reviews tonen waarom GiGa FliX een <strong>top rated IPTV</strong> keuze is en een van de
               <strong>beste IPTV</strong> opties, vaak de <strong>beste voor IPTV</strong> fans die soepel
               <strong>IPTV streaming</strong> en betrouwbare <strong>IPTV stream</strong> kwaliteit willen.
             </p>
@@ -709,7 +754,7 @@ export default function NlHomePage() {
 
         <section id="faq" className="faq-section">
           <div className="container">
-            <h2 className="section-title">IPTV FAQ | Catchon TV IPTV Service</h2>
+            <h2 className="section-title">IPTV FAQ | GiGa FliX IPTV Service</h2>
             <div className="faq-grid">
               {[
                 {
@@ -753,8 +798,8 @@ export default function NlHomePage() {
             <div className="footer-brand">
               <a href="#" className="footer-logo">
                 <Image
-                  src="/img/logo.png"
-                  alt="Catchon TV Logo"
+                  src={logoImageSrc}
+                  alt="GiGa FliX Logo"
                   width={160}
                   height={40}
                   sizes="160px"
@@ -800,7 +845,7 @@ export default function NlHomePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Alle rechten voorbehouden.</p>
+            <p>&copy; 2026 GiGa FliX. Alle rechten voorbehouden.</p>
           </div>
         </div>
       </footer>

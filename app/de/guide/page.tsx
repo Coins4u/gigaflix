@@ -1,5 +1,7 @@
 "use client";
 
+import { logoImageSrc } from "@/lib/site-images";
+
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "../../components/Icon";
@@ -15,8 +17,8 @@ export default function DeGuidePage() {
           <div className="nav-wrapper">
             <Link href="/de" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -60,8 +62,8 @@ export default function DeGuidePage() {
               fontSize: "1.1rem",
             }}
           >
-            In wenigen Minuten einsatzbereit. Folgen Sie unseren Premium-Schritt-für-Schritt-Anleitungen, um Catchon TV auf
-            jedem Gerät einzurichten.
+            In wenigen Minuten einsatzbereit. Folgen Sie unseren Schritt-für-Schritt-Anleitungen, um GiGa FliX auf jedem Gerät
+            einzurichten.
           </p>
 
           {/* Platform Navigation */}
@@ -372,7 +374,7 @@ export default function DeGuidePage() {
                 <div className="step-content">
                   <h4>Portal-Details festlegen</h4>
                   <p>
-                    Geben Sie <b>&quot;Catchon TV&quot;</b> als Portalnamen ein und fügen Sie die in Ihrer E-Mail angegebene
+                    Geben Sie <b>&quot;GiGa FliX&quot;</b> als Portalnamen ein und fügen Sie die in Ihrer E-Mail angegebene
                     <b> Portal-URL</b> ein.
                   </p>
                   <Image
@@ -405,7 +407,7 @@ export default function DeGuidePage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/de" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Premium IPTV Subscription Service.</p>
             </div>
@@ -442,7 +444,7 @@ export default function DeGuidePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. All rights reserved.</p>
+            <p>&copy; 2026 GiGa FliX. All rights reserved.</p>
           </div>
         </div>
       </footer>

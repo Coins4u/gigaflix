@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../components/Icon";
 import CatchonTVUIClient from "../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function TermsConditionsPage() {
           <div className="nav-wrapper">
             <Link href="/" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -67,7 +68,7 @@ export default function TermsConditionsPage() {
               <p>
                 For the purposes described in these Terms and Conditions, the term &quot;Affiliated Company&quot; refers to an
                 entity that controls, is controlled by, or is under common control with a party. The entity referred to as
-                &quot;the Company,&quot; &quot;We,&quot; &quot;Our,&quot; or &quot;Us&quot; in this Agreement is Catchon TV.
+                &quot;the Company,&quot; &quot;We,&quot; &quot;Our,&quot; or &quot;Us&quot; in this Agreement is GiGa FliX.
                 &quot;Device&quot; means any device capable of accessing the Service. The term &quot;Service&quot; refers to
                 the website.
               </p>
@@ -137,7 +138,7 @@ export default function TermsConditionsPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">
                 The most reliable <strong>IPTV service provider</strong> for <strong>premium IPTV subscriptions</strong>{" "}
@@ -177,7 +178,7 @@ export default function TermsConditionsPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. All rights reserved.</p>
+            <p>&copy; 2026 GiGa FliX. All rights reserved.</p>
           </div>
         </div>
       </footer>

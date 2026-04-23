@@ -1,6 +1,6 @@
-# Catchon TV Next.js Website
+# GiGa FliX Next.js Website
 
-This is the Next.js version of the Catchon TV website, converted from the original static HTML website.
+This is the Next.js version of the GiGa FliX website.
 
 ## Getting Started
 

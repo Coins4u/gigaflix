@@ -1,5 +1,7 @@
 "use client";
 
+import { logoImageSrc } from "@/lib/site-images";
+
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "../../components/Icon";
@@ -15,8 +17,8 @@ export default function NlGuidePage() {
           <div className="nav-wrapper">
             <Link href="/nl" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -60,8 +62,8 @@ export default function NlGuidePage() {
               fontSize: "1.1rem",
             }}
           >
-            Binnen enkele minuten operationeel. Volg onze premium stap-voor-stap handleidingen om Catchon TV op elk apparaat in
-            te stellen.
+            Binnen enkele minuten operationeel. Volg onze stap-voor-stap handleidingen om GiGa FliX op elk apparaat in te
+            stellen.
           </p>
 
           <div className="platform-nav">
@@ -362,7 +364,7 @@ export default function NlGuidePage() {
                 <div className="step-content">
                   <h4>Portaalgegevens instellen</h4>
                   <p>
-                    Voer <b>&quot;Catchon TV&quot;</b> in als portaalnaam en plak de <b>Portaal URL</b> die in je e-mail is
+                    Voer <b>&quot;GiGa FliX&quot;</b> in als portaalnaam en plak de <b>Portaal URL</b> die in je e-mail is
                     opgegeven.
                   </p>
                   <Image
@@ -395,7 +397,7 @@ export default function NlGuidePage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/nl" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Premium IPTV Abonnementsservice.</p>
             </div>
@@ -432,7 +434,7 @@ export default function NlGuidePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Alle rechten voorbehouden.</p>
+            <p>&copy; 2026 GiGa FliX. Alle rechten voorbehouden.</p>
           </div>
         </div>
       </footer>

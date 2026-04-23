@@ -1,9 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  heroImageSrc,
+  HERO_IMAGE_SIZES,
+  logoImageSrc,
+  paymentsImageSrc,
+  sportsFootballImageSrc,
+} from "@/lib/site-images";
 import Icon from "../components/Icon";
 import CatchonTVUIClient from "../components/CatchonTVUIClient";
+import GlobalClientsSectionLazy from "../components/GlobalClientsSectionLazy";
 import MobileMenuToggle from "../components/MobileMenuToggle";
 import HeroStats from "../components/HeroStats";
+import SportsMarqueeSection, {
+  type SportsMarqueeItem,
+} from "../components/SportsMarqueeSection";
 
 const GRID_SIZES =
   "(max-width: 900px) 50vw, (max-width: 1200px) 25vw, 280px";
@@ -22,12 +33,11 @@ export default function PtHomePage() {
           <div className="nav-wrapper">
             <a href="#" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
-                priority
               />
             </a>
             <MobileMenuToggle />
@@ -59,12 +69,12 @@ export default function PtHomePage() {
         <section id="hero" className="hero">
           <div className="container hero-grid">
             <div className="hero-text">
-              <span className="hero-badge">Catchon TV</span>
+              <span className="hero-badge">GiGa FliX</span>
               <h1 className="hero-title">
-                Catchon TV IPTV: <span>melhor IPTV Portugal</span>
+                GiGa FliX IPTV: <span>IPTV Premium Portugal</span>
               </h1>
               <p className="hero-subtitle">
-                Catchon TV é para quem procura
+                GiGa FliX é para quem procura
                 <strong>melhor iptv em portugal</strong> com estabilidade. Oferecemos <strong>IPTV Portugal</strong> em 4K,
                 <strong>playlist IPTV Portugal</strong> e <strong>m3u iptv</strong> atualizados. Se procura
                 <strong>iptv legal portugal</strong>, está no lugar certo.
@@ -92,11 +102,11 @@ export default function PtHomePage() {
             <div className="hero-media">
               <div className="hero-card hero-card-main">
                 <Image
-                  src="/img/hero_sports_center_clean_1769521080817.png"
-                  alt="Catchon TV streaming preview"
+                  src={heroImageSrc}
+                  alt="GiGa FliX streaming preview"
                   width={600}
                   height={400}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes={HERO_IMAGE_SIZES}
                   priority
                   fetchPriority="high"
                 />
@@ -142,7 +152,7 @@ export default function PtHomePage() {
               <div className="sports-media">
                 <div className="sports-card">
                   <Image
-                    src="/img/sports/football.png"
+                    src={sportsFootballImageSrc}
                     alt="Live sports streaming"
                     width={600}
                     height={400}
@@ -198,8 +208,43 @@ export default function PtHomePage() {
                 </div>
               </div>
             </div>
+
+            <SportsMarqueeSection
+              title="Grandes desportos, PPV e eventos ao vivo"
+              pillKicker="AO VIVO + VOD"
+              pillMeta="HD/4K · multi-dispositivo"
+              marqueeAriaLabel="Categorias de desporto"
+              items={
+                [
+                  { id: "football", label: "Futebol" },
+                  { id: "basketball", label: "Basquetebol" },
+                  { id: "tennis", label: "Ténis" },
+                  { id: "equestrian", label: "Desporto equestre" },
+                  { id: "rugby", label: "Rugby" },
+                  { id: "moto", label: "Moto" },
+                  { id: "formula", label: "Fórmula" },
+                  { id: "mma", label: "MMA" },
+                  { id: "combat", label: "Desportos de combate" },
+                  { id: "ppv", label: "Todos os PPV" },
+                ] satisfies SportsMarqueeItem[]
+              }
+            />
           </div>
         </section>
+
+        <GlobalClientsSectionLazy
+          title="Clientes no mundo todo. Uma experiência IPTV estável."
+          description={
+            <>
+              A GiGa FliX atende espectadores em todo o planeta com <strong>streaming 4K</strong>,{" "}
+              <strong>servidores estáveis</strong> e configuração rápida em Firestick, Smart
+              TV, telemóvel e apps de IPTV. Onde estiver, canais e PPV com fluidez.
+            </>
+          }
+          ctaPrimary="Começar"
+          ctaSecondary="Falar com o suporte"
+          supportHref="/pt/contact"
+        />
 
         <section id="movies" className="movies-section">
           <div className="container">
@@ -337,7 +382,7 @@ export default function PtHomePage() {
         <section id="pricing" className="pricing-section">
           <div className="container">
             <h2 className="section-title">
-              Comprar Assinatura IPTV | Planos Catchon TV
+              Comprar Assinatura IPTV | Planos GiGa FliX
             </h2>
             <p
               style={{
@@ -376,16 +421,16 @@ export default function PtHomePage() {
 
             <div id="standard-plans" className="pricing-container active">
               {[
-                { name: "1 Mês", price: "€14.32", period: "/mês" },
+                { name: "1 Mês", price: "€13.45", period: "/mês" },
                 {
                   name: "3 Meses",
-                  price: "€26.34",
+                  price: "€23.36",
                   period: "/3 meses",
                   popular: true,
                   badge: "Melhor Valor",
                 },
-                { name: "6 Meses", price: "€36.78", period: "/6 meses" },
-                { name: "12 Meses", price: "€48.98", period: "/ano" },
+                { name: "6 Meses", price: "€35.97", period: "/6 meses" },
+                { name: "12 Meses", price: "€49.13", period: "/ano" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -432,7 +477,7 @@ export default function PtHomePage() {
                     Encomendar Agora
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -448,16 +493,16 @@ export default function PtHomePage() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Mês Premium", price: "€24.89", period: "/mês" },
+                { name: "1 Mês Premium", price: "€24.23", period: "/mês" },
                 {
                   name: "3 Meses Premium",
-                  price: "€36.49",
+                  price: "€33.54",
                   period: "/3 meses",
                   popular: true,
                   badge: "Top Escolha",
                 },
-                { name: "6 Meses Premium", price: "€45.09", period: "/6 meses" },
-                { name: "12 Meses Premium", price: "€68.24", period: "/ano" },
+                { name: "6 Meses Premium", price: "€45.47", period: "/6 meses" },
+                { name: "12 Meses Premium", price: "€66.62", period: "/ano" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -504,7 +549,7 @@ export default function PtHomePage() {
                     Encomendar Agora
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -533,7 +578,7 @@ export default function PtHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Procurando os <strong>melhores serviços IPTV</strong> e desempenho do <strong>melhor serviço IPTV</strong>? Catchon TV se destaca
+              Procurando os <strong>melhores serviços IPTV</strong> e desempenho do <strong>melhor serviço IPTV</strong>? GiGa FliX se destaca
               entre <strong>provedores de serviços IPTV</strong> e <strong>fornecedores IPTV</strong> como um
               <strong>fornecedor IPTV premium</strong> com tecnologia <strong>anti-freeze IPTV</strong>, <strong>serviço IPTV 4K</strong>,
               e suporte para <strong>Smart IPTV</strong>, <strong>IPTV Smarters</strong>, <strong>Xtream IPTV</strong> e acesso a <strong>playlist IPTV m3u</strong>.
@@ -661,7 +706,7 @@ export default function PtHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Essas avaliações refletem por que Catchon TV é uma escolha <strong>IPTV top rated</strong> e uma das
+              Essas avaliações refletem por que GiGa FliX é uma escolha <strong>IPTV top rated</strong> e uma das
               opções <strong>melhores IPTV</strong>, frequentemente o <strong>melhor para IPTV</strong> para fãs que querem
               <strong>streaming IPTV</strong> suave e qualidade de <strong>stream IPTV</strong> confiável.
             </p>
@@ -709,7 +754,7 @@ export default function PtHomePage() {
 
         <section id="faq" className="faq-section">
           <div className="container">
-            <h2 className="section-title">IPTV FAQ | Serviço IPTV Catchon TV</h2>
+            <h2 className="section-title">IPTV FAQ | Serviço IPTV GiGa FliX</h2>
             <div className="faq-grid">
               {[
                 {
@@ -753,8 +798,8 @@ export default function PtHomePage() {
             <div className="footer-brand">
               <a href="#" className="footer-logo">
                 <Image
-                  src="/img/logo.png"
-                  alt="Catchon TV Logo"
+                  src={logoImageSrc}
+                  alt="GiGa FliX Logo"
                   width={160}
                   height={40}
                   sizes="160px"
@@ -800,7 +845,7 @@ export default function PtHomePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Todos os direitos reservados.</p>
+            <p>&copy; 2026 GiGa FliX. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

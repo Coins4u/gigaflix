@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
+import { siteLogoAbsoluteUrl } from "@/lib/site-images";
 
 export const metadata: Metadata = {
-  title: "Catchon TV IPTV | Meilleur abonnement IPTV France",
+  title: "GiGa FliX IPTV | Abonnement IPTV France",
   description:
-    "Catchon TV (catch on tv) propose un abonnement IPTV premium en France : 4K, anti‑coupure, chaînes françaises et apps IPTV Smarters Pro.",
+    "GiGa FliX propose un abonnement IPTV premium : streaming 4K, serveurs stables, installation rapide et compatibilité avec les principales apps IPTV.",
   alternates: {
-    canonical: "https://catchontvapp.com/fr/",
+    canonical: "https://gigaflixiptv.com/fr",
   },
   openGraph: {
     type: "website",
-    url: "https://catchontvapp.com/fr/",
-    title: "Catchon TV IPTV | Meilleur abonnement IPTV France",
+    url: "https://gigaflixiptv.com/fr",
+    title: "GiGa FliX IPTV | Abonnement IPTV France",
     description:
-      "Catchon TV (catchontv) : abonnement IPTV premium, 4K, anti‑coupure, chaînes françaises et internationales.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX : abonnement IPTV premium, streaming 4K, serveurs stables et accès sur appareils et applications populaires.",
+    images: [siteLogoAbsoluteUrl],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Catchon TV IPTV | Meilleur abonnement IPTV France",
+    title: "GiGa FliX IPTV | Abonnement IPTV France",
     description:
-      "Catchon TV (catch on tv) : abonnement IPTV premium, 4K, anti‑coupure et chaînes françaises.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX : abonnement IPTV premium, 4K, serveurs stables et installation rapide.",
+    images: [siteLogoAbsoluteUrl],
   },
 };
 

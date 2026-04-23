@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../../components/Icon";
 import CatchonTVUIClient from "../../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function FrRefundPolicyPage() {
           <div className="nav-wrapper">
             <Link href="/fr" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -114,7 +115,7 @@ export default function FrRefundPolicyPage() {
             <div className="legal-item">
               <h3>Modifications de la Politique de Remboursement</h3>
               <p>
-                Catchon TV se réserve le droit de modifier ou de mettre à jour cette politique de remboursement à tout moment.
+                GiGa FliX se réserve le droit de modifier ou de mettre à jour cette politique de remboursement à tout moment.
                 Toutes les modifications entreront en vigueur immédiatement après leur publication sur le site web.
               </p>
             </div>
@@ -127,7 +128,7 @@ export default function FrRefundPolicyPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/fr" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Service d&apos;abonnement IPTV Premium.</p>
             </div>
@@ -164,7 +165,7 @@ export default function FrRefundPolicyPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Tous droits réservés.</p>
+            <p>&copy; 2026 GiGa FliX. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

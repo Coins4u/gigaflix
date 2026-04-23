@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
+import { siteLogoAbsoluteUrl } from "@/lib/site-images";
 
 export const metadata: Metadata = {
-  title: "Catchon TV IPTV Portugal | Melhor IPTV em Portugal",
+  title: "GiGa FliX IPTV Portugal | IPTV Premium",
   description:
-    "Catchon TV (catch on tv) oferece IPTV Portugal 4K, playlists M3U e streaming estável. Opção legal e simples para Portugal.",
+    "GiGa FliX oferece IPTV premium com streaming 4K, servidores estáveis e configuração rápida em apps e dispositivos populares.",
   alternates: {
-    canonical: "https://catchontvapp.com/pt/",
+    canonical: "https://gigaflixiptv.com/pt",
   },
   openGraph: {
     type: "website",
-    url: "https://catchontvapp.com/pt/",
-    title: "Catchon TV IPTV Portugal | Melhor IPTV em Portugal",
+    url: "https://gigaflixiptv.com/pt",
+    title: "GiGa FliX IPTV Portugal | IPTV Premium",
     description:
-      "Catchon TV (catchontv): IPTV Portugal 4K, playlists M3U e listas IPTV estáveis.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX: IPTV Portugal, streaming 4K, playlists M3U e streams estáveis.",
+    images: [siteLogoAbsoluteUrl],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Catchon TV IPTV Portugal | Melhor IPTV em Portugal",
+    title: "GiGa FliX IPTV Portugal | IPTV Premium",
     description:
-      "Catchon TV (catch on iptv): IPTV Portugal 4K, playlists M3U e listas estáveis.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX: IPTV premium com 4K, playlists M3U e streams estáveis.",
+    images: [siteLogoAbsoluteUrl],
   },
 };
 

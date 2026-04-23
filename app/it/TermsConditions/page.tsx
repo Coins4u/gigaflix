@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../../components/Icon";
 import CatchonTVUIClient from "../../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function ItTermsConditionsPage() {
           <div className="nav-wrapper">
             <Link href="/it" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -67,7 +68,7 @@ export default function ItTermsConditionsPage() {
               <p>
                 Ai fini di questi Termini e Condizioni, il termine &quot;Società Affiliata&quot; si riferisce a un&apos;entità che
                 controlla, è controllata da o è sotto controllo comune con una parte. L&apos;entità designata in questo accordo
-                come &quot;la Società&quot;, &quot;Noi&quot;, &quot;Nostro&quot; o &quot;Nostri&quot; è Catchon TV.
+                come &quot;la Società&quot;, &quot;Noi&quot;, &quot;Nostro&quot; o &quot;Nostri&quot; è GiGa FliX.
                 &quot;Dispositivo&quot; indica qualsiasi dispositivo in grado di accedere al Servizio. Il termine &quot;Servizio&quot;
                 si riferisce al sito web.
               </p>
@@ -138,7 +139,7 @@ export default function ItTermsConditionsPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/it" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Servizio di abbonamento IPTV Premium.</p>
             </div>
@@ -175,7 +176,7 @@ export default function ItTermsConditionsPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Tutti i diritti riservati.</p>
+            <p>&copy; 2026 GiGa FliX. Tutti i diritti riservati.</p>
           </div>
         </div>
       </footer>

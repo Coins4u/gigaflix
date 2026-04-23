@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
+import { siteLogoAbsoluteUrl } from "@/lib/site-images";
 
 export const metadata: Metadata = {
-  title: "Catchon TV IPTV Italia | Miglior servizio IPTV",
+  title: "GiGa FliX IPTV Italia | Servizio IPTV Premium",
   description:
-    "Catchon TV (catch on tv) offre IPTV Italia 4K senza buffering, canali TV italiani, liste M3U aggiornate e IPTV Smarters Italia.",
+    "GiGa FliX offre IPTV Italia con streaming 4K, server stabili e configurazione rapida su Smart TV, Firestick e app IPTV.",
   alternates: {
-    canonical: "https://catchontvapp.com/it/",
+    canonical: "https://gigaflixiptv.com/it",
   },
   openGraph: {
     type: "website",
-    url: "https://catchontvapp.com/it/",
-    title: "Catchon TV IPTV Italia | Miglior servizio IPTV",
+    url: "https://gigaflixiptv.com/it",
+    title: "GiGa FliX IPTV Italia | Servizio IPTV Premium",
     description:
-      "Catchon TV (catchontv): abbonamenti IPTV, canali TV italiani, sport in 4K e streaming stabile senza buffering.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX: abbonamenti IPTV, streaming stabile, 4K e supporto per dispositivi e app popolari.",
+    images: [siteLogoAbsoluteUrl],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Catchon TV IPTV Italia | Miglior servizio IPTV",
+    title: "GiGa FliX IPTV Italia | Servizio IPTV Premium",
     description:
-      "Catchon TV (catch on iptv): abbonamenti IPTV, canali italiani, 4K e streaming senza buffering.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX: IPTV Italia premium con 4K, server stabili e configurazione rapida.",
+    images: [siteLogoAbsoluteUrl],
   },
 };
 

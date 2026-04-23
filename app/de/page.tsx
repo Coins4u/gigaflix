@@ -1,9 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  heroImageSrc,
+  HERO_IMAGE_SIZES,
+  logoImageSrc,
+  paymentsImageSrc,
+  sportsFootballImageSrc,
+} from "@/lib/site-images";
 import Icon from "../components/Icon";
 import CatchonTVUIClient from "../components/CatchonTVUIClient";
+import GlobalClientsSectionLazy from "../components/GlobalClientsSectionLazy";
 import MobileMenuToggle from "../components/MobileMenuToggle";
 import HeroStats from "../components/HeroStats";
+import SportsMarqueeSection, {
+  type SportsMarqueeItem,
+} from "../components/SportsMarqueeSection";
 
 const GRID_SIZES =
   "(max-width: 900px) 50vw, (max-width: 1200px) 25vw, 280px";
@@ -22,12 +33,11 @@ export default function DeHomePage() {
           <div className="nav-wrapper">
             <a href="#" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
-                priority
               />
             </a>
             <MobileMenuToggle />
@@ -59,13 +69,12 @@ export default function DeHomePage() {
         <section id="hero" className="hero">
           <div className="container hero-grid">
             <div className="hero-text">
-              <span className="hero-badge">Catchon TV</span>
+              <span className="hero-badge">GiGa FliX</span>
               <h1 className="hero-title">
-                Catchon TV IPTV: <span>bester IPTV Anbieter</span>
+                GiGa FliX IPTV: <span>Premium IPTV Anbieter</span>
               </h1>
               <p className="hero-subtitle">
-                Catchon TV ist ein <strong>deutscher IPTV Anbieter</strong> mit Fokus auf <strong>IPTV Deutschland</strong>.
-                Viele kennen uns als <strong>catchon</strong> oder <strong>catch tv</strong>. Wir liefern
+                GiGa FliX ist ein <strong>IPTV Anbieter</strong> mit Fokus auf <strong>stabile Streams</strong> und schnelle Einrichtung.
                 <strong>IPTV stream</strong> in 4K, <strong>Anti‑Freeze IPTV</strong> und einen stabilen
                 <strong>IPTV server</strong>. So genießen Sie <strong>IPTV Deutsch</strong>, <strong>deutsches IPTV</strong>
                 und internationale Sender – ideal für Suchende nach <strong>IPTV Germany</strong>, <strong>Germany IPTV</strong>,
@@ -95,11 +104,11 @@ export default function DeHomePage() {
             <div className="hero-media">
               <div className="hero-card hero-card-main">
                 <Image
-                  src="/img/hero_sports_center_clean_1769521080817.png"
-                  alt="Catchon TV streaming preview"
+                  src={heroImageSrc}
+                  alt="GiGa FliX streaming preview"
                   width={600}
                   height={400}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes={HERO_IMAGE_SIZES}
                   priority
                   fetchPriority="high"
                 />
@@ -203,8 +212,44 @@ export default function DeHomePage() {
                 </div>
               </div>
             </div>
+
+            <SportsMarqueeSection
+              title="Große Sportarten, PPV & Live-Events"
+              pillKicker="LIVE + VOD"
+              pillMeta="HD/4K · mehrere Geräte"
+              marqueeAriaLabel="Sportkategorien"
+              items={
+                [
+                  { id: "football", label: "Fußball" },
+                  { id: "basketball", label: "Basketball" },
+                  { id: "tennis", label: "Tennis" },
+                  { id: "equestrian", label: "Reitsport" },
+                  { id: "rugby", label: "Rugby" },
+                  { id: "moto", label: "Motorrad" },
+                  { id: "formula", label: "Formel" },
+                  { id: "mma", label: "MMA" },
+                  { id: "combat", label: "Kampfsport" },
+                  { id: "ppv", label: "Alle PPV-Events" },
+                ] satisfies SportsMarqueeItem[]
+              }
+            />
           </div>
         </section>
+
+        <GlobalClientsSectionLazy
+          title="Kunden weltweit. Ein stabiles IPTV-Erlebnis."
+          description={
+            <>
+              GiGa FliX liefert weltweit <strong>4K-bereites</strong> Streaming,{" "}
+              <strong>stabile Server</strong> und schnelle Einrichtung auf Firestick, Smart
+              TV, Mobilgeräten und IPTV-Apps. Ihre Kanäle und PPV-Events bleiben überall
+              flüssig.
+            </>
+          }
+          ctaPrimary="Jetzt starten"
+          ctaSecondary="Support kontaktieren"
+          supportHref="/de/contact"
+        />
 
         <section id="movies" className="movies-section">
           <div className="container">
@@ -382,16 +427,16 @@ export default function DeHomePage() {
 
             <div id="standard-plans" className="pricing-container active">
               {[
-                { name: "1 Monat", price: "€14.32", period: "/Monat" },
+                { name: "1 Monat", price: "€13.45", period: "/Monat" },
                 {
                   name: "3 Monate",
-                  price: "€26.34",
+                  price: "€23.36",
                   period: "/3 Mon",
                   popular: true,
                   badge: "Bester Wert",
                 },
-                { name: "6 Monate", price: "€36.78", period: "/6 Mon" },
-                { name: "12 Monate", price: "€48.98", period: "/Jahr" },
+                { name: "6 Monate", price: "€35.97", period: "/6 Mon" },
+                { name: "12 Monate", price: "€49.13", period: "/Jahr" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -438,7 +483,7 @@ export default function DeHomePage() {
                     Jetzt bestellen
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -454,16 +499,16 @@ export default function DeHomePage() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Monat Premium", price: "€24.89", period: "/Monat" },
+                { name: "1 Monat Premium", price: "€24.23", period: "/Monat" },
                 {
                   name: "3 Monate Premium",
-                  price: "€36.49",
+                  price: "€33.54",
                   period: "/3 Mon",
                   popular: true,
                   badge: "Top Auswahl",
                 },
-                { name: "6 Monate Premium", price: "€45.09", period: "/6 Mon" },
-                { name: "12 Monate Premium", price: "€68.24", period: "/Jahr" },
+                { name: "6 Monate Premium", price: "€45.47", period: "/6 Mon" },
+                { name: "12 Monate Premium", price: "€66.62", period: "/Jahr" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -510,7 +555,7 @@ export default function DeHomePage() {
                     Jetzt bestellen
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -529,7 +574,7 @@ export default function DeHomePage() {
         <section id="features" className="features-section">
           <div className="container">
             <h2 className="section-title">
-              Beste IPTV Anbieter | Catchon TV für Deutschland
+              Beste IPTV Anbieter | GiGa FliX für Deutschland
             </h2>
             <p
               style={{
@@ -539,7 +584,7 @@ export default function DeHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Catchon TV steht im <strong>IPTV Anbieter Vergleich</strong> für Stabilität, 4K‑Qualität und
+              GiGa FliX steht im <strong>IPTV Anbieter Vergleich</strong> für Stabilität, 4K‑Qualität und
               <strong>anti‑freeze IPTV</strong>. Als <strong>deutscher IPTV Anbieter</strong> liefern wir
               <strong>deutsche IPTV</strong> Kanäle, <strong>iptv playlist</strong> und <strong>iptv m3u deutsch</strong>
               für Smart TV, Firestick und Kodi. Zur <strong>IPTV Legalität</strong> in Deutschland und
@@ -575,7 +620,7 @@ export default function DeHomePage() {
                 {
                   icon: "shield-alt",
                   title: "Premium IPTV Anbieter",
-                  desc: "Verlässlicher Service für deutsche IPTV Anbieter Standards. Catchon TV ist ein bester IPTV Anbieter und zählt zu den beste IPTV Anbieter in Deutschland.",
+                  desc: "Verlässlicher Service für deutsche IPTV Anbieter Standards. GiGa FliX zählt für viele zu den besten IPTV Anbietern in Deutschland.",
                 },
               ].map((feature, idx) => (
                 <div key={idx} className="feature-item">
@@ -668,7 +713,7 @@ export default function DeHomePage() {
                 color: "var(--text-gray)",
               }}
             >
-              Diese <strong>german iptv erfahrung</strong> zeigt, warum Catchon TV für viele der
+              Diese <strong>german iptv erfahrung</strong> zeigt, warum GiGa FliX für viele der
               <strong>bester iptv anbieter</strong> ist. Wer einen <strong>iptv anbieter vergleich</strong> macht oder nach
               <strong>iptv anbieter erfahrunge</strong> sucht, sollte auf Stabilität und Support achten.
             </p>
@@ -725,7 +770,7 @@ export default function DeHomePage() {
                 },
                 {
                   q: "Brauche ich ein VPN für IPTV?",
-                  a: "Ein VPN verschlüsselt Ihren Datenverkehr und schützt Ihre Privatsphäre. Die Nutzung wird für zusätzliche Sicherheit mit IPTV Deutschland empfohlen. Wählen Sie immer IPTV legal wie Catchon TV für eine sichere Erfahrung.",
+                  a: "Ein VPN verschlüsselt Ihren Datenverkehr und schützt Ihre Privatsphäre. Die Nutzung wird für zusätzliche Sicherheit empfohlen. Wählen Sie immer legale Angebote für eine sichere Erfahrung.",
                 },
                 {
                   q: "Kann ich IPTV auf meinem Handy schauen?",
@@ -760,8 +805,8 @@ export default function DeHomePage() {
             <div className="footer-brand">
               <a href="#" className="footer-logo">
                 <Image
-                  src="/img/logo.png"
-                  alt="Catchon TV Logo"
+                  src={logoImageSrc}
+                  alt="GiGa FliX Logo"
                   width={160}
                   height={40}
                   sizes="160px"
@@ -807,7 +852,7 @@ export default function DeHomePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. All rights reserved.</p>
+            <p>&copy; 2026 GiGa FliX. All rights reserved.</p>
           </div>
         </div>
       </footer>

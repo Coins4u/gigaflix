@@ -1,5 +1,7 @@
 "use client";
 
+import { logoImageSrc } from "@/lib/site-images";
+
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "../components/Icon";
@@ -15,8 +17,8 @@ export default function GuidePage() {
           <div className="nav-wrapper">
             <Link href="/" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -60,7 +62,7 @@ export default function GuidePage() {
               fontSize: "1.1rem",
             }}
           >
-            Get up and running in minutes. Follow our premium step-by-step tutorials to set up Catchon TV on any device.
+            Get up and running in minutes. Follow our step-by-step tutorials to set up GiGa FliX on any device.
           </p>
 
           {/* Platform Navigation */}
@@ -364,7 +366,7 @@ export default function GuidePage() {
                 <div className="step-content">
                   <h4>Set Portal Details</h4>
                   <p>
-                    Enter <b>&quot;Catchon TV&quot;</b> as the Portal Name and paste the <b>Portal URL</b> provided in your
+                    Enter <b>&quot;GiGa FliX&quot;</b> as the Portal Name and paste the <b>Portal URL</b> provided in your
                     email.
                   </p>
                   <Image
@@ -397,7 +399,7 @@ export default function GuidePage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">
                 The most reliable <strong>IPTV service provider</strong> for <strong>premium IPTV subscriptions</strong>{" "}
@@ -437,7 +439,7 @@ export default function GuidePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. All rights reserved.</p>
+            <p>&copy; 2026 GiGa FliX. All rights reserved.</p>
           </div>
         </div>
       </footer>

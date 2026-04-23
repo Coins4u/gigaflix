@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../../components/Icon";
 import CatchonTVUIClient from "../../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function NlRefundPolicyPage() {
           <div className="nav-wrapper">
             <Link href="/nl" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -114,7 +115,7 @@ export default function NlRefundPolicyPage() {
             <div className="legal-item">
               <h3>Wijzigingen in het Restitutiebeleid</h3>
               <p>
-                Catchon TV behoudt zich het recht voor om dit restitutiebeleid op elk moment te wijzigen of bij te werken. Alle
+                GiGa FliX behoudt zich het recht voor om dit restitutiebeleid op elk moment te wijzigen of bij te werken. Alle
                 wijzigingen worden onmiddellijk van kracht na publicatie op de website.
               </p>
             </div>
@@ -127,7 +128,7 @@ export default function NlRefundPolicyPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/nl" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Premium IPTV Abonnementsservice.</p>
             </div>
@@ -164,7 +165,7 @@ export default function NlRefundPolicyPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Alle rechten voorbehouden.</p>
+            <p>&copy; 2026 GiGa FliX. Alle rechten voorbehouden.</p>
           </div>
         </div>
       </footer>

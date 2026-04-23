@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../../components/Icon";
 import CatchonTVUIClient from "../../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function PtRefundPolicyPage() {
           <div className="nav-wrapper">
             <Link href="/pt" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -113,7 +114,7 @@ export default function PtRefundPolicyPage() {
             <div className="legal-item">
               <h3>Alterações à Política de Reembolso</h3>
               <p>
-                A Catchon TV reserva-se o direito de alterar ou atualizar esta política de reembolso a qualquer momento. Todas as
+                A GiGa FliX reserva-se o direito de alterar ou atualizar esta política de reembolso a qualquer momento. Todas as
                 alterações entram em vigor imediatamente após a sua publicação no site.
               </p>
             </div>
@@ -126,7 +127,7 @@ export default function PtRefundPolicyPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/pt" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Serviço de Assinatura IPTV Premium.</p>
             </div>
@@ -163,7 +164,7 @@ export default function PtRefundPolicyPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Todos os direitos reservados.</p>
+            <p>&copy; 2026 GiGa FliX. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

@@ -1,48 +1,64 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { siteLogoAbsoluteUrl } from "@/lib/site-images";
 import { Outfit } from "next/font/google";
 import { SetLang } from "./components/SetLang";
 import ThirdPartyScripts from "./components/ThirdPartyScripts";
+import ScrollEffects from "./components/ScrollEffects";
+import Providers from "./providers";
 import "./globals.css";
 import "./catchontv-style.css";
+import "@mantine/core/styles.css";
 
 const outfit = Outfit({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-outfit",
+  adjustFontFallback: true,
 });
 
+/** Mobile-first: correct viewport + theme / status bar color for phones. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f5f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#1b0d5f" },
+  ],
+};
+
 export const metadata: Metadata = {
-  title: "Catchon TV IPTV | Best IPTV Service 2026",
+  metadataBase: new URL("https://gigaflixiptv.com"),
+  title: "GiGa FliX IPTV | Premium IPTV Service 2026",
   description:
-    "Catchon TV (catchon tv) offers premium IPTV service 4K, anti-freeze tech, and no buffering IPTV streams for Firestick, Kodi & Smart IPTV.",
+    "GiGa FliX offers premium IPTV streaming with 4K quality, stable servers, and quick setup for Firestick, Kodi, Smart TVs, and IPTV apps.",
   keywords:
-    "IPTV service, IPTV providers, Premium IPTV subscription, IPTV stream, IPTV server, Smart IPTV, Xtream IPTV, M3U IPTV playlist, IPTV list, IPTV channels, IPTV on Firestick, IPTV on Kodi, Best IPTV player for Firestick, USA IPTV, UK IPTV, IPTV in the UK, IPTV Smarters Pro, 4K IPTV streaming, Live IPTV channels, IPTV VOD, IPTV EPG, affordable IPTV, reliable IPTV provider",
+    "IPTV service, IPTV provider, premium IPTV subscription, IPTV streaming, IPTV server, Smart IPTV, Xtream IPTV, M3U IPTV playlist, IPTV channels, IPTV on Firestick, IPTV on Kodi, IPTV Smarters, 4K IPTV streaming, live TV streaming, IPTV VOD, IPTV EPG, reliable IPTV provider",
   alternates: {
-    canonical: "https://catchontvapp.com/",
+    canonical: "https://gigaflixiptv.com/",
     languages: {
-      en: "https://catchontvapp.com/",
-      fr: "https://catchontvapp.com/fr/",
-      de: "https://catchontvapp.com/de/",
-      it: "https://catchontvapp.com/it/",
-      nl: "https://catchontvapp.com/nl/",
-      pt: "https://catchontvapp.com/pt/",
-      "x-default": "https://catchontvapp.com/",
+      en: "https://gigaflixiptv.com/",
+      fr: "https://gigaflixiptv.com/fr",
+      de: "https://gigaflixiptv.com/de",
+      it: "https://gigaflixiptv.com/it",
+      nl: "https://gigaflixiptv.com/nl",
+      pt: "https://gigaflixiptv.com/pt",
+      "x-default": "https://gigaflixiptv.com/",
     },
   },
   openGraph: {
     type: "website",
-    url: "https://catchontvapp.com/",
-    title: "Catchon TV IPTV | Best IPTV Service 2026",
+    url: "https://gigaflixiptv.com/",
+    title: "GiGa FliX IPTV | Premium IPTV Service 2026",
     description:
-      "Catchon TV (catch on tv, catchontv) delivers premium IPTV service 4K, anti-freeze IPTV tech, and no buffering IPTV streams.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX delivers premium IPTV streaming with 4K quality, stable servers, and fast setup across popular devices and apps.",
+    images: [siteLogoAbsoluteUrl],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Catchon TV IPTV | Best IPTV Service 2026",
+    title: "GiGa FliX IPTV | Premium IPTV Service 2026",
     description:
-      "Catchon TV (catchon tv) is a premium IPTV provider with 4K live TV streaming, anti-freeze IPTV, and no buffering IPTV streams.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX is a premium IPTV provider with 4K live TV streaming, stable servers, and fast setup for popular devices.",
+    images: [siteLogoAbsoluteUrl],
   },
 };
 
@@ -54,6 +70,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://assets.aceternity.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://assets.aceternity.com" />
         <link rel="shortcut icon" href="/img/favicon.png" type="image/png" />
         <script
           type="application/ld+json"
@@ -61,12 +79,12 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "@id": "https://catchontvapp.com/",
-              name: "Catchon TV",
-              url: "https://catchontvapp.com/",
-              logo: "https://catchontvapp.com/img/logo.png",
+              "@id": "https://gigaflixiptv.com/",
+              name: "GiGa FliX",
+              url: "https://gigaflixiptv.com/",
+              logo: siteLogoAbsoluteUrl,
               description:
-                "Catchon TV is a premium IPTV provider offering anti-freeze IPTV, IPTV service 4K, and no buffering IPTV streams for Firestick, Kodi, Smart IPTV, and M3U IPTV playlists.",
+                "GiGa FliX is a premium IPTV provider focused on stable streaming, fast setup, and broad device/app compatibility.",
               address: {
                 "@type": "PostalAddress",
                 addressCountry: "US",
@@ -75,7 +93,7 @@ export default function RootLayout({
                 "@type": "ContactPoint",
                 telephone: "+1-579-3893-759",
                 contactType: "customer service",
-                email: "support@catchontvapp.com",
+                email: "support@gigaflixiptv.com",
               },
             }),
           }}
@@ -86,9 +104,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Product",
-              name: "Catchon TV IPTV Subscription | Best IPTV Service 2026",
+              name: "GiGa FliX IPTV Subscription | Premium IPTV Service 2026",
               description:
-                "Catchon TV IPTV subscription with 47,000+ live channels, IPTV streams, M3U IPTV playlists, and 4K quality. Premium IPTV provider with anti-freeze IPTV for Firestick, Kodi, and Smart IPTV.",
+                "GiGa FliX IPTV subscription with live channels, VOD library, and stable 4K-ready streaming. Fast setup and broad device support.",
               offers: {
                 "@type": "AggregateOffer",
                 priceCurrency: "EUR",
@@ -164,9 +182,12 @@ export default function RootLayout({
         />
       </head>
       <body className={outfit.variable}>
-        <SetLang />
-        <ThirdPartyScripts />
-        {children}
+        <Providers>
+          <SetLang />
+          <ThirdPartyScripts />
+          <ScrollEffects />
+          {children}
+        </Providers>
       </body>
     </html>
   );

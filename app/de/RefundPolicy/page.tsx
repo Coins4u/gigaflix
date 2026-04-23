@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../../components/Icon";
 import CatchonTVUIClient from "../../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function DeRefundPolicyPage() {
           <div className="nav-wrapper">
             <Link href="/de" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -113,7 +114,7 @@ export default function DeRefundPolicyPage() {
             <div className="legal-item">
               <h3>Änderungen der Rückerstattungsrichtlinie</h3>
               <p>
-                Catchon TV behält sich das Recht vor, diese Rückerstattungsrichtlinie jederzeit zu ändern oder zu aktualisieren.
+                GiGa FliX behält sich das Recht vor, diese Rückerstattungsrichtlinie jederzeit zu ändern oder zu aktualisieren.
                 Alle Änderungen treten sofort nach Veröffentlichung auf der Website in Kraft.
               </p>
             </div>
@@ -126,7 +127,7 @@ export default function DeRefundPolicyPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/de" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Premium IPTV Subscription Service.</p>
             </div>
@@ -163,7 +164,7 @@ export default function DeRefundPolicyPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. All rights reserved.</p>
+            <p>&copy; 2026 GiGa FliX. All rights reserved.</p>
           </div>
         </div>
       </footer>

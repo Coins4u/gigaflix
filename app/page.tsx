@@ -1,9 +1,23 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { Accordion, Badge, Button, Card, Group, SimpleGrid, Stack, Text } from "@mantine/core";
+import {
+  heroImageSrc,
+  HERO_IMAGE_SIZES,
+  logoImageSrc,
+  paymentsImageSrc,
+  sportsFootballImageSrc,
+} from "@/lib/site-images";
 import Icon from "./components/Icon";
 import CatchonTVUIClient from "./components/CatchonTVUIClient";
 import MobileMenuToggle from "./components/MobileMenuToggle";
 import HeroStats from "./components/HeroStats";
+import GlobalClientsSectionLazy from "./components/GlobalClientsSectionLazy";
+import SportsMarqueeSection, {
+  type SportsMarqueeItem,
+} from "./components/SportsMarqueeSection";
 
 const GRID_SIZES =
   "(max-width: 900px) 50vw, (max-width: 1200px) 25vw, 280px";
@@ -22,12 +36,11 @@ export default function Home() {
           <div className="nav-wrapper">
             <a href="#" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
-                priority
               />
             </a>
             <MobileMenuToggle />
@@ -59,54 +72,54 @@ export default function Home() {
         <section id="hero" className="hero">
           <div className="container hero-grid">
             <div className="hero-text">
-              <span className="hero-badge">Catchon TV</span>
+              <span className="hero-badge">GiGa FliX</span>
               <h1 className="hero-title">
-                Catchon TV IPTV: <span>Best IPTV Service 2026</span>
+                GiGa FliX IPTV: <span>Premium IPTV Service 2026</span>
               </h1>
               <p className="hero-subtitle">
-                Catchon TV is a premium IPTV provider built for{" "}
-                <strong>no buffering IPTV</strong> streams and{" "}
-                <strong>live TV streaming</strong>. Many viewers simply call it{" "}
-                <strong>catch tv</strong> or <strong>catchon</strong>. Our{" "}
-                <strong>catchon IPTV</strong> service 4K uses{" "}
-                <strong>anti-freeze IPTV</strong> technology and an optimized{" "}
-                <strong>IPTV server</strong> so you can enjoy{" "}
-                <strong>IPTV on Firestick</strong>, <strong>IPTV on Kodi</strong>
-                , <strong>Smart IPTV</strong>, <strong>IPTV Smarters</strong>,{" "}
-                <strong>Xtream IPTV</strong>, and{" "}
-                <strong>M3U IPTV playlists</strong>.
+                GiGa FliX is a premium IPTV service built for{" "}
+                <strong>stable streaming</strong> and{" "}
+                <strong>quick setup</strong>. Stream live TV, sports, and VOD on{" "}
+                <strong>Firestick</strong>, <strong>Kodi</strong>,{" "}
+                <strong>Smart TVs</strong>, and popular IPTV apps using{" "}
+                <strong>Xtream</strong> or <strong>M3U</strong>.
               </p>
               <ul className="hero-features">
                 <li>
-                  <Icon name="check-circle" className="icon" /> IPTV service 4K
-                  quality
+                  <Icon name="check-circle" className="icon" /> 4K-ready streaming
                 </li>
                 <li>
-                  <Icon name="check-circle" className="icon" /> Anti-freeze IPTV
-                  tech
+                  <Icon name="check-circle" className="icon" /> Stable servers
                 </li>
                 <li>
-                  <Icon name="check-circle" className="icon" /> No buffering IPTV
-                  streams
+                  <Icon name="check-circle" className="icon" /> Fast activation
                 </li>
               </ul>
               <div className="hero-buttons">
-                <a href="#pricing" className="btn btn-primary">
-                  Get Started
-                </a>
-                <a href="#features" className="btn btn-outline">
-                  Learn More
-                </a>
+                <Group gap="md" wrap="wrap">
+                  <Button component="a" href="#pricing" size="md" radius="xl">
+                    Get Started
+                  </Button>
+                  <Button
+                    component="a"
+                    href="#features"
+                    size="md"
+                    radius="xl"
+                    variant="light"
+                  >
+                    Learn More
+                  </Button>
+                </Group>
               </div>
             </div>
             <div className="hero-media">
               <div className="hero-card hero-card-main">
                 <Image
-                  src="/img/hero_sports_center_clean_1769521080817.png"
-                  alt="Catchon TV streaming preview"
+                  src={heroImageSrc}
+                  alt="GiGa FliX streaming preview"
                   width={600}
                   height={400}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes={HERO_IMAGE_SIZES}
                   priority
                   fetchPriority="high"
                 />
@@ -126,9 +139,9 @@ export default function Home() {
 
         <section id="sports" className="sports-section">
           <div className="container">
-            <div className="sports-header">
+            <div className="sports-header" data-scroll="fade">
               <h2 className="section-title">
-                Sports Streaming | Live TV Streaming with Catchon TV
+                Sports Streaming | Live TV with GiGa FliX
               </h2>
               <p
                 style={{
@@ -138,20 +151,17 @@ export default function Home() {
                   color: "var(--text-gray)",
                 }}
               >
-                Enjoy <strong>sports streaming</strong> with our{" "}
-                <strong>IPTV service</strong>. Our <strong>IPTV services</strong>{" "}
-                include a massive <strong>IPTV list</strong> of{" "}
-                <strong>IPTV channels</strong> for football, basketball, MMA, and
-                racing. This is the <strong>best IPTV for Firestick</strong> fans
-                who want smooth <strong>IPTV streams</strong> and reliable{" "}
-                <strong>IPTV streaming</strong> on Firestick, Kodi, or any device.
+                Enjoy <strong>sports streaming</strong> with a reliable{" "}
+                <strong>IPTV service</strong> designed for smooth live events.
+                Watch football, basketball, MMA, racing, and more with stable HD/4K
+                playback on Firestick, Kodi, Smart TVs, and mobile.
               </p>
             </div>
-            <div className="sports-layout">
+            <div className="sports-layout" data-scroll>
               <div className="sports-media">
                 <div className="sports-card">
                   <Image
-                    src="/img/sports/football.png"
+                    src={sportsFootballImageSrc}
                     alt="Live sports streaming"
                     width={600}
                     height={400}
@@ -209,8 +219,31 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            <SportsMarqueeSection
+              title="Major sports, PPV & live events"
+              pillKicker="LIVE + VOD"
+              pillMeta="HD/4K · multi-device"
+              marqueeAriaLabel="Sports categories"
+              items={
+                [
+                  { id: "football", label: "Football" },
+                  { id: "basketball", label: "Basketball" },
+                  { id: "tennis", label: "Tennis" },
+                  { id: "equestrian", label: "Equestrian" },
+                  { id: "rugby", label: "Rugby" },
+                  { id: "moto", label: "Moto Racing" },
+                  { id: "formula", label: "Formula Racing" },
+                  { id: "mma", label: "MMA" },
+                  { id: "combat", label: "Combat Sports" },
+                  { id: "ppv", label: "All PPV Events" },
+                ] satisfies SportsMarqueeItem[]
+              }
+            />
           </div>
         </section>
+
+        <GlobalClientsSectionLazy />
 
         <section id="movies" className="movies-section">
           <div className="container">
@@ -354,9 +387,10 @@ export default function Home() {
         <section id="pricing" className="pricing-section">
           <div className="container">
             <h2 className="section-title">
-              Buy IPTV Subscription | Catchon TV Plans
+              Buy IPTV Subscription | GiGa FliX Plans
             </h2>
             <p
+              data-scroll="fade"
               style={{
                 textAlign: "center",
                 maxWidth: 800,
@@ -365,15 +399,11 @@ export default function Home() {
               }}
             >
               Choose a plan and <strong>subscribe to IPTV</strong> with a trusted{" "}
-              <strong>premium IPTV provider</strong>. Our <strong>IPTV subscription</strong>{" "}
-              options make it easy to <strong>buy IPTV subscription</strong> or{" "}
-              <strong>subscribe IPTV</strong> monthly or yearly. If you want a{" "}
-              <strong>subscription for IPTV</strong> (subscription IPTV) that feels
-              like <strong>IPTV Pro</strong>, choose <strong>catch on IPTV</strong> for
-              a reliable experience. Catchon TV is a smart alternative to a typical{" "}
-              <strong>cheap IPTV service</strong>.
+              <strong>premium IPTV provider</strong>. GiGa FliX makes it easy to
+              get started with monthly or yearly options—fast activation, stable
+              servers, and help when you need it.
             </p>
-            <div className="pricing-alert">
+            <div className="pricing-alert" data-scroll>
               <p>
                 <strong>Secure & Fast Delivery:</strong> After purchase, you&apos;ll
                 receive your IPTV subscription details (Username, Password, URL) via
@@ -388,7 +418,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="pricing-toggle-container">
+            <div className="pricing-toggle-container" data-scroll="fade">
               <span className="toggle-label active" data-plan="standard">
                 Standard Server
               </span>
@@ -398,90 +428,123 @@ export default function Home() {
               </span>
             </div>
 
-            <div id="standard-plans" className="pricing-container active">
+            <div id="standard-plans" className="pricing-container active" data-scroll>
               {[
-                { name: "1 Month", price: "€14.32", period: "/mo" },
+                { name: "1 Month", price: "€13.45", period: "/mo" },
                 {
                   name: "3 Months",
-                  price: "€26.34",
+                  price: "€23.36",
                   period: "/3mo",
                   popular: true,
                   badge: "Best Value",
                 },
-                { name: "6 Months", price: "€36.78", period: "/6mo" },
-                { name: "12 Months", price: "€48.98", period: "/yr" },
+                { name: "6 Months", price: "€35.97", period: "/6mo" },
+                { name: "12 Months", price: "€49.13", period: "/yr" },
               ].map((plan, idx) => (
-                <div
+                <Card
                   key={idx}
                   className={`pricing-card ${plan.popular ? "popular" : ""}`}
+                  withBorder
+                  radius="xl"
+                  padding="lg"
+                  shadow={plan.popular ? "md" : "sm"}
+                  style={{
+                    height: "100%",
+                    borderColor: plan.popular ? "var(--primary-color)" : undefined,
+                  }}
                 >
-                  {plan.badge && (
-                    <div className="popular-badge">{plan.badge}</div>
-                  )}
-                  <h3 className="plan-name">{plan.name}</h3>
-                  <div className="plan-price">
-                    {plan.price}
-                    <span>{plan.period}</span>
-                  </div>
-                  <ul className="pricing-features">
-                    <li>
-                      <Icon name="check" className="icon" />{" "}
-                      <strong>20K+ HD Channels</strong>
-                    </li>
-                    <li>
-                      <Icon name="check" className="icon" />{" "}
-                      <strong>120K+ Movies & Series</strong>
-                    </li>
-                    <li>
-                      <Icon name="check" className="icon" />{" "}
-                      <strong>Reliable Performance</strong>
-                    </li>
-                    <li>
-                      <Icon name="check" className="icon" />{" "}
-                      <strong>All Devices Supported</strong>
-                    </li>
-                    <li>
-                      <Icon name="check" className="icon" />{" "}
-                      <strong>24/7 Live chat support</strong>
-                    </li>
-                    <li>
-                      <Icon name="check" className="icon" />{" "}
-                      <strong>Adult Content (Optional)</strong>
-                    </li>
-                  </ul>
-                  <a
-                    href="#"
-                    className={`btn ${plan.popular ? "btn-primary" : "btn-outline"}`}
-                  >
-                    Order Now
-                  </a>
-                  <Image
-                    src="/img/payments.png"
-                    alt="Accepted Payment Methods"
-                    width={320}
-                    height={60}
-                    sizes={PAYMENT_SIZES}
-                    className="payment-methods-img"
-                    loading="lazy"
-                    placeholder="blur"
-                    blurDataURL={BLUR_DATA_URL}
-                  />
-                </div>
+                  <Stack gap="md">
+                    {plan.badge ? (
+                      <Group justify="space-between" align="center">
+                        <Text
+                          fw={800}
+                          tt="uppercase"
+                          style={{ letterSpacing: 1 }}
+                          className="plan-name"
+                        >
+                          {plan.name}
+                        </Text>
+                        <Badge variant="filled" radius="sm">
+                          {plan.badge}
+                        </Badge>
+                      </Group>
+                    ) : (
+                      <Text
+                        fw={800}
+                        tt="uppercase"
+                        style={{ letterSpacing: 1 }}
+                        className="plan-name"
+                      >
+                        {plan.name}
+                      </Text>
+                    )}
+
+                    <Group align="baseline" gap="xs" className="plan-price">
+                      <Text fz={36} fw={900} style={{ lineHeight: 1 }}>
+                        {plan.price}
+                      </Text>
+                      <Text c="dimmed">{plan.period}</Text>
+                    </Group>
+
+                    <Stack gap={8}>
+                      {[
+                        "20K+ HD Channels",
+                        "120K+ Movies & Series",
+                        "Reliable Performance",
+                        "All Devices Supported",
+                        "24/7 Live chat support",
+                        "Adult Content (Optional)",
+                      ].map((label) => (
+                        <Group key={label} gap="sm" wrap="nowrap" align="flex-start">
+                          <span aria-hidden style={{ marginTop: 2 }}>
+                            <Icon name="check" className="icon" />
+                          </span>
+                          <Text fz="sm" fw={600}>
+                            {label}
+                          </Text>
+                        </Group>
+                      ))}
+                    </Stack>
+
+                    <Button
+                      component="a"
+                      href="#"
+                      radius="xl"
+                      variant={plan.popular ? "filled" : "light"}
+                      fullWidth
+                      className={`btn ${plan.popular ? "btn-primary" : "btn-outline"}`}
+                    >
+                      Order Now
+                    </Button>
+
+                    <Image
+                      src={paymentsImageSrc}
+                      alt="Accepted Payment Methods"
+                      width={320}
+                      height={60}
+                      sizes={PAYMENT_SIZES}
+                      className="payment-methods-img"
+                      loading="lazy"
+                      placeholder="blur"
+                      blurDataURL={BLUR_DATA_URL}
+                    />
+                  </Stack>
+                </Card>
               ))}
             </div>
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Month Premium", price: "€24.89", period: "/mo" },
+                { name: "1 Month Premium", price: "€24.23", period: "/mo" },
                 {
                   name: "3 Months Premium",
-                  price: "€36.49",
+                  price: "€33.54",
                   period: "/3mo",
                   popular: true,
                   badge: "Top Choice",
                 },
-                { name: "6 Months Premium", price: "€45.09", period: "/6mo" },
-                { name: "12 Months Premium", price: "€68.24", period: "/yr" },
+                { name: "6 Months Premium", price: "€45.47", period: "/6mo" },
+                { name: "12 Months Premium", price: "€66.62", period: "/yr" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -528,7 +591,7 @@ export default function Home() {
                     Order Now
                   </a>
                   <Image
-                    src="/img/payments.png"
+                    src={paymentsImageSrc}
                     alt="Accepted Payment Methods"
                     width={320}
                     height={60}
@@ -558,7 +621,7 @@ export default function Home() {
               }}
             >
               Looking for the <strong>best IPTV services</strong> and{" "}
-              <strong>best IPTV service</strong> performance? Catchon TV stands out
+              <strong>best IPTV service</strong> performance? GiGa FliX stands out
               among <strong>IPTV service providers</strong> and{" "}
               <strong>IPTV providers</strong> as a{" "}
               <strong>premium IPTV provider</strong> with{" "}
@@ -694,7 +757,7 @@ export default function Home() {
                 color: "var(--text-gray)",
               }}
             >
-              These reviews reflect why Catchon TV is a <strong>top rated IPTV</strong>{" "}
+              These reviews reflect why GiGa FliX is a <strong>top rated IPTV</strong>{" "}
               choice and one of the <strong>best IPTV</strong> options, often the{" "}
               <strong>best for IPTV</strong> fans who want smooth{" "}
               <strong>IPTV streaming</strong> and reliable <strong>IPTV stream</strong>{" "}
@@ -746,8 +809,18 @@ export default function Home() {
 
         <section id="faq" className="faq-section">
           <div className="container">
-            <h2 className="section-title">IPTV FAQ | Catchon TV IPTV Service</h2>
-            <div className="faq-grid">
+            <h2 className="section-title">IPTV FAQ | GiGa FliX IPTV Service</h2>
+            <Accordion
+              data-scroll
+              variant="separated"
+              radius="lg"
+              styles={{
+                item: {
+                  border: "1px solid rgba(17, 24, 39, 0.12)",
+                  background: "#fff",
+                },
+              }}
+            >
               {[
                 {
                   q: "What do I need for IPTV?",
@@ -769,17 +842,17 @@ export default function Home() {
                   q: "Can IPTV work on a regular television?",
                   a: "You can use our IPTV service on regular TVs by using an external IPTV box or Firestick. These devices connect to your TV's HDMI port and provide the best IPTV player experience.",
                 },
-              ].map((faq, idx) => (
-                <details key={idx} className="faq-item">
-                  <summary className="faq-question">
-                    {faq.q} <Icon name="chevron-down" className="icon" />
-                  </summary>
-                  <div className="faq-answer">
-                    <p>{faq.a}</p>
-                  </div>
-                </details>
+              ].map((faq) => (
+                <Accordion.Item key={faq.q} value={faq.q}>
+                  <Accordion.Control>{faq.q}</Accordion.Control>
+                  <Accordion.Panel>
+                    <Text c="dimmed" fz="sm">
+                      {faq.a}
+                    </Text>
+                  </Accordion.Panel>
+                </Accordion.Item>
               ))}
-            </div>
+            </Accordion>
           </div>
         </section>
       </main>
@@ -790,8 +863,8 @@ export default function Home() {
             <div className="footer-brand">
               <a href="#" className="footer-logo">
                 <Image
-                  src="/img/logo.png"
-                  alt="Catchon TV Logo"
+                  src={logoImageSrc}
+                  alt="GiGa FliX Logo"
                   width={160}
                   height={40}
                   sizes="160px"
@@ -838,7 +911,7 @@ export default function Home() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. All rights reserved.</p>
+            <p>&copy; 2026 GiGa FliX. All rights reserved.</p>
           </div>
         </div>
       </footer>

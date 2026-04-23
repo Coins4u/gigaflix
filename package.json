@@ -1,9 +1,12 @@
 {
-  "name": "catchontv-nextjs",
+  "name": "gigaflixiptv-nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--max-old-space-size=2048' next dev --webpack",
+    "dev:fast": "next dev",
+    "dev:webpack": "next dev --webpack",
+    "dev:lowram": "NODE_OPTIONS='--max-old-space-size=2048' next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -12,11 +15,18 @@
     "node": "18.x"
   },
   "dependencies": {
+    "@mantine/carousel": "^9.1.0",
+    "@mantine/core": "^9.1.0",
+    "@mantine/hooks": "^9.1.0",
+    "embla-carousel-react": "^8.6.0",
     "next": "16.1.6",
     "nodemailer": "^8.0.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-globe.gl": "^2.37.1",
     "react-icons": "^5.5.0",
+    "sharp": "^0.34.2",
+    "three": "^0.184.0",
     "typescript": "^5"
   },
   "devDependencies": {

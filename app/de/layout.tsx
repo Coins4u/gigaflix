@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
+import { siteLogoAbsoluteUrl } from "@/lib/site-images";
 
 export const metadata: Metadata = {
-  title: "Catchon TV IPTV – bester IPTV Anbieter Deutschland",
+  title: "GiGa FliX IPTV – Premium IPTV in Deutschland",
   description:
-    "Catchon TV (catch on tv) ist Ihr deutscher IPTV Anbieter: 4K, Anti‑Freeze, stabile IPTV Streams, Firestick & Kodi.",
+    "GiGa FliX bietet Premium IPTV mit 4K-Streaming, stabilen Servern und schneller Einrichtung für Firestick, Kodi, Smart TVs und IPTV-Apps.",
   alternates: {
-    canonical: "https://catchontvapp.com/de/",
+    canonical: "https://gigaflixiptv.com/de",
   },
   openGraph: {
     type: "website",
-    url: "https://catchontvapp.com/de/",
-    title: "Catchon TV IPTV – bester IPTV Anbieter Deutschland",
+    url: "https://gigaflixiptv.com/de",
+    title: "GiGa FliX IPTV – Premium IPTV in Deutschland",
     description:
-      "Catchon TV (catchontv) bietet deutsches IPTV: 4K, Anti‑Freeze IPTV und IPTV Streams ohne Pufferung.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX bietet IPTV mit 4K-Qualität, stabilen Streams und einfacher Einrichtung auf beliebten Geräten.",
+    images: [siteLogoAbsoluteUrl],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Catchon TV IPTV – bester IPTV Anbieter Deutschland",
+    title: "GiGa FliX IPTV – Premium IPTV in Deutschland",
     description:
-      "Catchon TV (catch on tv) ist ein deutscher IPTV Anbieter mit 4K, Anti‑Freeze und IPTV Streams ohne Pufferung.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX: Premium IPTV mit 4K-Streaming, stabilen Servern und schneller Einrichtung.",
+    images: [siteLogoAbsoluteUrl],
   },
 };
 

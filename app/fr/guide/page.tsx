@@ -1,5 +1,7 @@
 "use client";
 
+import { logoImageSrc } from "@/lib/site-images";
+
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "../../components/Icon";
@@ -15,8 +17,8 @@ export default function FrGuidePage() {
           <div className="nav-wrapper">
             <Link href="/fr" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -60,7 +62,7 @@ export default function FrGuidePage() {
               fontSize: "1.1rem",
             }}
           >
-            Soyez opérationnel en quelques minutes. Suivez nos tutoriels premium étape par étape pour configurer Catchon TV
+            Soyez opérationnel en quelques minutes. Suivez nos tutoriels étape par étape pour configurer GiGa FliX
             sur n&apos;importe quel appareil.
           </p>
 
@@ -371,7 +373,7 @@ export default function FrGuidePage() {
                 <div className="step-content">
                   <h4>Définir les détails du portail</h4>
                   <p>
-                    Entrez <b>&quot;Catchon TV&quot;</b> comme nom de portail et collez l&apos;<b>URL du portail</b> fournie dans
+                    Entrez <b>&quot;GiGa FliX&quot;</b> comme nom de portail et collez l&apos;<b>URL du portail</b> fournie dans
                     votre e-mail.
                   </p>
                   <Image
@@ -404,7 +406,7 @@ export default function FrGuidePage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/fr" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Service d&apos;abonnement IPTV Premium.</p>
             </div>
@@ -441,7 +443,7 @@ export default function FrGuidePage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Tous droits réservés.</p>
+            <p>&copy; 2026 GiGa FliX. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

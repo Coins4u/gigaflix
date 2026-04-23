@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { logoImageSrc } from "@/lib/site-images";
 import Link from "next/link";
 import Icon from "../../components/Icon";
 import CatchonTVUIClient from "../../components/CatchonTVUIClient";
@@ -13,8 +14,8 @@ export default function PtTermsConditionsPage() {
           <div className="nav-wrapper">
             <Link href="/pt" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -67,7 +68,7 @@ export default function PtTermsConditionsPage() {
               <p>
                 Para os fins destes Termos e Condições, o termo &quot;Afiliada&quot; refere-se a uma entidade que controla, é
                 controlada por ou está sob controlo comum com uma parte. A entidade referida neste acordo como &quot;a
-                Empresa&quot;, &quot;Nós&quot;, &quot;Nosso&quot; ou &quot;Nossa&quot; é a Catchon TV. &quot;Dispositivo&quot;
+                Empresa&quot;, &quot;Nós&quot;, &quot;Nosso&quot; ou &quot;Nossa&quot; é a GiGa FliX. &quot;Dispositivo&quot;
                 significa qualquer dispositivo que possa aceder ao Serviço. O termo &quot;Serviço&quot; refere-se ao site.
               </p>
             </div>
@@ -136,7 +137,7 @@ export default function PtTermsConditionsPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/pt" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Serviço de Assinatura IPTV Premium.</p>
             </div>
@@ -173,7 +174,7 @@ export default function PtTermsConditionsPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Todos os direitos reservados.</p>
+            <p>&copy; 2026 GiGa FliX. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

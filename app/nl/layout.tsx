@@ -1,26 +1,27 @@
 import type { Metadata } from "next";
+import { siteLogoAbsoluteUrl } from "@/lib/site-images";
 
 export const metadata: Metadata = {
-  title: "Catchon TV IPTV Nederland | Beste IPTV kopen",
+  title: "GiGa FliX IPTV Nederland | IPTV Abonnement",
   description:
-    "Catchon TV (catch on tv) biedt Nederlandse IPTV: IPTV met abonnement, 4K zonder haperingen, M3U lijsten en IPTV kastje opties.",
+    "GiGa FliX biedt IPTV met abonnement, 4K-kwaliteit, stabiele streams en snelle installatie op populaire apparaten en apps.",
   alternates: {
-    canonical: "https://catchontvapp.com/nl/",
+    canonical: "https://gigaflixiptv.com/nl",
   },
   openGraph: {
     type: "website",
-    url: "https://catchontvapp.com/nl/",
-    title: "Catchon TV IPTV Nederland | Beste IPTV kopen",
+    url: "https://gigaflixiptv.com/nl",
+    title: "GiGa FliX IPTV Nederland | IPTV Abonnement",
     description:
-      "Catchon TV (catchontv): Nederlandse IPTV, IPTV met abonnement, 4K, M3U lijsten en stabiele streams.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX: IPTV met abonnement, 4K, M3U-lijsten en stabiele streams op populaire apparaten.",
+    images: [siteLogoAbsoluteUrl],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Catchon TV IPTV Nederland | Beste IPTV kopen",
+    title: "GiGa FliX IPTV Nederland | IPTV Abonnement",
     description:
-      "Catchon TV (catch on iptv): Nederlandse IPTV met abonnement, 4K en M3U lijsten.",
-    images: ["https://catchontvapp.com/img/logo.png"],
+      "GiGa FliX: IPTV met abonnement, 4K-kwaliteit en stabiele streams.",
+    images: [siteLogoAbsoluteUrl],
   },
 };
 

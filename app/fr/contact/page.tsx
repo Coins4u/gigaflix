@@ -1,5 +1,7 @@
 "use client";
 
+import { logoImageSrc } from "@/lib/site-images";
+
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "../../components/Icon";
@@ -33,8 +35,8 @@ export default function FrContactPage() {
           <div className="nav-wrapper">
             <Link href="/fr" className="logo">
               <Image
-                src="/img/logo.png"
-                alt="Catchon TV Logo"
+                src={logoImageSrc}
+                alt="GiGa FliX Logo"
                 width={160}
                 height={40}
                 sizes="160px"
@@ -181,7 +183,7 @@ export default function FrContactPage() {
           <div className="footer-content">
             <div className="footer-brand">
               <Link href="/fr" className="footer-logo">
-                <Image src="/img/logo.png" alt="Catchon TV Logo" width={160} height={40} sizes="160px" />
+                <Image src={logoImageSrc} alt="GiGa FliX Logo" width={160} height={40} sizes="160px" />
               </Link>
               <p className="footer-desc">Service d&apos;abonnement IPTV Premium.</p>
             </div>
@@ -218,7 +220,7 @@ export default function FrContactPage() {
             </div>
           </div>
           <div className="copyright">
-            <p>&copy; 2025 Catchon TV. Tous droits réservés.</p>
+            <p>&copy; 2026 GiGa FliX. Tous droits réservés.</p>
           </div>
         </div>
       </footer>
