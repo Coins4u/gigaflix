@@ -45,6 +45,9 @@ export default function PtHomePage() {
               <a href="#pricing" className="nav-link">
                 Preços
               </a>
+              <Link href="/pt/channels" className="nav-link">
+                Canais
+              </Link>
               <Link href="/pt/guide" className="nav-link">
                 Guia de Instalação
               </Link>

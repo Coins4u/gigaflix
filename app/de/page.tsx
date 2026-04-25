@@ -45,6 +45,9 @@ export default function DeHomePage() {
               <a href="#pricing" className="nav-link">
                 Preise
               </a>
+              <Link href="/de/channels" className="nav-link">
+                Sender
+              </Link>
               <Link href="/de/guide" className="nav-link">
                 Installationsanleitung
               </Link>

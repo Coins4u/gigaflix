@@ -45,6 +45,9 @@ export default function ItHomePage() {
               <a href="#pricing" className="nav-link">
                 Prezzi
               </a>
+              <Link href="/it/channels" className="nav-link">
+                Canali
+              </Link>
               <Link href="/it/guide" className="nav-link">
                 Guida Installazione
               </Link>

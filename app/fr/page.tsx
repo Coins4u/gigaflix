@@ -45,6 +45,9 @@ export default function FrHomePage() {
               <a href="#pricing" className="nav-link">
                 Tarifs
               </a>
+              <Link href="/fr/channels" className="nav-link">
+                Chaînes
+              </Link>
               <Link href="/fr/guide" className="nav-link">
                 Guide d&apos;installation
               </Link>

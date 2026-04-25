@@ -45,6 +45,9 @@ export default function NlHomePage() {
               <a href="#pricing" className="nav-link">
                 Prijzen
               </a>
+              <Link href="/nl/channels" className="nav-link">
+                Kanalen
+              </Link>
               <Link href="/nl/guide" className="nav-link">
                 Installatie Gids
               </Link>

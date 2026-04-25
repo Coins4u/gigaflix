@@ -1,0 +1,9 @@
+# Local only — gitignored. Hostinger SMTP (SSL / 465).
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=giga.flix.iptv@gmail.com
+SMTP_PASS=nzjacfvpaklgcdjq
+SMTP_FROM="GiGa FliX <giga.flix.iptv@gmail.com>"
+ADMIN_EMAIL=essadik921@gmail.com
+
