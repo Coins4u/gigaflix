@@ -19,11 +19,30 @@ export default function PtContactPage() {
     setIsSubmitting(true);
     setResponseMessage("");
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          locale: "pt",
+          pagePath: "/pt/contact",
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setResponseMessage(data.error || "Falha ao enviar. Tente novamente.");
+        return;
+      }
+
       setResponseMessage("Obrigado pela sua mensagem! Responderemos em 1-2 horas.");
       setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setResponseMessage("Falha ao enviar. Tente novamente.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

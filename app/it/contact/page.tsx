@@ -19,11 +19,30 @@ export default function ItContactPage() {
     setIsSubmitting(true);
     setResponseMessage("");
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          locale: "it",
+          pagePath: "/it/contact",
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setResponseMessage(data.error || "Invio non riuscito. Riprova.");
+        return;
+      }
+
       setResponseMessage("Grazie per il tuo messaggio! Ti risponderemo entro 1-2 ore.");
       setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setResponseMessage("Invio non riuscito. Riprova.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

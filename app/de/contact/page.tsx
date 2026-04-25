@@ -19,11 +19,30 @@ export default function DeContactPage() {
     setIsSubmitting(true);
     setResponseMessage("");
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          locale: "de",
+          pagePath: "/de/contact",
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setResponseMessage(data.error || "Senden fehlgeschlagen. Bitte versuchen Sie es erneut.");
+        return;
+      }
+
       setResponseMessage("Vielen Dank für Ihre Nachricht! Wir werden Ihnen innerhalb von 1-2 Stunden antworten.");
       setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setResponseMessage("Senden fehlgeschlagen. Bitte versuchen Sie es erneut.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

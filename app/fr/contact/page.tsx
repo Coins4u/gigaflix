@@ -19,12 +19,30 @@ export default function FrContactPage() {
     setIsSubmitting(true);
     setResponseMessage("");
 
-    // Simulate form submission (replace with actual API call)
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          locale: "fr",
+          pagePath: "/fr/contact",
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setResponseMessage(data.error || "Échec de l'envoi. Veuillez réessayer.");
+        return;
+      }
+
       setResponseMessage("Merci pour votre message ! Nous vous répondrons dans les 1-2 heures.");
       setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setResponseMessage("Échec de l'envoi. Veuillez réessayer.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

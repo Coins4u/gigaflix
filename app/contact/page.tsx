@@ -19,12 +19,30 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setResponseMessage("");
 
-    // Simulate form submission (replace with actual API call)
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          locale: "en",
+          pagePath: "/contact",
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setResponseMessage(data.error || "Failed to send message. Please try again.");
+        return;
+      }
+
       setResponseMessage("Thank you for your message! We'll get back to you within 1-2 hours.");
       setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setResponseMessage("Failed to send message. Please try again.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (

@@ -19,11 +19,30 @@ export default function NlContactPage() {
     setIsSubmitting(true);
     setResponseMessage("");
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          locale: "nl",
+          pagePath: "/nl/contact",
+        }),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        setResponseMessage(data.error || "Verzenden mislukt. Probeer het opnieuw.");
+        return;
+      }
+
       setResponseMessage("Bedankt voor je bericht! We reageren binnen 1-2 uur.");
       setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setResponseMessage("Verzenden mislukt. Probeer het opnieuw.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
