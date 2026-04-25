@@ -50,6 +50,9 @@ export default function Home() {
               <a href="#pricing" className="nav-link">
                 Pricing
               </a>
+              <Link href="/channels" className="nav-link">
+                Channels
+              </Link>
               <Link href="/guide" className="nav-link">
                 installation guide
               </Link>
@@ -154,6 +157,9 @@ export default function Home() {
                 </li>
                 <li>
                   <a href="#pricing">Pricing</a>
+                </li>
+                <li>
+                  <Link href="/channels">Channels</Link>
                 </li>
                 <li>
                   <Link href="/guide">Installation Guide</Link>

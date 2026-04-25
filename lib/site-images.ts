@@ -21,7 +21,7 @@ export const HERO_IMAGE_SIZES =
  * same `?v=` in public/guide/index.html (two places).
  */
 const LOGO_FILENAME = "logo.png";
-export const LOGO_IMAGE_CACHE_BUST = "5";
+export const LOGO_IMAGE_CACHE_BUST = "7";
 export const logoImageSrc = `/img/${LOGO_FILENAME}?v=${LOGO_IMAGE_CACHE_BUST}`;
 
 /** Sports section image: public/img/sports/football.png — bump when you replace the file in place. */
@@ -31,6 +31,26 @@ export const sportsFootballImageSrc = `/img/sports/football.png?v=${SPORTS_FOOTB
 /** Payment methods strip: public/img/payments.png */
 export const PAYMENTS_IMAGE_CACHE_BUST = "1";
 export const paymentsImageSrc = `/img/payments.png?v=${PAYMENTS_IMAGE_CACHE_BUST}`;
+
+/**
+ * Channel categories page: `public/img/channels/{sport,Movie,News,Kids,Entertainment,Music}.png`.
+ * After replacing any file in place, raise CHANNEL_CATEGORY_IMAGES_CACHE_BUST.
+ */
+export const CHANNEL_CATEGORY_IMAGES_CACHE_BUST = "1";
+const ch = (f: string) => `/img/channels/${f}?v=${CHANNEL_CATEGORY_IMAGES_CACHE_BUST}`;
+
+export const channelCategoryImageSrc = {
+  sport: ch("sport.png"),
+  movie: ch("Movie.png"),
+  news: ch("News.png"),
+  kids: ch("Kids.png"),
+  entertainment: ch("Entertainment.png"),
+  music: ch("Music.png"),
+} as const;
+
+/** `next/image` `sizes` for channel category row illustrations. */
+export const CHANNEL_CATEGORY_IMAGE_SIZES =
+  "(max-width: 900px) 90vw, (max-width: 1200px) 40vw, 400px";
 
 /** Full URL for Open Graph, Twitter, JSON-LD (includes cache-bust query). */
 export const siteLogoAbsoluteUrl = `${SITE_ORIGIN}${logoImageSrc}`;

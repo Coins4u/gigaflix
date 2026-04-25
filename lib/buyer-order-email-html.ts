@@ -22,6 +22,141 @@ const C = {
   linkOnWhite: "#2c1596",
 } as const;
 
+/**
+ * Dark mode for clients that honor `prefers-color-scheme` + embedded `<style>`.
+ * Scoped so we do **not** blanket-paint every `td` (that washed out the header,
+ * CTA, and callouts). Uses `!important` to override inline styles where allowed.
+ */
+const EMAIL_DARK_MODE_STYLE = `
+:root { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) {
+  body.gf-email-root,
+  table.gf-email-outer {
+    background-color: #0e0e14 !important;
+  }
+  table.gf-email-card {
+    background-color: #16161e !important;
+    border: 1px solid #3d3d4f !important;
+  }
+  table.gf-email-card td.gf-email-main,
+  table.gf-email-card td.gf-email-footer {
+    background-color: #16161e !important;
+  }
+  table.gf-email-card td.gf-email-footer {
+    border-top: 1px solid #3d3d4f !important;
+  }
+
+  /* Header row: keep gradient + light type (do not inherit “body” colors) */
+  table.gf-email-card td.gf-email-header p {
+    color: rgba(255, 255, 255, 0.94) !important;
+  }
+  table.gf-email-card td.gf-email-header strong {
+    color: #ffffff !important;
+  }
+
+  /* Opening lines only (not nested module copy) */
+  table.gf-email-card td.gf-email-main > p:not(.gf-email-muted) {
+    color: #e2e2e8 !important;
+  }
+  table.gf-email-card td.gf-email-main > p:not(.gf-email-muted) strong {
+    color: #ffffff !important;
+  }
+
+  table.gf-email-card .gf-email-muted {
+    color: #9b9ba8 !important;
+  }
+  table.gf-email-card a {
+    color: #c4b5fd !important;
+  }
+  table.gf-email-card .gf-email-heading {
+    color: #ede9fe !important;
+  }
+  table.gf-email-card .gf-email-price {
+    color: #e9d5ff !important;
+  }
+  table.gf-email-card .gf-email-critical {
+    color: #fb7185 !important;
+  }
+
+  /* Inset panels (bill-to, steps, line item) */
+  table.gf-email-card .gf-email-surface {
+    background-color: #1f1f28 !important;
+    border-color: #4b4b5e !important;
+  }
+  table.gf-email-card .gf-email-surface td {
+    border-color: #4b4b5e !important;
+    color: #e4e4ea !important;
+  }
+  table.gf-email-card .gf-email-surface td.gf-email-muted {
+    color: #9b9ba8 !important;
+  }
+  table.gf-email-card .gf-email-surface p {
+    color: #e4e4ea !important;
+  }
+  table.gf-email-card .gf-email-surface strong {
+    color: #ffffff !important;
+  }
+
+  /* Secure checkout notice */
+  table.gf-email-card .gf-email-alert {
+    background-color: #252036 !important;
+    border-color: #6d5bd0 !important;
+  }
+  table.gf-email-card .gf-email-alert p {
+    color: #eceaf5 !important;
+  }
+  table.gf-email-card .gf-email-alert strong {
+    color: #ddd6fe !important;
+  }
+
+  /* CTA pill: slightly brighter edge in dark UI */
+  table.gf-email-card td.gf-email-cta-wrap {
+    box-shadow: 0 6px 28px rgba(99, 102, 241, 0.45) !important;
+  }
+  table.gf-email-card td.gf-email-cta-wrap a {
+    color: #ffffff !important;
+  }
+
+  /* Callouts: higher contrast text vs panel */
+  table.gf-email-card .gf-email-callout-cyan {
+    background-color: #0c1f2e !important;
+    border-color: #0e7490 !important;
+  }
+  table.gf-email-card .gf-email-callout-cyan p {
+    color: #cffafe !important;
+  }
+  table.gf-email-card .gf-email-callout-cyan strong {
+    color: #5eead4 !important;
+  }
+
+  table.gf-email-card .gf-email-callout-amber {
+    background-color: #29170a !important;
+    border-color: #c2410c !important;
+  }
+  table.gf-email-card .gf-email-callout-amber p {
+    color: #ffedd5 !important;
+  }
+  table.gf-email-card .gf-email-callout-amber strong {
+    color: #fdba74 !important;
+  }
+
+  table.gf-email-card .gf-email-callout-green {
+    background-color: #0f1f14 !important;
+    border-color: #166534 !important;
+  }
+  table.gf-email-card .gf-email-callout-green p {
+    color: #dcfce7 !important;
+  }
+  table.gf-email-card .gf-email-callout-green strong {
+    color: #86efac !important;
+  }
+
+  table.gf-email-card .gf-email-sep {
+    color: #5c5c70 !important;
+  }
+}
+`;
+
 export type BuyerLocale = "en" | "fr" | "nl" | "de" | "it" | "pt" | "es";
 
 type BuyerEmailCopy = {
@@ -530,16 +665,21 @@ export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="color-scheme" content="light dark" />
+<meta name="supported-color-schemes" content="light dark" />
 <title>${escapeHtml(t.htmlTitle)}</title>
+<style type="text/css">
+${EMAIL_DARK_MODE_STYLE}
+</style>
 </head>
-<body style="margin:0;padding:0;background-color:${C.bgPage};font-family:'Outfit',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};padding:24px 12px;">
+<body class="gf-email-root" style="margin:0;padding:0;background-color:${C.bgPage};font-family:'Outfit',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+<table role="presentation" class="gf-email-outer" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};padding:24px 12px;">
   <tr>
     <td align="center">
-      <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;background-color:${C.bgCard};border-radius:12px;overflow:hidden;border:1px solid ${C.border};">
+      <table role="presentation" class="gf-email-card" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;background-color:${C.bgCard};border-radius:12px;overflow:hidden;border:1px solid ${C.border};">
         <!-- Header: brand gradient (primary → primary-dark) -->
         <tr>
-          <td style="background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};padding:28px 32px;text-align:center;">
+          <td class="gf-email-header" style="background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};padding:28px 32px;text-align:center;">
             <p style="margin:0 0 8px 0;font-size:11px;font-weight:600;letter-spacing:0.12em;color:${C.headerSub};text-transform:uppercase;">${escapeHtml(t.headerEyebrow)}</p>
             <p style="margin:0 0 10px 0;font-size:28px;font-weight:700;color:#ffffff;font-family:Georgia,'Times New Roman',Times,serif;line-height:1.2;">GiGa FliX</p>
             <p style="margin:0;font-size:13px;color:${C.headerInvoice};">${escapeHtml(t.invoiceReference)}: <strong style="color:#ffffff;">${inv}</strong></p>
@@ -547,28 +687,28 @@ export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
         </tr>
         <!-- Body -->
         <tr>
-          <td style="padding:28px 32px 8px 32px;">
+          <td class="gf-email-main" style="padding:28px 32px 8px 32px;">
             <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:${C.text};">${escapeHtml(t.greeting)} <strong>${name}</strong>,</p>
             <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:${C.text};">${escapeHtml(t.thanksLine)}</p>
             <!-- Bill to -->
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
+            <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
               <tr>
                 <td style="padding:16px 18px;">
-                  <p style="margin:0 0 8px 0;font-size:11px;font-weight:600;letter-spacing:0.08em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.billTo)}</p>
+                  <p class="gf-email-muted" style="margin:0 0 8px 0;font-size:11px;font-weight:600;letter-spacing:0.08em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.billTo)}</p>
                   <p style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:${C.text};">${name}</p>
                   <p style="margin:0 0 4px 0;font-size:14px;"><a href="mailto:${mail}" style="color:${C.linkOnWhite};text-decoration:underline;">${mail}</a></p>
-                  <p style="margin:0;font-size:14px;color:${C.textGray};">${country}</p>
+                  <p class="gf-email-muted" style="margin:0;font-size:14px;color:${C.textGray};">${country}</p>
                 </td>
               </tr>
             </table>
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 24px 0;">
               <tr>
                 <td style="padding:0 0 10px 0;">
-                  <p style="margin:0;font-size:20px;font-weight:800;color:${C.primaryDark};line-height:1.2;">${escapeHtml(t.paymentInstructions)}</p>
+                  <p class="gf-email-heading" style="margin:0;font-size:20px;font-weight:800;color:${C.primaryDark};line-height:1.2;">${escapeHtml(t.paymentInstructions)}</p>
                 </td>
               </tr>
               <tr>
-                <td style="background-color:${C.alertBg};border:1px solid ${C.alertBorder};border-radius:10px;padding:14px 16px;">
+                <td class="gf-email-alert" style="background-color:${C.alertBg};border:1px solid ${C.alertBorder};border-radius:10px;padding:14px 16px;">
                   <p style="margin:0;font-size:14px;line-height:1.6;color:${C.text};"><strong style="color:${C.primaryDark};">${escapeHtml(t.secureCheckoutLabel)}</strong> ${escapeHtml(t.secureCheckoutText)}</p>
                 </td>
               </tr>
@@ -576,18 +716,18 @@ export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
             <!-- Prominent escrow CTA -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 18px auto;">
               <tr>
-                <td style="border-radius:50px;background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};">
+                <td class="gf-email-cta-wrap" style="border-radius:50px;background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};">
                   <a href="${link}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:15px 30px;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;text-transform:none;">${escapeHtml(t.ctaLabel)}</a>
                 </td>
               </tr>
             </table>
-            <p style="margin:0 0 22px 0;font-size:13px;color:${C.textGray};text-align:center;">${escapeHtml(t.fallbackLinkHelp)}<br/><a href="${link}" style="color:${C.linkOnWhite};text-decoration:underline;word-break:break-all;">${link}</a></p>
+            <p class="gf-email-muted" style="margin:0 0 22px 0;font-size:13px;color:${C.textGray};text-align:center;">${escapeHtml(t.fallbackLinkHelp)}<br/><a href="${link}" style="color:${C.linkOnWhite};text-decoration:underline;word-break:break-all;">${link}</a></p>
 
             <!-- Step-by-step guide -->
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
+            <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
               <tr>
                 <td style="padding:14px 16px;border-bottom:1px solid ${C.border};">
-                  <p style="margin:0;font-size:14px;font-weight:700;color:${C.primaryDark};">${escapeHtml(t.stepGuideTitle)}</p>
+                  <p class="gf-email-heading" style="margin:0;font-size:14px;font-weight:700;color:${C.primaryDark};">${escapeHtml(t.stepGuideTitle)}</p>
                 </td>
               </tr>
               <tr>
@@ -611,54 +751,54 @@ export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:28px;">
               <tr>
                 <td style="padding:0 0 10px 0;">
-                  <p style="margin:0;font-size:14px;font-weight:800;color:#b91c1c;text-transform:uppercase;letter-spacing:0.04em;">${escapeHtml(t.criticalNotes)}</p>
+                  <p class="gf-email-critical" style="margin:0;font-size:14px;font-weight:800;color:#b91c1c;text-transform:uppercase;letter-spacing:0.04em;">${escapeHtml(t.criticalNotes)}</p>
                 </td>
               </tr>
               <tr>
-                <td style="background-color:#ecfeff;border:1px solid #67e8f9;border-radius:10px;padding:13px 14px 12px 14px;">
+                <td class="gf-email-callout-cyan" style="background-color:#ecfeff;border:1px solid #67e8f9;border-radius:10px;padding:13px 14px 12px 14px;">
                   <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#0e7490;">${escapeHtml(t.instantDeliveryTitle)}</strong> ${escapeHtml(t.instantDeliveryText)}</p>
                 </td>
               </tr>
               <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
               <tr>
-                <td style="background-color:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:13px 14px 12px 14px;">
+                <td class="gf-email-callout-amber" style="background-color:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:13px 14px 12px 14px;">
                   <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#9a3412;">${escapeHtml(t.communicationProtocolTitle)}</strong> ${escapeHtml(t.communicationProtocolText)}</p>
                 </td>
               </tr>
               <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
               <tr>
-                <td style="background-color:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:13px 14px 12px 14px;">
+                <td class="gf-email-callout-green" style="background-color:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:13px 14px 12px 14px;">
                   <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#166534;">${escapeHtml(t.supportTitle)}</strong> ${escapeHtml(t.supportText)}</p>
                 </td>
               </tr>
             </table>
             <!-- Line item -->
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;">
+            <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;">
               <tr>
                 <td colspan="2" style="padding:12px 18px;border-bottom:1px solid ${C.border};">
                   <table width="100%" cellspacing="0" cellpadding="0" border="0">
                     <tr>
-                      <td style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.lineItem)}</td>
-                      <td align="right" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.amount)}</td>
+                      <td class="gf-email-muted" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.lineItem)}</td>
+                      <td class="gf-email-muted" align="right" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.amount)}</td>
                     </tr>
                   </table>
                 </td>
               </tr>
               <tr>
                 <td style="padding:16px 18px;font-size:15px;font-weight:700;color:${C.text};vertical-align:top;">${tier}</td>
-                <td align="right" style="padding:16px 18px;font-size:15px;font-weight:700;color:${C.primaryDark};white-space:nowrap;vertical-align:top;">${price}</td>
+                <td class="gf-email-price" align="right" style="padding:16px 18px;font-size:15px;font-weight:700;color:${C.primaryDark};white-space:nowrap;vertical-align:top;">${price}</td>
               </tr>
             </table>
-            <p style="margin:24px 0 0 0;font-size:13px;line-height:1.5;color:${C.textGray};">${escapeHtml(t.spamReminder)}</p>
+            <p class="gf-email-muted" style="margin:24px 0 0 0;font-size:13px;line-height:1.5;color:${C.textGray};">${escapeHtml(t.spamReminder)}</p>
           </td>
         </tr>
         <!-- Footer -->
         <tr>
-          <td style="padding:8px 32px 28px 32px;border-top:1px solid ${C.border};">
-            <p style="margin:0 0 16px 0;font-size:12px;color:${C.textGray};line-height:1.5;">${escapeHtml(t.ignoreNotice)}</p>
+          <td class="gf-email-footer" style="padding:8px 32px 28px 32px;border-top:1px solid ${C.border};">
+            <p class="gf-email-muted" style="margin:0 0 16px 0;font-size:12px;color:${C.textGray};line-height:1.5;">${escapeHtml(t.ignoreNotice)}</p>
             <p style="margin:0;font-size:13px;">
               <a href="${refundUrl}" style="color:${C.linkOnWhite};text-decoration:none;font-weight:600;">${escapeHtml(t.refundPolicy)}</a>
-              <span style="color:${C.border};"> · </span>
+              <span class="gf-email-sep" style="color:${C.border};"> · </span>
               <a href="${termsUrl}" style="color:${C.linkOnWhite};text-decoration:none;font-weight:600;">${escapeHtml(t.termsOfService)}</a>
             </p>
           </td>

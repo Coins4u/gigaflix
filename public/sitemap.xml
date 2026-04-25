@@ -78,4 +78,10 @@
     <xhtml:link rel="alternate" hreflang="pt" href="https://gigaflixiptv.com/pt"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://gigaflixiptv.com/"/>
   </url>
+  <url>
+    <loc>https://gigaflixiptv.com/channels</loc>
+    <lastmod>2026-04-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
 </urlset>

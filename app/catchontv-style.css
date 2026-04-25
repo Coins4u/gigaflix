@@ -3630,3 +3630,290 @@ h2.section-title {
         display: none;
     }
 }
+/* --- Channel categories timeline (/channels) --- */
+.channel-categories-page {
+    padding: 100px 0 80px;
+    background: #ffffff;
+    min-height: 60vh;
+    box-sizing: border-box;
+}
+
+.channel-categories-hero__title {
+    text-align: center;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin: 0 0 12px 0;
+    letter-spacing: 0.02em;
+}
+
+.channel-categories-hero__lead {
+    text-align: center;
+    color: var(--text-gray);
+    max-width: 640px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+
+.channel-timeline {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0 0 32px;
+    max-width: 1000px;
+    position: relative;
+}
+
+.channel-timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    margin-left: -1px;
+    background: linear-gradient(
+        180deg,
+        #e35d3a 0%,
+        rgba(227, 93, 58, 0.65) 50%,
+        #e35d3a 100%
+    );
+    z-index: 0;
+    border-radius: 2px;
+}
+
+.channel-timeline__row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 200px;
+    position: relative;
+    z-index: 1;
+}
+
+.channel-timeline__row--text-first {
+    flex-direction: row-reverse;
+}
+
+.channel-timeline__cell {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 24px 20px;
+}
+
+.channel-timeline__cell--art {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.channel-timeline__row--text-first .channel-timeline__cell--text {
+    text-align: right;
+}
+
+.channel-timeline__row:not(.channel-timeline__row--text-first)
+    .channel-timeline__cell--text {
+    text-align: left;
+}
+
+.channel-cat-illu {
+    max-width: 60%;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Portrait asset (e.g. Kids) — cap height in the timeline */
+.channel-cat-illu--tall {
+    max-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.channel-cat-illu--tall .channel-cat-illu__img {
+    max-height: 380px;
+    width: auto;
+    max-width: 100%;
+}
+
+.channel-cat-illu__img {
+    display: block;
+    width: 100%;
+    max-width: min(100%, 440px);
+    height: auto;
+    object-fit: contain;
+}
+
+.channel-timeline__axis {
+    flex: 0 0 56px;
+    width: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.channel-timeline__num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #e35d3a;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1rem;
+    box-shadow: 0 0 0 4px #ffffff, 0 0 0 6px #e35d3a;
+}
+
+.channel-timeline__heading {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin: 0 0 10px 0;
+}
+
+.channel-timeline__desc {
+    margin: 0;
+    color: var(--text-gray);
+    line-height: 1.65;
+    font-size: 0.98rem;
+}
+
+.channel-categories-cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px 0 40px;
+}
+
+@media (max-width: 900px) {
+    .channel-categories-page {
+        padding: 88px max(18px, env(safe-area-inset-right, 0px)) 56px
+            calc(22px + env(safe-area-inset-left, 0px));
+        border-left: 3px solid #e35d3a;
+    }
+
+    .channel-categories-hero__title {
+        font-size: 1.6rem;
+        line-height: 1.2;
+    }
+
+    .channel-categories-hero__lead {
+        font-size: 0.98rem;
+        line-height: 1.6;
+        margin: 0 auto 2rem;
+        padding: 0 2px;
+    }
+
+    /* One vertical line on the page edge — not a second line in the list */
+    .channel-timeline::before {
+        display: none;
+    }
+
+    .channel-timeline {
+        padding: 0 0 0.5rem;
+        max-width: 100%;
+    }
+
+    .channel-timeline__row,
+    .channel-timeline__row--text-first {
+        flex-direction: column;
+        align-items: center;
+        min-height: 0;
+        margin: 0 0 2.5rem;
+        padding: 0 0 0.5rem;
+    }
+
+    .channel-timeline__cell {
+        width: 100%;
+        max-width: 32rem;
+        padding: 0 4px;
+    }
+
+    .channel-timeline__cell--art {
+        justify-content: center;
+    }
+
+    .channel-cat-illu {
+        width: 60%;
+        max-width: 70%;
+        min-width: 0;
+        margin: 0 auto 4px;
+    }
+
+    .channel-cat-illu__img {
+        max-width: 100% !important;
+    }
+
+    .channel-cat-illu--tall {
+        max-height: 320px;
+    }
+
+    .channel-cat-illu--tall .channel-cat-illu__img {
+        max-height: 300px;
+    }
+
+    .channel-timeline__row .channel-timeline__cell--art {
+        order: 1;
+    }
+
+    .channel-timeline__axis {
+        order: 2;
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 12px 0 10px;
+        justify-content: center;
+    }
+
+    .channel-timeline__row .channel-timeline__cell--text {
+        order: 3;
+        text-align: center !important;
+    }
+
+    .channel-timeline__num {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        box-shadow: 0 0 0 3px #ffffff, 0 0 0 5px #e35d3a;
+    }
+
+    .channel-timeline__heading {
+        font-size: 1.22rem;
+        line-height: 1.3;
+        margin: 0 0 0.75rem 0;
+    }
+
+    .channel-timeline__desc {
+        font-size: 0.95rem;
+        line-height: 1.65;
+    }
+
+    .channel-categories-cta {
+        padding: 1.25rem 0 2.5rem;
+    }
+
+    /* Editorial, readable type on small screens (matches reference) */
+    .channel-categories-hero__title,
+    .channel-categories-hero__lead,
+    .channel-timeline__heading,
+    .channel-timeline__desc {
+        font-family: Georgia, "Times New Roman", ui-serif, serif;
+    }
+}
+
+@media (max-width: 400px) {
+    .channel-categories-page {
+        padding: 80px max(14px, env(safe-area-inset-right, 0px)) 48px
+            calc(18px + env(safe-area-inset-left, 0px));
+    }
+
+    .channel-cat-illu {
+        max-width: 78%;
+    }
+}
