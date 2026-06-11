@@ -306,16 +306,16 @@ export default function PtHomeContentClient() {
 
             <div id="standard-plans" className="pricing-container active">
               {[
-                { name: "1 Mês", price: "€13.45", period: "/mês" },
+                { name: "1 Mês", price: "€13.67", period: "/mês" },
                 {
                   name: "3 Meses",
-                  price: "€23.36",
+                  price: "€25.49",
                   period: "/3 meses",
                   popular: true,
                   badge: "Melhor Valor",
                 },
-                { name: "6 Meses", price: "€35.97", period: "/6 meses" },
-                { name: "12 Meses", price: "€49.13", period: "/ano" },
+                { name: "6 Meses", price: "€37.78", period: "/6 meses" },
+                { name: "12 Meses", price: "€49.56", period: "/ano" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -378,16 +378,16 @@ export default function PtHomeContentClient() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Mês Premium", price: "€24.23", period: "/mês" },
+                { name: "1 Mês Premium", price: "€23.12", period: "/mês" },
                 {
                   name: "3 Meses Premium",
-                  price: "€33.54",
+                  price: "€35.53",
                   period: "/3 meses",
                   popular: true,
                   badge: "Top Escolha",
                 },
-                { name: "6 Meses Premium", price: "€45.47", period: "/6 meses" },
-                { name: "12 Meses Premium", price: "€66.62", period: "/ano" },
+                { name: "6 Meses Premium", price: "€45.79", period: "/6 meses" },
+                { name: "12 Meses Premium", price: "€67.48", period: "/ano" },
               ].map((plan, idx) => (
                 <div
                   key={idx}

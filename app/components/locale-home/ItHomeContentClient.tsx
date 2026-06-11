@@ -307,16 +307,16 @@ export default function ItHomeContentClient() {
 
             <div id="standard-plans" className="pricing-container active">
               {[
-                { name: "1 Mese", price: "€13.45", period: "/Mese" },
+                { name: "1 Mese", price: "€13.67", period: "/Mese" },
                 {
                   name: "3 Mesi",
-                  price: "€23.36",
+                  price: "€25.49",
                   period: "/3 Mesi",
                   popular: true,
                   badge: "Miglior Valore",
                 },
-                { name: "6 Mesi", price: "€35.97", period: "/6 Mesi" },
-                { name: "12 Mesi", price: "€49.13", period: "/Anno" },
+                { name: "6 Mesi", price: "€37.78", period: "/6 Mesi" },
+                { name: "12 Mesi", price: "€49.56", period: "/Anno" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -379,16 +379,16 @@ export default function ItHomeContentClient() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Mese Premium", price: "€24.23", period: "/Mese" },
+                { name: "1 Mese Premium", price: "€23.12", period: "/Mese" },
                 {
                   name: "3 Mesi Premium",
-                  price: "€33.54",
+                  price: "€35.53",
                   period: "/3 Mesi",
                   popular: true,
                   badge: "Top Scelta",
                 },
-                { name: "6 Mesi Premium", price: "€45.47", period: "/6 Mesi" },
-                { name: "12 Mesi Premium", price: "€66.62", period: "/Anno" },
+                { name: "6 Mesi Premium", price: "€45.79", period: "/6 Mesi" },
+                { name: "12 Mesi Premium", price: "€67.48", period: "/Anno" },
               ].map((plan, idx) => (
                 <div
                   key={idx}

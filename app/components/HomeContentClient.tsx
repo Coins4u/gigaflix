@@ -309,16 +309,16 @@ export default function HomeContentClient() {
 
             <div id="standard-plans" className="pricing-container active" data-scroll>
               {[
-                { name: "1 Month", price: "€13.45", period: "/mo" },
+                { name: "1 Month", price: "€13.67", period: "/mo" },
                 {
                   name: "3 Months",
-                  price: "€23.36",
+                  price: "€25.49",
                   period: "/3mo",
                   popular: true,
                   badge: "Best Value",
                 },
-                { name: "6 Months", price: "€35.97", period: "/6mo" },
-                { name: "12 Months", price: "€49.13", period: "/yr" },
+                { name: "6 Months", price: "€37.78", period: "/6mo" },
+                { name: "12 Months", price: "€49.56", period: "/yr" },
               ].map((plan, idx) => (
                 <Card
                   key={idx}
@@ -414,16 +414,16 @@ export default function HomeContentClient() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Month Premium", price: "€24.23", period: "/mo" },
+                { name: "1 Month Premium", price: "€23.12", period: "/mo" },
                 {
                   name: "3 Months Premium",
-                  price: "€33.54",
+                  price: "€35.53",
                   period: "/3mo",
                   popular: true,
                   badge: "Top Choice",
                 },
-                { name: "6 Months Premium", price: "€45.47", period: "/6mo" },
-                { name: "12 Months Premium", price: "€66.62", period: "/yr" },
+                { name: "6 Months Premium", price: "€45.79", period: "/6mo" },
+                { name: "12 Months Premium", price: "€67.48", period: "/yr" },
               ].map((plan, idx) => (
                 <div
                   key={idx}

@@ -306,16 +306,16 @@ export default function NlHomeContentClient() {
 
             <div id="standard-plans" className="pricing-container active">
               {[
-                { name: "1 Maand", price: "€13.45", period: "/maand" },
+                { name: "1 Maand", price: "€13.67", period: "/maand" },
                 {
                   name: "3 Maanden",
-                  price: "€23.36",
+                  price: "€25.49",
                   period: "/3 maanden",
                   popular: true,
                   badge: "Beste Waarde",
                 },
-                { name: "6 Maanden", price: "€35.97", period: "/6 maanden" },
-                { name: "12 Maanden", price: "€49.13", period: "/jaar" },
+                { name: "6 Maanden", price: "€37.78", period: "/6 maanden" },
+                { name: "12 Maanden", price: "€49.56", period: "/jaar" },
               ].map((plan, idx) => (
                 <div
                   key={idx}
@@ -378,16 +378,16 @@ export default function NlHomeContentClient() {
 
             <div id="premium-plans" className="pricing-container">
               {[
-                { name: "1 Maand Premium", price: "€24.23", period: "/maand" },
+                { name: "1 Maand Premium", price: "€23.12", period: "/maand" },
                 {
                   name: "3 Maanden Premium",
-                  price: "€33.54",
+                  price: "€35.53",
                   period: "/3 maanden",
                   popular: true,
                   badge: "Top Keuze",
                 },
-                { name: "6 Maanden Premium", price: "€45.47", period: "/6 maanden" },
-                { name: "12 Maanden Premium", price: "€66.62", period: "/jaar" },
+                { name: "6 Maanden Premium", price: "€45.79", period: "/6 maanden" },
+                { name: "12 Maanden Premium", price: "€67.48", period: "/jaar" },
               ].map((plan, idx) => (
                 <div
                   key={idx}

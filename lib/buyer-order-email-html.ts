@@ -191,6 +191,7 @@ type BuyerEmailCopy = {
   termsOfService: string;
   plainHello: string;
   plainSecureReady: string;
+  plainCheckoutNote: string;
   plainInvoiceReference: string;
   plainOpenPayment: string;
   plainPlan: string;
@@ -206,29 +207,29 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     invoiceReference: "Invoice reference",
     greeting: "Hello",
     thanksLine:
-      "Thanks for choosing GiGa FliX. Your secure payment link is ready.",
+      "Thank you for your order. Your technical configuration invoice is ready for settlement. Please use our secure payment gateway partner below to finalize your payment and activate your digital asset allocation.",
     billTo: "Bill to",
     paymentInstructions: "Payment Instructions",
-    secureCheckoutLabel: "The Secure Checkout Link:",
+    secureCheckoutLabel: "Note:",
     secureCheckoutText:
-      "Please use the official escrow checkout button below.",
-    ctaLabel: "Complete Secure Payment via G2G Escrow",
+      "Please leave any optional description or note fields blank during checkout to ensure instant automated provisioning. Your access credentials and configuration data will be dispatched directly to your primary inbox immediately after network confirmation.",
+    ctaLabel: "Complete Secure Payment via Whop",
     fallbackLinkHelp:
       "If the button does not open, copy and paste this URL into your browser:",
     stepGuideTitle: "Step-by-Step Payment Guide",
     step1:
-      "Step 1: Click the secure link above to visit our official product listing on G2G.",
+      "Step 1: Click the secure link above to open our official Whop checkout page.",
     step2:
-      "Step 2: Sign in (social login like Google/Discord is recommended for speed).",
+      "Step 2: Sign in or create a Whop account if prompted.",
     step3:
-      "Step 3: Complete your purchase using your preferred method (PayPal, Apple Pay, Google Pay, or credit card).",
+      "Step 3: Complete your payment using your preferred method (PayPal, Apple Pay, Google Pay, or credit card). Leave any optional description or note fields blank.",
     criticalNotes: "Critical Delivery & Security Notes",
-    instantDeliveryTitle: "Instant Multi-Channel Delivery:",
+    instantDeliveryTitle: "Instant Delivery:",
     instantDeliveryText:
-      "Your private credentials will be sent automatically to your registered email address and your G2G Order Chat immediately after payment is verified.",
-    communicationProtocolTitle: "Communication Protocol:",
+      "Your access credentials and configuration data will be dispatched directly to your primary inbox immediately after network confirmation.",
+    communicationProtocolTitle: "Secure Payment Partner:",
     communicationProtocolText:
-      "G2G is our primary secure payment and escrow partner. To ensure your account warranty remains valid, please do not mention this website or external URLs in the G2G chat.",
+      "Whop is our secure payment gateway partner. All transactions are processed through their encrypted checkout to protect your payment details.",
     supportTitle: "Technical Support:",
     supportText:
       "For all technical assistance or configuration help, please reply directly to this email. Our engineering team handles all support off-platform to maintain your privacy.",
@@ -241,7 +242,9 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     termsOfService: "Terms of Service",
     plainHello: "Hello",
     plainSecureReady:
-      "Thanks for choosing GiGa FliX. Your secure payment link is ready.",
+      "Thank you for your order. Your technical configuration invoice is ready for settlement. Please use our secure payment gateway partner below to finalize your payment and activate your digital asset allocation.",
+    plainCheckoutNote:
+      "Note: Please leave any optional description or note fields blank during checkout to ensure instant automated provisioning. Your access credentials and configuration data will be dispatched directly to your primary inbox immediately after network confirmation.",
     plainInvoiceReference: "Invoice reference",
     plainOpenPayment: "Open payment link",
     plainPlan: "Plan",
@@ -256,29 +259,29 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     invoiceReference: "Reference de facture",
     greeting: "Bonjour",
     thanksLine:
-      "Merci d avoir choisi GiGa FliX. Votre lien de paiement securise est pret.",
+      "Merci pour votre commande. Votre facture de configuration technique est prete a etre reglee. Veuillez utiliser notre partenaire de passerelle de paiement securise ci-dessous pour finaliser votre paiement et activer votre allocation d actifs numeriques.",
     billTo: "Facture a",
     paymentInstructions: "Instructions de paiement",
-    secureCheckoutLabel: "Lien de paiement securise :",
+    secureCheckoutLabel: "Note :",
     secureCheckoutText:
-      "Veuillez utiliser le bouton officiel de paiement escrow ci-dessous.",
-    ctaLabel: "Finaliser le paiement securise via G2G Escrow",
+      "Veuillez laisser vides tous les champs de description ou de note optionnels lors du paiement afin d assurer un provisionnement automatise instantane. Vos identifiants d acces et vos donnees de configuration seront envoyes directement dans votre boite de reception principale immediatement apres confirmation du reseau.",
+    ctaLabel: "Finaliser le paiement securise via Whop",
     fallbackLinkHelp:
       "Si le bouton ne s ouvre pas, copiez-collez cette URL dans votre navigateur :",
     stepGuideTitle: "Guide de paiement etape par etape",
     step1:
-      "Etape 1 : Cliquez sur le lien securise ci-dessus pour acceder a notre fiche produit officielle sur G2G.",
+      "Etape 1 : Cliquez sur le lien securise ci-dessus pour ouvrir notre page de paiement Whop officielle.",
     step2:
-      "Etape 2 : Connectez-vous (connexion sociale Google/Discord recommandee pour aller plus vite).",
+      "Etape 2 : Connectez-vous ou creez un compte Whop si vous y etes invite.",
     step3:
-      "Etape 3 : Finalisez votre achat avec le moyen de paiement de votre choix (PayPal, Apple Pay, Google Pay ou carte bancaire).",
+      "Etape 3 : Finalisez votre paiement avec le moyen de votre choix (PayPal, Apple Pay, Google Pay ou carte bancaire). Laissez vides les champs de description ou de note optionnels.",
     criticalNotes: "Notes critiques de livraison et de securite",
-    instantDeliveryTitle: "Livraison instantanee multi-canal :",
+    instantDeliveryTitle: "Livraison instantanee :",
     instantDeliveryText:
-      "Vos identifiants prives seront envoyes automatiquement a votre adresse email enregistree et dans votre chat de commande G2G des verification du paiement.",
-    communicationProtocolTitle: "Protocole de communication :",
+      "Vos identifiants d acces et vos donnees de configuration seront envoyes directement dans votre boite de reception principale immediatement apres confirmation du reseau.",
+    communicationProtocolTitle: "Partenaire de paiement securise :",
     communicationProtocolText:
-      "G2G est notre partenaire principal de paiement securise et d escrow. Pour conserver la validite de votre garantie, ne mentionnez pas ce site web ni des URL externes dans le chat G2G.",
+      "Whop est notre partenaire de passerelle de paiement securise. Toutes les transactions sont traitees via leur checkout chiffre pour proteger vos informations de paiement.",
     supportTitle: "Support technique :",
     supportText:
       "Pour toute assistance technique ou aide de configuration, repondez directement a cet email. Notre equipe d ingenierie gere le support hors plateforme pour proteger votre confidentialite.",
@@ -292,7 +295,9 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     termsOfService: "Conditions d utilisation",
     plainHello: "Bonjour",
     plainSecureReady:
-      "Merci d avoir choisi GiGa FliX. Votre lien de paiement securise est pret.",
+      "Merci pour votre commande. Votre facture de configuration technique est prete a etre reglee. Veuillez utiliser notre partenaire de passerelle de paiement securise ci-dessous pour finaliser votre paiement et activer votre allocation d actifs numeriques.",
+    plainCheckoutNote:
+      "Note : Veuillez laisser vides tous les champs de description ou de note optionnels lors du paiement afin d assurer un provisionnement automatise instantane. Vos identifiants d acces et vos donnees de configuration seront envoyes directement dans votre boite de reception principale immediatement apres confirmation du reseau.",
     plainInvoiceReference: "Reference de facture",
     plainOpenPayment: "Ouvrir le lien de paiement",
     plainPlan: "Forfait",
@@ -308,29 +313,29 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     invoiceReference: "Factuurreferentie",
     greeting: "Hallo",
     thanksLine:
-      "Bedankt dat je voor GiGa FliX hebt gekozen. Je beveiligde betaallink staat klaar.",
+      "Bedankt voor je bestelling. Je technische configuratiefactuur is klaar voor betaling. Gebruik onze beveiligde betaalgateway-partner hieronder om je betaling af te ronden en je digitale asset-toewijzing te activeren.",
     billTo: "Factuur voor",
     paymentInstructions: "Betaalinstructies",
-    secureCheckoutLabel: "De beveiligde afrekenlink:",
+    secureCheckoutLabel: "Opmerking:",
     secureCheckoutText:
-      "Gebruik de officiele escrow-betaalknop hieronder.",
-    ctaLabel: "Voltooi beveiligde betaling via G2G Escrow",
+      "Laat optionele beschrijvings- of notitievelden leeg tijdens het afrekenen om directe geautomatiseerde levering te garanderen. Je toegangsgegevens en configuratiedata worden direct naar je primaire inbox gestuurd zodra de betaling is bevestigd.",
+    ctaLabel: "Voltooi beveiligde betaling via Whop",
     fallbackLinkHelp:
       "Als de knop niet opent, kopieer en plak deze URL in je browser:",
     stepGuideTitle: "Stapsgewijze betaalgids",
     step1:
-      "Stap 1: Klik op de beveiligde link hierboven om naar onze officiele productpagina op G2G te gaan.",
+      "Stap 1: Klik op de beveiligde link hierboven om onze officiële Whop-checkoutpagina te openen.",
     step2:
-      "Stap 2: Log in (social login via Google/Discord wordt aanbevolen voor snelheid).",
+      "Stap 2: Log in of maak een Whop-account aan indien gevraagd.",
     step3:
-      "Stap 3: Rond je aankoop af met je voorkeursmethode (PayPal, Apple Pay, Google Pay of creditcard).",
+      "Stap 3: Rond je betaling af met je voorkeursmethode (PayPal, Apple Pay, Google Pay of creditcard). Laat optionele beschrijvings- of notitievelden leeg.",
     criticalNotes: "Belangrijke leverings- en beveiligingsnotities",
-    instantDeliveryTitle: "Directe levering via meerdere kanalen:",
+    instantDeliveryTitle: "Directe levering:",
     instantDeliveryText:
-      "Je privegegevens worden automatisch verzonden naar je geregistreerde e-mailadres en je G2G-bestelchat zodra de betaling is bevestigd.",
-    communicationProtocolTitle: "Communicatieprotocol:",
+      "Je toegangsgegevens en configuratiedata worden direct naar je primaire inbox gestuurd zodra de betaling is bevestigd.",
+    communicationProtocolTitle: "Beveiligde betaalpartner:",
     communicationProtocolText:
-      "G2G is onze primaire veilige betaal- en escrowpartner. Om je accountgarantie geldig te houden, vermeld deze website of externe URL's niet in de G2G-chat.",
+      "Whop is onze beveiligde betaalgateway-partner. Alle transacties worden verwerkt via hun versleutelde checkout om je betaalgegevens te beschermen.",
     supportTitle: "Technische ondersteuning:",
     supportText:
       "Voor alle technische hulp of configuratiehulp kun je direct op deze e-mail reageren. Ons engineeringteam behandelt ondersteuning buiten het platform om je privacy te beschermen.",
@@ -344,7 +349,9 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     termsOfService: "Servicevoorwaarden",
     plainHello: "Hallo",
     plainSecureReady:
-      "Bedankt dat je voor GiGa FliX hebt gekozen. Je beveiligde betaallink staat klaar.",
+      "Bedankt voor je bestelling. Je technische configuratiefactuur is klaar voor betaling. Gebruik onze beveiligde betaalgateway-partner hieronder om je betaling af te ronden en je digitale asset-toewijzing te activeren.",
+    plainCheckoutNote:
+      "Opmerking: Laat optionele beschrijvings- of notitievelden leeg tijdens het afrekenen om directe geautomatiseerde levering te garanderen. Je toegangsgegevens en configuratiedata worden direct naar je primaire inbox gestuurd zodra de betaling is bevestigd.",
     plainInvoiceReference: "Factuurreferentie",
     plainOpenPayment: "Open betaallink",
     plainPlan: "Plan",
@@ -360,29 +367,29 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     invoiceReference: "Rechnungsreferenz",
     greeting: "Hallo",
     thanksLine:
-      "Danke, dass Sie GiGa FliX gewaehlt haben. Ihr sicherer Zahlungslink ist bereit.",
+      "Vielen Dank fuer Ihre Bestellung. Ihre technische Konfigurationsrechnung ist zur Zahlung bereit. Bitte nutzen Sie unseren sicheren Zahlungsgateway-Partner unten, um Ihre Zahlung abzuschliessen und Ihre digitale Asset-Zuweisung zu aktivieren.",
     billTo: "Rechnung an",
     paymentInstructions: "Zahlungsanweisungen",
-    secureCheckoutLabel: "Der sichere Checkout-Link:",
+    secureCheckoutLabel: "Hinweis:",
     secureCheckoutText:
-      "Bitte verwenden Sie den offiziellen Escrow-Checkout-Button unten.",
-    ctaLabel: "Sichere Zahlung ueber G2G Escrow abschliessen",
+      "Bitte lassen Sie optionale Beschreibungs- oder Notizfelder beim Checkout leer, um eine sofortige automatische Bereitstellung zu gewaehrleisten. Ihre Zugangsdaten und Konfigurationsdaten werden direkt nach Netzwerkbestaetigung an Ihren primaeren Posteingang gesendet.",
+    ctaLabel: "Sichere Zahlung ueber Whop abschliessen",
     fallbackLinkHelp:
       "Wenn der Button nicht geoeffnet wird, kopieren Sie diese URL in Ihren Browser:",
     stepGuideTitle: "Schritt-fuer-Schritt Zahlungsanleitung",
     step1:
-      "Schritt 1: Klicken Sie auf den sicheren Link oben, um unsere offizielle Produktseite auf G2G zu oeffnen.",
+      "Schritt 1: Klicken Sie auf den sicheren Link oben, um unsere offizielle Whop-Checkout-Seite zu oeffnen.",
     step2:
-      "Schritt 2: Melden Sie sich an (Social Login ueber Google/Discord wird fuer Schnelligkeit empfohlen).",
+      "Schritt 2: Melden Sie sich an oder erstellen Sie ein Whop-Konto, falls Sie dazu aufgefordert werden.",
     step3:
-      "Schritt 3: Schliessen Sie den Kauf mit Ihrer bevorzugten Methode ab (PayPal, Apple Pay, Google Pay oder Kreditkarte).",
+      "Schritt 3: Schliessen Sie die Zahlung mit Ihrer bevorzugten Methode ab (PayPal, Apple Pay, Google Pay oder Kreditkarte). Lassen Sie optionale Beschreibungs- oder Notizfelder leer.",
     criticalNotes: "Wichtige Liefer- und Sicherheitshinweise",
-    instantDeliveryTitle: "Sofortige Mehrkanal-Zustellung:",
+    instantDeliveryTitle: "Sofortige Zustellung:",
     instantDeliveryText:
-      "Ihre privaten Zugangsdaten werden automatisch an Ihre registrierte E-Mail-Adresse und Ihren G2G-Bestellchat gesendet, sobald die Zahlung bestaetigt wurde.",
-    communicationProtocolTitle: "Kommunikationsprotokoll:",
+      "Ihre Zugangsdaten und Konfigurationsdaten werden direkt nach Netzwerkbestaetigung an Ihren primaeren Posteingang gesendet.",
+    communicationProtocolTitle: "Sicherer Zahlungspartner:",
     communicationProtocolText:
-      "G2G ist unser primaerer sicherer Zahlungs- und Escrow-Partner. Damit Ihre Kontogarantie gueltig bleibt, nennen Sie bitte diese Website oder externe URLs nicht im G2G-Chat.",
+      "Whop ist unser sicherer Zahlungsgateway-Partner. Alle Transaktionen werden ueber deren verschluesselten Checkout verarbeitet, um Ihre Zahlungsdaten zu schuetzen.",
     supportTitle: "Technischer Support:",
     supportText:
       "Bei technischer Hilfe oder Konfigurationshilfe antworten Sie bitte direkt auf diese E-Mail. Unser Engineering-Team bearbeitet den Support ausserhalb der Plattform zum Schutz Ihrer Privatsphaere.",
@@ -396,7 +403,9 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     termsOfService: "Nutzungsbedingungen",
     plainHello: "Hallo",
     plainSecureReady:
-      "Danke, dass Sie GiGa FliX gewaehlt haben. Ihr sicherer Zahlungslink ist bereit.",
+      "Vielen Dank fuer Ihre Bestellung. Ihre technische Konfigurationsrechnung ist zur Zahlung bereit. Bitte nutzen Sie unseren sicheren Zahlungsgateway-Partner unten, um Ihre Zahlung abzuschliessen und Ihre digitale Asset-Zuweisung zu aktivieren.",
+    plainCheckoutNote:
+      "Hinweis: Bitte lassen Sie optionale Beschreibungs- oder Notizfelder beim Checkout leer, um eine sofortige automatische Bereitstellung zu gewaehrleisten. Ihre Zugangsdaten und Konfigurationsdaten werden direkt nach Netzwerkbestaetigung an Ihren primaeren Posteingang gesendet.",
     plainInvoiceReference: "Rechnungsreferenz",
     plainOpenPayment: "Zahlungslink oeffnen",
     plainPlan: "Tarif",
@@ -412,29 +421,29 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     invoiceReference: "Riferimento fattura",
     greeting: "Ciao",
     thanksLine:
-      "Grazie per aver scelto GiGa FliX. Il tuo link di pagamento sicuro e pronto.",
+      "Grazie per il tuo ordine. La tua fattura di configurazione tecnica e pronta per il pagamento. Utilizza il nostro partner gateway di pagamento sicuro qui sotto per finalizzare il pagamento e attivare l allocazione dei tuoi asset digitali.",
     billTo: "Fatturato a",
     paymentInstructions: "Istruzioni di pagamento",
-    secureCheckoutLabel: "Il link di pagamento sicuro:",
+    secureCheckoutLabel: "Nota:",
     secureCheckoutText:
-      "Usa il pulsante ufficiale di pagamento escrow qui sotto.",
-    ctaLabel: "Completa il pagamento sicuro tramite G2G Escrow",
+      "Lascia vuoti eventuali campi opzionali di descrizione o note durante il checkout per garantire un provisioning automatico istantaneo. Le tue credenziali di accesso e i dati di configurazione saranno inviati direttamente alla tua casella di posta principale subito dopo la conferma di rete.",
+    ctaLabel: "Completa il pagamento sicuro tramite Whop",
     fallbackLinkHelp:
       "Se il pulsante non si apre, copia e incolla questo URL nel browser:",
     stepGuideTitle: "Guida al pagamento passo dopo passo",
     step1:
-      "Passo 1: Clicca sul link sicuro qui sopra per visitare la nostra inserzione ufficiale su G2G.",
+      "Passo 1: Clicca sul link sicuro qui sopra per aprire la nostra pagina di checkout Whop ufficiale.",
     step2:
-      "Passo 2: Accedi (login social con Google/Discord consigliato per velocita).",
+      "Passo 2: Accedi o crea un account Whop se richiesto.",
     step3:
-      "Passo 3: Completa l acquisto con il metodo che preferisci (PayPal, Apple Pay, Google Pay o carta di credito).",
+      "Passo 3: Completa il pagamento con il metodo che preferisci (PayPal, Apple Pay, Google Pay o carta di credito). Lascia vuoti i campi opzionali di descrizione o note.",
     criticalNotes: "Note critiche su consegna e sicurezza",
-    instantDeliveryTitle: "Consegna istantanea multi-canale:",
+    instantDeliveryTitle: "Consegna istantanea:",
     instantDeliveryText:
-      "Le tue credenziali private verranno inviate automaticamente al tuo indirizzo email registrato e alla chat ordine G2G subito dopo la verifica del pagamento.",
-    communicationProtocolTitle: "Protocollo di comunicazione:",
+      "Le tue credenziali di accesso e i dati di configurazione saranno inviati direttamente alla tua casella di posta principale subito dopo la conferma di rete.",
+    communicationProtocolTitle: "Partner di pagamento sicuro:",
     communicationProtocolText:
-      "G2G e il nostro partner principale per pagamenti sicuri ed escrow. Per mantenere valida la garanzia dell account, non menzionare questo sito o URL esterni nella chat G2G.",
+      "Whop e il nostro partner gateway di pagamento sicuro. Tutte le transazioni vengono elaborate tramite il loro checkout crittografato per proteggere i tuoi dati di pagamento.",
     supportTitle: "Supporto tecnico:",
     supportText:
       "Per assistenza tecnica o supporto di configurazione, rispondi direttamente a questa email. Il nostro team di ingegneria gestisce il supporto fuori piattaforma per proteggere la tua privacy.",
@@ -448,7 +457,9 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     termsOfService: "Termini di servizio",
     plainHello: "Ciao",
     plainSecureReady:
-      "Grazie per aver scelto GiGa FliX. Il tuo link di pagamento sicuro e pronto.",
+      "Grazie per il tuo ordine. La tua fattura di configurazione tecnica e pronta per il pagamento. Utilizza il nostro partner gateway di pagamento sicuro qui sotto per finalizzare il pagamento e attivare l allocazione dei tuoi asset digitali.",
+    plainCheckoutNote:
+      "Nota: Lascia vuoti eventuali campi opzionali di descrizione o note durante il checkout per garantire un provisioning automatico istantaneo. Le tue credenziali di accesso e i dati di configurazione saranno inviati direttamente alla tua casella di posta principale subito dopo la conferma di rete.",
     plainInvoiceReference: "Riferimento fattura",
     plainOpenPayment: "Apri link di pagamento",
     plainPlan: "Piano",
@@ -464,29 +475,29 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     invoiceReference: "Referencia da fatura",
     greeting: "Ola",
     thanksLine:
-      "Obrigado por escolher a GiGa FliX. Seu link de pagamento seguro esta pronto.",
+      "Obrigado pelo seu pedido. Sua fatura de configuracao tecnica esta pronta para pagamento. Use nosso parceiro de gateway de pagamento seguro abaixo para finalizar seu pagamento e ativar sua alocacao de ativos digitais.",
     billTo: "Faturar para",
     paymentInstructions: "Instrucoes de pagamento",
-    secureCheckoutLabel: "Link de checkout seguro:",
+    secureCheckoutLabel: "Nota:",
     secureCheckoutText:
-      "Use o botao oficial de pagamento escrow abaixo.",
-    ctaLabel: "Concluir pagamento seguro via G2G Escrow",
+      "Deixe em branco quaisquer campos opcionais de descricao ou observacao durante o checkout para garantir provisionamento automatizado instantaneo. Suas credenciais de acesso e dados de configuracao serao enviados diretamente para sua caixa de entrada principal imediatamente apos a confirmacao da rede.",
+    ctaLabel: "Concluir pagamento seguro via Whop",
     fallbackLinkHelp:
       "Se o botao nao abrir, copie e cole esta URL no seu navegador:",
     stepGuideTitle: "Guia de pagamento passo a passo",
     step1:
-      "Passo 1: Clique no link seguro acima para visitar nossa listagem oficial de produto na G2G.",
+      "Passo 1: Clique no link seguro acima para abrir nossa pagina oficial de checkout Whop.",
     step2:
-      "Passo 2: Faca login (login social via Google/Discord e recomendado para rapidez).",
+      "Passo 2: Faca login ou crie uma conta Whop se solicitado.",
     step3:
-      "Passo 3: Conclua sua compra usando seu metodo preferido (PayPal, Apple Pay, Google Pay ou cartao de credito).",
+      "Passo 3: Conclua seu pagamento usando seu metodo preferido (PayPal, Apple Pay, Google Pay ou cartao de credito). Deixe em branco campos opcionais de descricao ou observacao.",
     criticalNotes: "Notas criticas de entrega e seguranca",
-    instantDeliveryTitle: "Entrega instantanea em varios canais:",
+    instantDeliveryTitle: "Entrega instantanea:",
     instantDeliveryText:
-      "Suas credenciais privadas serao enviadas automaticamente para seu email registrado e para o chat do pedido na G2G assim que o pagamento for verificado.",
-    communicationProtocolTitle: "Protocolo de comunicacao:",
+      "Suas credenciais de acesso e dados de configuracao serao enviados diretamente para sua caixa de entrada principal imediatamente apos a confirmacao da rede.",
+    communicationProtocolTitle: "Parceiro de pagamento seguro:",
     communicationProtocolText:
-      "A G2G e nosso principal parceiro de pagamento seguro e escrow. Para manter a garantia da sua conta valida, nao mencione este site ou URLs externas no chat da G2G.",
+      "A Whop e nossa parceira de gateway de pagamento seguro. Todas as transacoes sao processadas por meio do checkout criptografado para proteger seus dados de pagamento.",
     supportTitle: "Suporte tecnico:",
     supportText:
       "Para ajuda tecnica ou configuracao, responda diretamente a este email. Nossa equipe de engenharia presta suporte fora da plataforma para manter sua privacidade.",
@@ -500,7 +511,9 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     termsOfService: "Termos de servico",
     plainHello: "Ola",
     plainSecureReady:
-      "Obrigado por escolher a GiGa FliX. Seu link de pagamento seguro esta pronto.",
+      "Obrigado pelo seu pedido. Sua fatura de configuracao tecnica esta pronta para pagamento. Use nosso parceiro de gateway de pagamento seguro abaixo para finalizar seu pagamento e ativar sua alocacao de ativos digitais.",
+    plainCheckoutNote:
+      "Nota: Deixe em branco quaisquer campos opcionais de descricao ou observacao durante o checkout para garantir provisionamento automatizado instantaneo. Suas credenciais de acesso e dados de configuracao serao enviados diretamente para sua caixa de entrada principal imediatamente apos a confirmacao da rede.",
     plainInvoiceReference: "Referencia da fatura",
     plainOpenPayment: "Abrir link de pagamento",
     plainPlan: "Plano",
@@ -516,29 +529,29 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     invoiceReference: "Referencia de factura",
     greeting: "Hola",
     thanksLine:
-      "Gracias por elegir GiGa FliX. Tu enlace de pago seguro esta listo.",
+      "Gracias por tu pedido. Tu factura de configuracion tecnica esta lista para el pago. Utiliza nuestro socio de pasarela de pago seguro a continuacion para finalizar tu pago y activar tu asignacion de activos digitales.",
     billTo: "Facturar a",
     paymentInstructions: "Instrucciones de pago",
-    secureCheckoutLabel: "El enlace de pago seguro:",
+    secureCheckoutLabel: "Nota:",
     secureCheckoutText:
-      "Utiliza el boton oficial de pago escrow a continuacion.",
-    ctaLabel: "Completar pago seguro por G2G Escrow",
+      "Deja en blanco cualquier campo opcional de descripcion o nota durante el checkout para garantizar un aprovisionamiento automatizado instantaneo. Tus credenciales de acceso y datos de configuracion se enviaran directamente a tu bandeja de entrada principal inmediatamente despues de la confirmacion de red.",
+    ctaLabel: "Completar pago seguro por Whop",
     fallbackLinkHelp:
       "Si el boton no se abre, copia y pega esta URL en tu navegador:",
     stepGuideTitle: "Guia de pago paso a paso",
     step1:
-      "Paso 1: Haz clic en el enlace seguro de arriba para visitar nuestro listado oficial en G2G.",
+      "Paso 1: Haz clic en el enlace seguro de arriba para abrir nuestra pagina oficial de checkout de Whop.",
     step2:
-      "Paso 2: Inicia sesion (se recomienda inicio social con Google/Discord para mayor rapidez).",
+      "Paso 2: Inicia sesion o crea una cuenta de Whop si se te solicita.",
     step3:
-      "Paso 3: Completa tu compra con tu metodo preferido (PayPal, Apple Pay, Google Pay o tarjeta).",
+      "Paso 3: Completa tu pago con tu metodo preferido (PayPal, Apple Pay, Google Pay o tarjeta). Deja en blanco los campos opcionales de descripcion o nota.",
     criticalNotes: "Notas criticas de entrega y seguridad",
-    instantDeliveryTitle: "Entrega instantanea multicanal:",
+    instantDeliveryTitle: "Entrega instantanea:",
     instantDeliveryText:
-      "Tus credenciales privadas se enviaran automaticamente a tu correo registrado y al chat de pedido de G2G justo despues de verificar el pago.",
-    communicationProtocolTitle: "Protocolo de comunicacion:",
+      "Tus credenciales de acceso y datos de configuracion se enviaran directamente a tu bandeja de entrada principal inmediatamente despues de la confirmacion de red.",
+    communicationProtocolTitle: "Socio de pago seguro:",
     communicationProtocolText:
-      "G2G es nuestro socio principal de pago seguro y escrow. Para mantener valida la garantia de tu cuenta, no menciones este sitio web ni URLs externas en el chat de G2G.",
+      "Whop es nuestro socio de pasarela de pago seguro. Todas las transacciones se procesan a traves de su checkout cifrado para proteger tus datos de pago.",
     supportTitle: "Soporte tecnico:",
     supportText:
       "Para cualquier ayuda tecnica o de configuracion, responde directamente a este correo. Nuestro equipo de ingenieria gestiona el soporte fuera de la plataforma para proteger tu privacidad.",
@@ -552,7 +565,9 @@ const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
     termsOfService: "Terminos del servicio",
     plainHello: "Hola",
     plainSecureReady:
-      "Gracias por elegir GiGa FliX. Tu enlace de pago seguro esta listo.",
+      "Gracias por tu pedido. Tu factura de configuracion tecnica esta lista para el pago. Utiliza nuestro socio de pasarela de pago seguro a continuacion para finalizar tu pago y activar tu asignacion de activos digitales.",
+    plainCheckoutNote:
+      "Nota: Deja en blanco cualquier campo opcional de descripcion o nota durante el checkout para garantizar un aprovisionamiento automatizado instantaneo. Tus credenciales de acceso y datos de configuracion se enviaran directamente a tu bandeja de entrada principal inmediatamente despues de la confirmacion de red.",
     plainInvoiceReference: "Referencia de factura",
     plainOpenPayment: "Abrir enlace de pago",
     plainPlan: "Plan",
@@ -825,6 +840,8 @@ export function buildBuyerOrderEmailText(
   return `${t.plainHello} ${p.fullName},
 
 ${t.plainSecureReady}
+
+${t.plainCheckoutNote}
 
 ${t.plainInvoiceReference}: ${p.invoiceRef}
 
