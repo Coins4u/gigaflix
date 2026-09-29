@@ -1,10 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useId, useState } from "react";
+import type { CurrencyCode } from "../../lib/sellapp-config";
+import { resolveOrderPrices } from "../../lib/order-pricing";
 import {
-  getSellAppLinkForTier,
-  type CurrencyCode,
-} from "../../lib/sellapp-config";
+  isSelectablePaymentMethod,
+  PAYMENT_METHOD_LABELS,
+  type SelectablePaymentMethod,
+} from "../../lib/payment-method";
 
 const EUROPE_COUNTRIES = [
   "Albania",
@@ -99,6 +102,7 @@ const AMERICAS_COUNTRIES = [
 ];
 
 type Props = {
+  /** Kept for parent compatibility; payment is handled by email follow-up. */
   currency: CurrencyCode;
 };
 
@@ -108,22 +112,24 @@ type LeadState =
       open: true;
       tierIndex: number;
       tierName: string;
-      sellAppLink: string;
       /** From .plan-price (e.g. "€14.32 /mo") for the email line item */
       priceDisplay: string;
     };
 
-export default function OrderLeadModal({ currency }: Props) {
+export default function OrderLeadModal(_props: Props) {
   const titleId = useId();
   const [lead, setLead] = useState<LeadState>({ open: false });
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"" | SelectablePaymentMethod>("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{
     fullName: string;
     email: string;
+    discountedPriceDisplay: string | null;
+    paymentMethodLabel: string;
   } | null>(null);
 
   const close = useCallback(() => {
@@ -133,6 +139,7 @@ export default function OrderLeadModal({ currency }: Props) {
     setFullName("");
     setEmail("");
     setCountry("");
+    setPaymentMethod("");
   }, []);
 
   useEffect(() => {
@@ -159,33 +166,21 @@ export default function OrderLeadModal({ currency }: Props) {
       const priceEl = card?.querySelector(".plan-price");
       const priceDisplay =
         priceEl?.textContent?.replace(/\s+/g, " ").trim() ?? "";
-      const sellAppLink = getSellAppLinkForTier(index, currency);
-      if (!sellAppLink) {
-        setError("This plan is not available. Please try another.");
-        setLead({
-          open: true,
-          tierIndex: index,
-          tierName,
-          sellAppLink: "",
-          priceDisplay,
-        });
-        return;
-      }
 
       setError(null);
       setSuccess(null);
+      setPaymentMethod("");
       setLead({
         open: true,
         tierIndex: index,
         tierName,
-        sellAppLink,
         priceDisplay,
       });
     };
 
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
-  }, [currency]);
+  }, []);
 
   useEffect(() => {
     if (!lead.open) return;
@@ -203,10 +198,14 @@ export default function OrderLeadModal({ currency }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!lead.open || !sellAppLinkReady(lead)) return;
+    if (!lead.open) return;
     const countryValue = country.trim();
     if (!countryValue) {
       setError("Please enter your country.");
+      return;
+    }
+    if (!isSelectablePaymentMethod(paymentMethod)) {
+      setError("Please select a payment method.");
       return;
     }
     setSubmitting(true);
@@ -220,20 +219,27 @@ export default function OrderLeadModal({ currency }: Props) {
           email: email.trim(),
           country: countryValue,
           tierName: lead.tierName,
-          sellAppLink: lead.sellAppLink,
           priceDisplay: lead.priceDisplay,
+          paymentMethod,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
         error?: string;
+        discountedPriceDisplay?: string;
       };
       if (!res.ok) {
         setError(data.error ?? "Something went wrong. Please try again.");
         return;
       }
+      const localPrices = resolveOrderPrices(lead.priceDisplay);
       setSuccess({
         fullName: fullName.trim(),
         email: email.trim(),
+        discountedPriceDisplay:
+          data.discountedPriceDisplay ??
+          localPrices?.discountedDisplay ??
+          null,
+        paymentMethodLabel: PAYMENT_METHOD_LABELS[paymentMethod],
       });
     } catch {
       setError("Network error. Please try again.");
@@ -273,9 +279,13 @@ export default function OrderLeadModal({ currency }: Props) {
               Thank you
             </h2>
             <p>
-              Thank you, {success.fullName}. We have sent a secure payment link
-              to {success.email}. Please check your inbox (and spam folder) to
-              finalize your purchase.
+              Thank you, {success.fullName}. We emailed {success.email} with
+              your {success.paymentMethodLabel.toLowerCase()} payment details
+              link
+              {success.discountedPriceDisplay
+                ? ` — your final price with 15% off is ${success.discountedPriceDisplay}`
+                : " and a 15% discount"}
+              . Open that email and use the button to complete payment.
             </p>
             <button
               type="button"
@@ -294,85 +304,98 @@ export default function OrderLeadModal({ currency }: Props) {
               Plan: <strong>{lead.tierName}</strong>
             </p>
 
-            {!sellAppLinkReady(lead) && error && (
-              <p className="order-lead-modal__error">{error}</p>
-            )}
-
-            {sellAppLinkReady(lead) && (
-              <form onSubmit={handleSubmit} className="order-lead-form">
-                <label className="order-lead-form__label">
-                  Full Name
-                  <input
-                    type="text"
-                    name="fullName"
-                    autoComplete="name"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="order-lead-form__input"
-                  />
-                </label>
-                <label className="order-lead-form__label">
-                  Correct Email Address
-                  <input
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="order-lead-form__input"
-                  />
-                </label>
-                <label className="order-lead-form__label">
-                  Country
-                  <select
-                    name="country"
-                    required
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    className="order-lead-form__input"
-                  >
-                    <option value="">Select country (Europe + Americas)</option>
-                    <optgroup label="Europe">
-                      {EUROPE_COUNTRIES.map((c) => (
-                        <option key={`eu-${c}`} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Americas">
-                      {AMERICAS_COUNTRIES.map((c) => (
-                        <option key={`am-${c}`} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </optgroup>
-                  </select>
-                </label>
-                {error && (
-                  <p className="order-lead-modal__error" role="alert">
-                    {error}
-                  </p>
-                )}
-                <button
-                  type="submit"
-                  className="btn btn-primary order-lead-form__submit"
-                  disabled={submitting}
+            <form onSubmit={handleSubmit} className="order-lead-form">
+              <label className="order-lead-form__label">
+                Full Name
+                <input
+                  type="text"
+                  name="fullName"
+                  autoComplete="name"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="order-lead-form__input"
+                />
+              </label>
+              <label className="order-lead-form__label">
+                Correct Email Address
+                <input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="order-lead-form__input"
+                />
+              </label>
+              <label className="order-lead-form__label">
+                Country
+                <select
+                  name="country"
+                  required
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="order-lead-form__input"
                 >
-                  {submitting ? "Sending…" : "Get Secure Payment Link"}
-                </button>
-              </form>
-            )}
+                  <option value="">Select country (Europe + Americas)</option>
+                  <optgroup label="Europe">
+                    {EUROPE_COUNTRIES.map((c) => (
+                      <option key={`eu-${c}`} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Americas">
+                    {AMERICAS_COUNTRIES.map((c) => (
+                      <option key={`am-${c}`} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+              </label>
+              <label className="order-lead-form__label">
+                Payment Method
+                <select
+                  name="paymentMethod"
+                  required
+                  value={paymentMethod}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPaymentMethod(
+                      isSelectablePaymentMethod(value) ? value : "",
+                    );
+                  }}
+                  className="order-lead-form__input order-lead-form__input--payment"
+                >
+                  <option value="">Select payment method</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="cryptocurrency">Cryptocurrency</option>
+                  <option value="credit_card" disabled>
+                    Credit Card — Coming Soon
+                  </option>
+                  <option value="paypal" disabled>
+                    PayPal — Coming Soon
+                  </option>
+                </select>
+              </label>
+              {error && (
+                <p className="order-lead-modal__error" role="alert">
+                  {error}
+                </p>
+              )}
+              <button
+                type="submit"
+                className="btn btn-primary order-lead-form__submit"
+                disabled={submitting}
+              >
+                {submitting ? "Sending…" : "Submit Order"}
+              </button>
+            </form>
           </>
         )}
       </div>
     </div>
   );
-}
-
-function sellAppLinkReady(
-  lead: LeadState,
-): lead is Extract<LeadState, { open: true }> & { sellAppLink: string } {
-  return lead.open === true && Boolean(lead.sellAppLink);
 }

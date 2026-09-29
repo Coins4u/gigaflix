@@ -7,15 +7,21 @@ import {
   generateInvoiceRef,
   resolveBuyerLocaleFromCountry,
 } from "../../../lib/buyer-order-email-html";
+import { resolveOrderPrices } from "../../../lib/order-pricing";
+import {
+  getPaymentDetailsUrl,
+  isSelectablePaymentMethod,
+  PAYMENT_METHOD_LABELS,
+} from "../../../lib/payment-method";
 
 type Body = {
   fullName?: string;
   email?: string;
   country?: string;
   tierName?: string;
-  sellAppLink?: string;
   /** Display price from the pricing card, e.g. "€14.32 /mo" */
   priceDisplay?: string;
+  paymentMethod?: string;
 };
 
 function buildTransporter() {
@@ -50,22 +56,38 @@ export async function POST(request: Request) {
   const country = typeof body.country === "string" ? body.country.trim() : "";
   const tierName =
     typeof body.tierName === "string" ? body.tierName.trim() : "";
-  const sellAppLink =
-    typeof body.sellAppLink === "string" ? body.sellAppLink.trim() : "";
   const priceDisplay =
     typeof body.priceDisplay === "string" ? body.priceDisplay.trim() : "";
+  const paymentMethodRaw =
+    typeof body.paymentMethod === "string" ? body.paymentMethod.trim() : "";
 
-  if (!fullName || !email || !country || !tierName || !sellAppLink) {
+  if (!fullName || !email || !country || !tierName || !paymentMethodRaw) {
     return NextResponse.json(
       { error: "Missing required fields" },
       { status: 400 },
     );
   }
 
+  if (!isSelectablePaymentMethod(paymentMethodRaw)) {
+    return NextResponse.json(
+      { error: "Invalid payment method" },
+      { status: 400 },
+    );
+  }
+  const paymentMethod = paymentMethodRaw;
+  const paymentMethodLabel = PAYMENT_METHOD_LABELS[paymentMethod];
+
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   if (!emailOk) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
   }
+
+  const prices = resolveOrderPrices(priceDisplay);
+  const listedPriceDisplay = prices?.listedDisplay ?? (priceDisplay || "—");
+  const discountedPriceDisplay = prices?.discountedDisplay ?? "—";
+  const discountedAmount =
+    prices?.discountedPrice ??
+    (parseFloat(discountedPriceDisplay.replace(/[^\d.]/g, "")) || 0);
 
   const adminEmail = process.env.ADMIN_EMAIL?.trim();
   const from = (process.env.SMTP_FROM || process.env.SMTP_USER)?.trim();
@@ -94,6 +116,12 @@ export async function POST(request: Request) {
     process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://gigaflixiptv.com";
   const invoiceRef = generateInvoiceRef();
   const locale = resolveBuyerLocaleFromCountry(country);
+  const paymentDetailsUrl = getPaymentDetailsUrl(paymentMethod, {
+    siteOrigin,
+    plan: tierName,
+    amount: discountedAmount,
+    invoiceRef,
+  });
 
   const buyerSubject = getBuyerEmailSubject(tierName, invoiceRef, locale);
   const buyerHtml = buildBuyerOrderEmailHtml({
@@ -101,20 +129,24 @@ export async function POST(request: Request) {
     email,
     country,
     tierName,
-    sellAppLink,
-    priceDisplay: priceDisplay || "—",
+    listedPriceDisplay,
+    discountedPriceDisplay,
     invoiceRef,
     siteOrigin,
     locale,
+    paymentMethod,
+    paymentDetailsUrl,
   });
 
   const buyerText = buildBuyerOrderEmailText({
     fullName,
     tierName,
-    priceDisplay: priceDisplay || "—",
-    sellAppLink,
+    listedPriceDisplay,
+    discountedPriceDisplay,
     invoiceRef,
     locale,
+    paymentMethod,
+    paymentDetailsUrl,
   });
 
   const adminSubject = `NEW FORM FILLED: ${tierName} - ${fullName}`;
@@ -123,7 +155,11 @@ Name: ${fullName}
 Email: ${email}
 Country: ${country}
 Tier Selected: ${tierName}
-Status: Secure link has been sent to the buyer.`;
+Payment Method: ${paymentMethodLabel}
+Listed price: ${listedPriceDisplay}
+Discounted price (15% off bank transfer / crypto): ${discountedPriceDisplay}
+Status: Payment details follow-up email sent to the buyer (${paymentMethodLabel}).
+Payment page: ${paymentDetailsUrl}`;
 
   try {
     await Promise.all([
@@ -149,5 +185,10 @@ Status: Secure link has been sent to the buyer.`;
     );
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+    ok: true,
+    listedPriceDisplay,
+    discountedPriceDisplay,
+    paymentMethod,
+  });
 }

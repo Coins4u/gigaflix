@@ -1,8 +1,12 @@
 /**
- * Modern invoice-style HTML for the buyer “secure checkout” email.
+ * Buyer order follow-up email: bank transfer + cryptocurrency (15% off).
+ * Includes a conditional payment-details button based on the method chosen
+ * in the order form (placeholder URLs until those pages are live).
  * Table layout + inline styles for broad client support.
  * Colors align with app/globals.css :root (GiGa FliX brand).
  */
+
+import type { SelectablePaymentMethod } from "./payment-method";
 
 /** Mirrors :root in globals.css — keep in sync when rebranding */
 const C = {
@@ -13,8 +17,6 @@ const C = {
   text: "#111111",
   textGray: "#4b5563",
   border: "#e5e7eb",
-  ctaText: "#ffffff",
-  /** Soft tint of primary for notice box */
   alertBg: "#f3f1ff",
   alertBorder: "#c7bfff",
   headerSub: "rgba(255,255,255,0.92)",
@@ -24,8 +26,7 @@ const C = {
 
 /**
  * Dark mode for clients that honor `prefers-color-scheme` + embedded `<style>`.
- * Scoped so we do **not** blanket-paint every `td` (that washed out the header,
- * CTA, and callouts). Uses `!important` to override inline styles where allowed.
+ * Scoped so we do **not** blanket-paint every `td`.
  */
 const EMAIL_DARK_MODE_STYLE = `
 :root { color-scheme: light dark; }
@@ -45,23 +46,18 @@ const EMAIL_DARK_MODE_STYLE = `
   table.gf-email-card td.gf-email-footer {
     border-top: 1px solid #3d3d4f !important;
   }
-
-  /* Header row: keep gradient + light type (do not inherit “body” colors) */
   table.gf-email-card td.gf-email-header p {
     color: rgba(255, 255, 255, 0.94) !important;
   }
   table.gf-email-card td.gf-email-header strong {
     color: #ffffff !important;
   }
-
-  /* Opening lines only (not nested module copy) */
   table.gf-email-card td.gf-email-main > p:not(.gf-email-muted) {
     color: #e2e2e8 !important;
   }
   table.gf-email-card td.gf-email-main > p:not(.gf-email-muted) strong {
     color: #ffffff !important;
   }
-
   table.gf-email-card .gf-email-muted {
     color: #9b9ba8 !important;
   }
@@ -74,11 +70,6 @@ const EMAIL_DARK_MODE_STYLE = `
   table.gf-email-card .gf-email-price {
     color: #e9d5ff !important;
   }
-  table.gf-email-card .gf-email-critical {
-    color: #fb7185 !important;
-  }
-
-  /* Inset panels (bill-to, steps, line item) */
   table.gf-email-card .gf-email-surface {
     background-color: #1f1f28 !important;
     border-color: #4b4b5e !important;
@@ -96,8 +87,6 @@ const EMAIL_DARK_MODE_STYLE = `
   table.gf-email-card .gf-email-surface strong {
     color: #ffffff !important;
   }
-
-  /* Secure checkout notice */
   table.gf-email-card .gf-email-alert {
     background-color: #252036 !important;
     border-color: #6d5bd0 !important;
@@ -108,16 +97,6 @@ const EMAIL_DARK_MODE_STYLE = `
   table.gf-email-card .gf-email-alert strong {
     color: #ddd6fe !important;
   }
-
-  /* CTA pill: slightly brighter edge in dark UI */
-  table.gf-email-card td.gf-email-cta-wrap {
-    box-shadow: 0 6px 28px rgba(99, 102, 241, 0.45) !important;
-  }
-  table.gf-email-card td.gf-email-cta-wrap a {
-    color: #ffffff !important;
-  }
-
-  /* Callouts: higher contrast text vs panel */
   table.gf-email-card .gf-email-callout-cyan {
     background-color: #0c1f2e !important;
     border-color: #0e7490 !important;
@@ -128,18 +107,6 @@ const EMAIL_DARK_MODE_STYLE = `
   table.gf-email-card .gf-email-callout-cyan strong {
     color: #5eead4 !important;
   }
-
-  table.gf-email-card .gf-email-callout-amber {
-    background-color: #29170a !important;
-    border-color: #c2410c !important;
-  }
-  table.gf-email-card .gf-email-callout-amber p {
-    color: #ffedd5 !important;
-  }
-  table.gf-email-card .gf-email-callout-amber strong {
-    color: #fdba74 !important;
-  }
-
   table.gf-email-card .gf-email-callout-green {
     background-color: #0f1f14 !important;
     border-color: #166534 !important;
@@ -151,49 +118,67 @@ const EMAIL_DARK_MODE_STYLE = `
     color: #86efac !important;
   }
 
+  /* CTA pill */
+  table.gf-email-card td.gf-email-cta-wrap {
+    box-shadow: 0 6px 28px rgba(99, 102, 241, 0.45) !important;
+  }
+  table.gf-email-card td.gf-email-cta-wrap a {
+    color: #ffffff !important;
+  }
+
   table.gf-email-card .gf-email-sep {
     color: #5c5c70 !important;
   }
 }
 `;
 
-export type BuyerLocale = "en" | "fr" | "nl" | "de" | "it" | "pt" | "es";
+export type BuyerLocale = "en" | "fr" | "nl" | "de" | "it" | "pt" | "no" | "es";
 
 type BuyerEmailCopy = {
   subjectPrefix: string;
   htmlTitle: string;
   headerEyebrow: string;
-  invoiceReference: string;
+  orderReference: string;
   greeting: string;
   thanksLine: string;
   billTo: string;
-  paymentInstructions: string;
-  secureCheckoutLabel: string;
-  secureCheckoutText: string;
-  ctaLabel: string;
+  paymentOptionsTitle: string;
+  paymentOptionsText: string;
+  discountTitle: string;
+  discountText: string;
+  listedPriceLabel: string;
+  finalPriceLabel: string;
+  replyTitle: string;
+  replyText: string;
+  nextStepsTitle: string;
+  nextStep1: string;
+  nextStep2: string;
+  nextStep3: string;
+  selectedMethodLabel: string;
+  methodBank: string;
+  methodCrypto: string;
+  ctaBankLabel: string;
+  ctaCryptoLabel: string;
   fallbackLinkHelp: string;
-  stepGuideTitle: string;
-  step1: string;
-  step2: string;
-  step3: string;
-  criticalNotes: string;
-  instantDeliveryTitle: string;
-  instantDeliveryText: string;
-  communicationProtocolTitle: string;
-  communicationProtocolText: string;
+  deliveryTitle: string;
+  deliveryText: string;
   supportTitle: string;
   supportText: string;
   lineItem: string;
-  amount: string;
   spamReminder: string;
   ignoreNotice: string;
   refundPolicy: string;
   termsOfService: string;
   plainHello: string;
-  plainSecureReady: string;
-  plainCheckoutNote: string;
-  plainInvoiceReference: string;
+  plainThanks: string;
+  plainPaymentOptions: string;
+  plainDiscount: string;
+  plainListedPrice: string;
+  plainFinalPrice: string;
+  plainReply: string;
   plainOpenPayment: string;
+  plainDelivery: string;
+  plainOrderReference: string;
   plainPlan: string;
   plainSpamCheck: string;
   plainIgnoreNotice: string;
@@ -201,423 +186,588 @@ type BuyerEmailCopy = {
 
 const COPY: Record<BuyerLocale, BuyerEmailCopy> = {
   en: {
-    subjectPrefix: "Your order is ready",
-    htmlTitle: "Your order is ready",
-    headerEyebrow: "Your order is ready!",
-    invoiceReference: "Invoice reference",
+    subjectPrefix: "Thank you for your order",
+    htmlTitle: "Thank you for your order",
+    headerEyebrow: "Order received",
+    orderReference: "Order reference",
     greeting: "Hello",
     thanksLine:
-      "Thank you for your order. Your technical configuration invoice is ready for settlement. Please use our secure payment gateway partner below to finalize your payment and activate your digital asset allocation.",
-    billTo: "Bill to",
-    paymentInstructions: "Payment Instructions",
-    secureCheckoutLabel: "Note:",
-    secureCheckoutText:
-      "Please leave any optional description or note fields blank during checkout to ensure instant automated provisioning. Your access credentials and configuration data will be dispatched directly to your primary inbox immediately after network confirmation.",
-    ctaLabel: "Complete Secure Payment via Whop",
+      "Thank you for submitting your order for {plan}. We have received your request and will help you complete payment shortly.",
+    billTo: "Customer",
+    paymentOptionsTitle: "Your payment method",
+    paymentOptionsText:
+      "You selected {method}. Use the button below to open your payment details and complete your order.",
+    discountTitle: "15% discount",
+    discountText:
+      "Paying by bank transfer or cryptocurrency includes a 15% discount on the listed price. Your totals are shown below.",
+    listedPriceLabel: "Listed price",
+    finalPriceLabel: "Final price (15% off)",
+    replyTitle: "Payment details",
+    replyText:
+      "Click the button below to view your {method} payment details. Pay the final discounted amount shown above.",
+    nextStepsTitle: "Next steps",
+    nextStep1: "Open your payment details using the button below.",
+    nextStep2: "Complete payment for the final discounted amount.",
+    nextStep3:
+      "As soon as payment is received, we provide your account immediately.",
+    selectedMethodLabel: "Selected payment method",
+    methodBank: "Bank Transfer",
+    methodCrypto: "Cryptocurrency",
+    ctaBankLabel: "View Bank Transfer Details",
+    ctaCryptoLabel: "View Cryptocurrency Details",
     fallbackLinkHelp:
       "If the button does not open, copy and paste this URL into your browser:",
-    stepGuideTitle: "Step-by-Step Payment Guide",
-    step1:
-      "Step 1: Click the secure link above to open our official Whop checkout page.",
-    step2:
-      "Step 2: Sign in or create a Whop account if prompted.",
-    step3:
-      "Step 3: Complete your payment using your preferred method (PayPal, Apple Pay, Google Pay, or credit card). Leave any optional description or note fields blank.",
-    criticalNotes: "Critical Delivery & Security Notes",
-    instantDeliveryTitle: "Instant Delivery:",
-    instantDeliveryText:
-      "Your access credentials and configuration data will be dispatched directly to your primary inbox immediately after network confirmation.",
-    communicationProtocolTitle: "Secure Payment Partner:",
-    communicationProtocolText:
-      "Whop is our secure payment gateway partner. All transactions are processed through their encrypted checkout to protect your payment details.",
-    supportTitle: "Technical Support:",
+    deliveryTitle: "Instant activation:",
+    deliveryText:
+      "As soon as your payment is confirmed, your account credentials are sent to this email right away.",
+    supportTitle: "Need help?",
     supportText:
-      "For all technical assistance or configuration help, please reply directly to this email. Our engineering team handles all support off-platform to maintain your privacy.",
-    lineItem: "Line item",
-    amount: "Amount",
+      "Reply directly to this email for any questions. Our team is happy to assist.",
+    lineItem: "Plan",
     spamReminder:
-      "After paying, please check your Spam or Promotions folder in case delivery details are filtered.",
+      "If you do not see this message in your inbox, please check your Spam or Promotions folder.",
     ignoreNotice: "If you did not request this email, you can safely ignore it.",
     refundPolicy: "Refund Policy",
     termsOfService: "Terms of Service",
     plainHello: "Hello",
-    plainSecureReady:
-      "Thank you for your order. Your technical configuration invoice is ready for settlement. Please use our secure payment gateway partner below to finalize your payment and activate your digital asset allocation.",
-    plainCheckoutNote:
-      "Note: Please leave any optional description or note fields blank during checkout to ensure instant automated provisioning. Your access credentials and configuration data will be dispatched directly to your primary inbox immediately after network confirmation.",
-    plainInvoiceReference: "Invoice reference",
-    plainOpenPayment: "Open payment link",
+    plainThanks:
+      "Thank you for submitting your order for {plan}. We have received your request and will help you complete payment shortly.",
+    plainPaymentOptions: "Selected payment method: {method}",
+    plainDiscount:
+      "Pay by bank transfer or cryptocurrency and receive 15% off the listed price.",
+    plainListedPrice: "Listed price",
+    plainFinalPrice: "Final price (15% off)",
+    plainReply:
+      "Open your {method} payment details using the link below, then pay the final discounted amount.",
+    plainOpenPayment: "Open payment details",
+    plainDelivery:
+      "As soon as payment is received, we provide your account immediately.",
+    plainOrderReference: "Order reference",
     plainPlan: "Plan",
     plainSpamCheck:
-      "After paying, check your Spam folder if you do not see our confirmation.",
+      "If you do not see our message, check your Spam or Promotions folder.",
     plainIgnoreNotice: "If you did not request this email, you can ignore it.",
   },
   fr: {
-    subjectPrefix: "Votre commande est prete",
-    htmlTitle: "Votre commande est prete",
-    headerEyebrow: "Votre commande est prete !",
-    invoiceReference: "Reference de facture",
+    subjectPrefix: "Merci pour votre commande",
+    htmlTitle: "Merci pour votre commande",
+    headerEyebrow: "Commande recue",
+    orderReference: "Reference de commande",
     greeting: "Bonjour",
     thanksLine:
-      "Merci pour votre commande. Votre facture de configuration technique est prete a etre reglee. Veuillez utiliser notre partenaire de passerelle de paiement securise ci-dessous pour finaliser votre paiement et activer votre allocation d actifs numeriques.",
-    billTo: "Facture a",
-    paymentInstructions: "Instructions de paiement",
-    secureCheckoutLabel: "Note :",
-    secureCheckoutText:
-      "Veuillez laisser vides tous les champs de description ou de note optionnels lors du paiement afin d assurer un provisionnement automatise instantane. Vos identifiants d acces et vos donnees de configuration seront envoyes directement dans votre boite de reception principale immediatement apres confirmation du reseau.",
-    ctaLabel: "Finaliser le paiement securise via Whop",
+      "Merci d avoir soumis votre commande pour {plan}. Nous avons bien recu votre demande et vous aiderons a finaliser le paiement sous peu.",
+    billTo: "Client",
+    paymentOptionsTitle: "Votre moyen de paiement",
+    paymentOptionsText:
+      "Vous avez choisi {method}. Utilisez le bouton ci-dessous pour ouvrir vos details de paiement et finaliser votre commande.",
+    discountTitle: "Remise de 15 %",
+    discountText:
+      "Le paiement par virement bancaire ou cryptomonnaie inclut une remise de 15 % sur le prix affiche. Vos montants sont indiques ci-dessous.",
+    listedPriceLabel: "Prix affiche",
+    finalPriceLabel: "Prix final (−15 %)",
+    replyTitle: "Details de paiement",
+    replyText:
+      "Cliquez sur le bouton ci-dessous pour voir vos details de paiement {method}. Reglez le montant final remisé indique ci-dessus.",
+    nextStepsTitle: "Prochaines etapes",
+    nextStep1:
+      "Ouvrez vos details de paiement via le bouton ci-dessous.",
+    nextStep2:
+      "Finalisez le paiement du montant final remisé.",
+    nextStep3:
+      "Des que le paiement est recu, nous fournissons votre compte immediatement.",
+    selectedMethodLabel: "Moyen de paiement choisi",
+    methodBank: "Virement bancaire",
+    methodCrypto: "Cryptomonnaie",
+    ctaBankLabel: "Voir les details du virement bancaire",
+    ctaCryptoLabel: "Voir les details crypto",
     fallbackLinkHelp:
       "Si le bouton ne s ouvre pas, copiez-collez cette URL dans votre navigateur :",
-    stepGuideTitle: "Guide de paiement etape par etape",
-    step1:
-      "Etape 1 : Cliquez sur le lien securise ci-dessus pour ouvrir notre page de paiement Whop officielle.",
-    step2:
-      "Etape 2 : Connectez-vous ou creez un compte Whop si vous y etes invite.",
-    step3:
-      "Etape 3 : Finalisez votre paiement avec le moyen de votre choix (PayPal, Apple Pay, Google Pay ou carte bancaire). Laissez vides les champs de description ou de note optionnels.",
-    criticalNotes: "Notes critiques de livraison et de securite",
-    instantDeliveryTitle: "Livraison instantanee :",
-    instantDeliveryText:
-      "Vos identifiants d acces et vos donnees de configuration seront envoyes directement dans votre boite de reception principale immediatement apres confirmation du reseau.",
-    communicationProtocolTitle: "Partenaire de paiement securise :",
-    communicationProtocolText:
-      "Whop est notre partenaire de passerelle de paiement securise. Toutes les transactions sont traitees via leur checkout chiffre pour proteger vos informations de paiement.",
-    supportTitle: "Support technique :",
+    deliveryTitle: "Activation immediate :",
+    deliveryText:
+      "Des que votre paiement est confirme, vos identifiants de compte sont envoyes immediatement a cet email.",
+    supportTitle: "Besoin d aide ?",
     supportText:
-      "Pour toute assistance technique ou aide de configuration, repondez directement a cet email. Notre equipe d ingenierie gere le support hors plateforme pour proteger votre confidentialite.",
-    lineItem: "Article",
-    amount: "Montant",
+      "Repondez directement a cet email pour toute question. Notre equipe est a votre disposition.",
+    lineItem: "Forfait",
     spamReminder:
-      "Apres paiement, verifiez vos dossiers Spam ou Promotions si les details de livraison sont filtres.",
+      "Si vous ne voyez pas ce message dans votre boite de reception, verifiez vos dossiers Spam ou Promotions.",
     ignoreNotice:
       "Si vous n avez pas demande cet email, vous pouvez l ignorer en toute securite.",
     refundPolicy: "Politique de remboursement",
     termsOfService: "Conditions d utilisation",
     plainHello: "Bonjour",
-    plainSecureReady:
-      "Merci pour votre commande. Votre facture de configuration technique est prete a etre reglee. Veuillez utiliser notre partenaire de passerelle de paiement securise ci-dessous pour finaliser votre paiement et activer votre allocation d actifs numeriques.",
-    plainCheckoutNote:
-      "Note : Veuillez laisser vides tous les champs de description ou de note optionnels lors du paiement afin d assurer un provisionnement automatise instantane. Vos identifiants d acces et vos donnees de configuration seront envoyes directement dans votre boite de reception principale immediatement apres confirmation du reseau.",
-    plainInvoiceReference: "Reference de facture",
-    plainOpenPayment: "Ouvrir le lien de paiement",
+    plainThanks:
+      "Merci d avoir soumis votre commande pour {plan}. Nous avons bien recu votre demande et vous aiderons a finaliser le paiement sous peu.",
+    plainPaymentOptions: "Moyen de paiement choisi : {method}",
+    plainDiscount:
+      "Payez par virement bancaire ou cryptomonnaie et beneficiez de 15 % de reduction sur le prix affiche.",
+    plainListedPrice: "Prix affiche",
+    plainFinalPrice: "Prix final (−15 %)",
+    plainReply:
+      "Ouvrez vos details de paiement {method} via le lien ci-dessous, puis reglez le montant final remisé.",
+    plainOpenPayment: "Ouvrir les details de paiement",
+    plainDelivery:
+      "Des que le paiement est recu, nous fournissons votre compte immediatement.",
+    plainOrderReference: "Reference de commande",
     plainPlan: "Forfait",
     plainSpamCheck:
-      "Apres paiement, verifiez votre dossier Spam si vous ne voyez pas notre confirmation.",
+      "Si vous ne voyez pas notre message, verifiez vos dossiers Spam ou Promotions.",
     plainIgnoreNotice:
       "Si vous n avez pas demande cet email, vous pouvez l ignorer.",
   },
   nl: {
-    subjectPrefix: "Je bestelling is klaar",
-    htmlTitle: "Je bestelling is klaar",
-    headerEyebrow: "Je bestelling is klaar!",
-    invoiceReference: "Factuurreferentie",
+    subjectPrefix: "Bedankt voor je bestelling",
+    htmlTitle: "Bedankt voor je bestelling",
+    headerEyebrow: "Bestelling ontvangen",
+    orderReference: "Bestelreferentie",
     greeting: "Hallo",
     thanksLine:
-      "Bedankt voor je bestelling. Je technische configuratiefactuur is klaar voor betaling. Gebruik onze beveiligde betaalgateway-partner hieronder om je betaling af te ronden en je digitale asset-toewijzing te activeren.",
-    billTo: "Factuur voor",
-    paymentInstructions: "Betaalinstructies",
-    secureCheckoutLabel: "Opmerking:",
-    secureCheckoutText:
-      "Laat optionele beschrijvings- of notitievelden leeg tijdens het afrekenen om directe geautomatiseerde levering te garanderen. Je toegangsgegevens en configuratiedata worden direct naar je primaire inbox gestuurd zodra de betaling is bevestigd.",
-    ctaLabel: "Voltooi beveiligde betaling via Whop",
+      "Bedankt voor het indienen van je bestelling voor {plan}. We hebben je aanvraag ontvangen en helpen je binnenkort met de betaling.",
+    billTo: "Klant",
+    paymentOptionsTitle: "Je betaalmethode",
+    paymentOptionsText:
+      "Je hebt {method} gekozen. Gebruik de knop hieronder om je betalingsgegevens te openen en je bestelling af te ronden.",
+    discountTitle: "15% korting",
+    discountText:
+      "Betalen via bankoverschrijving of crypto geeft 15% korting op de vermelde prijs. Je bedragen staan hieronder.",
+    listedPriceLabel: "Vermelde prijs",
+    finalPriceLabel: "Eindprijs (15% korting)",
+    replyTitle: "Betalingsgegevens",
+    replyText:
+      "Klik op de knop hieronder om je {method}-betalingsgegevens te bekijken. Betaal het eindbedrag met korting hierboven.",
+    nextStepsTitle: "Volgende stappen",
+    nextStep1:
+      "Open je betalingsgegevens via de knop hieronder.",
+    nextStep2:
+      "Rond de betaling af voor het eindbedrag met korting.",
+    nextStep3:
+      "Zodra de betaling is ontvangen, leveren we je account onmiddellijk.",
+    selectedMethodLabel: "Gekozen betaalmethode",
+    methodBank: "Bankoverschrijving",
+    methodCrypto: "Cryptovaluta",
+    ctaBankLabel: "Bekijk bankoverschrijvinggegevens",
+    ctaCryptoLabel: "Bekijk cryptogegevens",
     fallbackLinkHelp:
       "Als de knop niet opent, kopieer en plak deze URL in je browser:",
-    stepGuideTitle: "Stapsgewijze betaalgids",
-    step1:
-      "Stap 1: Klik op de beveiligde link hierboven om onze officiële Whop-checkoutpagina te openen.",
-    step2:
-      "Stap 2: Log in of maak een Whop-account aan indien gevraagd.",
-    step3:
-      "Stap 3: Rond je betaling af met je voorkeursmethode (PayPal, Apple Pay, Google Pay of creditcard). Laat optionele beschrijvings- of notitievelden leeg.",
-    criticalNotes: "Belangrijke leverings- en beveiligingsnotities",
-    instantDeliveryTitle: "Directe levering:",
-    instantDeliveryText:
-      "Je toegangsgegevens en configuratiedata worden direct naar je primaire inbox gestuurd zodra de betaling is bevestigd.",
-    communicationProtocolTitle: "Beveiligde betaalpartner:",
-    communicationProtocolText:
-      "Whop is onze beveiligde betaalgateway-partner. Alle transacties worden verwerkt via hun versleutelde checkout om je betaalgegevens te beschermen.",
-    supportTitle: "Technische ondersteuning:",
+    deliveryTitle: "Directe activering:",
+    deliveryText:
+      "Zodra je betaling is bevestigd, worden je accountgegevens meteen naar dit e-mailadres gestuurd.",
+    supportTitle: "Hulp nodig?",
     supportText:
-      "Voor alle technische hulp of configuratiehulp kun je direct op deze e-mail reageren. Ons engineeringteam behandelt ondersteuning buiten het platform om je privacy te beschermen.",
-    lineItem: "Regel",
-    amount: "Bedrag",
+      "Beantwoord deze e-mail rechtstreeks bij vragen. Ons team helpt je graag.",
+    lineItem: "Plan",
     spamReminder:
-      "Controleer na betaling je Spam- of Promoties-map als leveringsdetails worden gefilterd.",
+      "Als je dit bericht niet in je inbox ziet, controleer dan je Spam- of Promoties-map.",
     ignoreNotice:
       "Als je deze e-mail niet hebt aangevraagd, kun je deze veilig negeren.",
     refundPolicy: "Terugbetalingsbeleid",
     termsOfService: "Servicevoorwaarden",
     plainHello: "Hallo",
-    plainSecureReady:
-      "Bedankt voor je bestelling. Je technische configuratiefactuur is klaar voor betaling. Gebruik onze beveiligde betaalgateway-partner hieronder om je betaling af te ronden en je digitale asset-toewijzing te activeren.",
-    plainCheckoutNote:
-      "Opmerking: Laat optionele beschrijvings- of notitievelden leeg tijdens het afrekenen om directe geautomatiseerde levering te garanderen. Je toegangsgegevens en configuratiedata worden direct naar je primaire inbox gestuurd zodra de betaling is bevestigd.",
-    plainInvoiceReference: "Factuurreferentie",
-    plainOpenPayment: "Open betaallink",
+    plainThanks:
+      "Bedankt voor het indienen van je bestelling voor {plan}. We hebben je aanvraag ontvangen en helpen je binnenkort met de betaling.",
+    plainPaymentOptions: "Gekozen betaalmethode: {method}",
+    plainDiscount:
+      "Betaal via bankoverschrijving of crypto en ontvang 15% korting op de vermelde prijs.",
+    plainListedPrice: "Vermelde prijs",
+    plainFinalPrice: "Eindprijs (15% korting)",
+    plainReply:
+      "Open je {method}-betalingsgegevens via de link hieronder en betaal het eindbedrag met korting.",
+    plainOpenPayment: "Open betalingsgegevens",
+    plainDelivery:
+      "Zodra de betaling is ontvangen, leveren we je account onmiddellijk.",
+    plainOrderReference: "Bestelreferentie",
     plainPlan: "Plan",
     plainSpamCheck:
-      "Controleer na betaling je Spam-map als je onze bevestiging niet ziet.",
+      "Als je ons bericht niet ziet, controleer je Spam- of Promoties-map.",
     plainIgnoreNotice:
       "Als je deze e-mail niet hebt aangevraagd, kun je deze negeren.",
   },
   de: {
-    subjectPrefix: "Ihre Bestellung ist bereit",
-    htmlTitle: "Ihre Bestellung ist bereit",
-    headerEyebrow: "Ihre Bestellung ist bereit!",
-    invoiceReference: "Rechnungsreferenz",
+    subjectPrefix: "Vielen Dank fuer Ihre Bestellung",
+    htmlTitle: "Vielen Dank fuer Ihre Bestellung",
+    headerEyebrow: "Bestellung eingegangen",
+    orderReference: "Bestellreferenz",
     greeting: "Hallo",
     thanksLine:
-      "Vielen Dank fuer Ihre Bestellung. Ihre technische Konfigurationsrechnung ist zur Zahlung bereit. Bitte nutzen Sie unseren sicheren Zahlungsgateway-Partner unten, um Ihre Zahlung abzuschliessen und Ihre digitale Asset-Zuweisung zu aktivieren.",
-    billTo: "Rechnung an",
-    paymentInstructions: "Zahlungsanweisungen",
-    secureCheckoutLabel: "Hinweis:",
-    secureCheckoutText:
-      "Bitte lassen Sie optionale Beschreibungs- oder Notizfelder beim Checkout leer, um eine sofortige automatische Bereitstellung zu gewaehrleisten. Ihre Zugangsdaten und Konfigurationsdaten werden direkt nach Netzwerkbestaetigung an Ihren primaeren Posteingang gesendet.",
-    ctaLabel: "Sichere Zahlung ueber Whop abschliessen",
+      "Vielen Dank fuer Ihre Bestellung fuer {plan}. Wir haben Ihre Anfrage erhalten und helfen Ihnen in Kuerze bei der Zahlung.",
+    billTo: "Kunde",
+    paymentOptionsTitle: "Ihre Zahlungsmethode",
+    paymentOptionsText:
+      "Sie haben {method} gewaehlt. Nutzen Sie den Button unten, um Ihre Zahlungsdetails zu oeffnen und Ihre Bestellung abzuschliessen.",
+    discountTitle: "15 % Rabatt",
+    discountText:
+      "Bei Zahlung per Bankueberweisung oder Krypto erhalten Sie 15 % Rabatt auf den Listenpreis. Ihre Betraege sehen Sie unten.",
+    listedPriceLabel: "Listenpreis",
+    finalPriceLabel: "Endpreis (15 % Rabatt)",
+    replyTitle: "Zahlungsdetails",
+    replyText:
+      "Klicken Sie auf den Button unten, um Ihre {method}-Zahlungsdetails anzuzeigen. Zahlen Sie den oben gezeigten Endpreis mit Rabatt.",
+    nextStepsTitle: "Naechste Schritte",
+    nextStep1:
+      "Oeffnen Sie Ihre Zahlungsdetails ueber den Button unten.",
+    nextStep2:
+      "Schliessen Sie die Zahlung fuer den Endpreis mit Rabatt ab.",
+    nextStep3:
+      "Sobald die Zahlung eingegangen ist, stellen wir Ihr Konto sofort bereit.",
+    selectedMethodLabel: "Gewaehlte Zahlungsmethode",
+    methodBank: "Bankueberweisung",
+    methodCrypto: "Kryptowaehrung",
+    ctaBankLabel: "Bankueberweisungsdetails anzeigen",
+    ctaCryptoLabel: "Krypto-Details anzeigen",
     fallbackLinkHelp:
       "Wenn der Button nicht geoeffnet wird, kopieren Sie diese URL in Ihren Browser:",
-    stepGuideTitle: "Schritt-fuer-Schritt Zahlungsanleitung",
-    step1:
-      "Schritt 1: Klicken Sie auf den sicheren Link oben, um unsere offizielle Whop-Checkout-Seite zu oeffnen.",
-    step2:
-      "Schritt 2: Melden Sie sich an oder erstellen Sie ein Whop-Konto, falls Sie dazu aufgefordert werden.",
-    step3:
-      "Schritt 3: Schliessen Sie die Zahlung mit Ihrer bevorzugten Methode ab (PayPal, Apple Pay, Google Pay oder Kreditkarte). Lassen Sie optionale Beschreibungs- oder Notizfelder leer.",
-    criticalNotes: "Wichtige Liefer- und Sicherheitshinweise",
-    instantDeliveryTitle: "Sofortige Zustellung:",
-    instantDeliveryText:
-      "Ihre Zugangsdaten und Konfigurationsdaten werden direkt nach Netzwerkbestaetigung an Ihren primaeren Posteingang gesendet.",
-    communicationProtocolTitle: "Sicherer Zahlungspartner:",
-    communicationProtocolText:
-      "Whop ist unser sicherer Zahlungsgateway-Partner. Alle Transaktionen werden ueber deren verschluesselten Checkout verarbeitet, um Ihre Zahlungsdaten zu schuetzen.",
-    supportTitle: "Technischer Support:",
+    deliveryTitle: "Sofortige Aktivierung:",
+    deliveryText:
+      "Sobald Ihre Zahlung bestaetigt ist, werden Ihre Zugangsdaten sofort an diese E-Mail gesendet.",
+    supportTitle: "Hilfe benoetigt?",
     supportText:
-      "Bei technischer Hilfe oder Konfigurationshilfe antworten Sie bitte direkt auf diese E-Mail. Unser Engineering-Team bearbeitet den Support ausserhalb der Plattform zum Schutz Ihrer Privatsphaere.",
-    lineItem: "Position",
-    amount: "Betrag",
+      "Antworten Sie bei Fragen direkt auf diese E-Mail. Unser Team hilft Ihnen gerne.",
+    lineItem: "Tarif",
     spamReminder:
-      "Pruefen Sie nach der Zahlung Ihren Spam- oder Werbeordner, falls Lieferdetails gefiltert werden.",
+      "Wenn Sie diese Nachricht nicht in Ihrem Posteingang sehen, pruefen Sie bitte den Spam- oder Werbeordner.",
     ignoreNotice:
       "Wenn Sie diese E-Mail nicht angefordert haben, koennen Sie sie sicher ignorieren.",
     refundPolicy: "Rueckerstattungsrichtlinie",
     termsOfService: "Nutzungsbedingungen",
     plainHello: "Hallo",
-    plainSecureReady:
-      "Vielen Dank fuer Ihre Bestellung. Ihre technische Konfigurationsrechnung ist zur Zahlung bereit. Bitte nutzen Sie unseren sicheren Zahlungsgateway-Partner unten, um Ihre Zahlung abzuschliessen und Ihre digitale Asset-Zuweisung zu aktivieren.",
-    plainCheckoutNote:
-      "Hinweis: Bitte lassen Sie optionale Beschreibungs- oder Notizfelder beim Checkout leer, um eine sofortige automatische Bereitstellung zu gewaehrleisten. Ihre Zugangsdaten und Konfigurationsdaten werden direkt nach Netzwerkbestaetigung an Ihren primaeren Posteingang gesendet.",
-    plainInvoiceReference: "Rechnungsreferenz",
-    plainOpenPayment: "Zahlungslink oeffnen",
+    plainThanks:
+      "Vielen Dank fuer Ihre Bestellung fuer {plan}. Wir haben Ihre Anfrage erhalten und helfen Ihnen in Kuerze bei der Zahlung.",
+    plainPaymentOptions: "Gewaehlte Zahlungsmethode: {method}",
+    plainDiscount:
+      "Zahlen Sie per Bankueberweisung oder Krypto und erhalten Sie 15 % Rabatt auf den Listenpreis.",
+    plainListedPrice: "Listenpreis",
+    plainFinalPrice: "Endpreis (15 % Rabatt)",
+    plainReply:
+      "Oeffnen Sie Ihre {method}-Zahlungsdetails ueber den Link unten und zahlen Sie den Endpreis mit Rabatt.",
+    plainOpenPayment: "Zahlungsdetails oeffnen",
+    plainDelivery:
+      "Sobald die Zahlung eingegangen ist, stellen wir Ihr Konto sofort bereit.",
+    plainOrderReference: "Bestellreferenz",
     plainPlan: "Tarif",
     plainSpamCheck:
-      "Pruefen Sie nach der Zahlung Ihren Spam-Ordner, wenn Sie unsere Bestaetigung nicht sehen.",
+      "Wenn Sie unsere Nachricht nicht sehen, pruefen Sie den Spam- oder Werbeordner.",
     plainIgnoreNotice:
       "Wenn Sie diese E-Mail nicht angefordert haben, koennen Sie sie ignorieren.",
   },
   it: {
-    subjectPrefix: "Il tuo ordine e pronto",
-    htmlTitle: "Il tuo ordine e pronto",
-    headerEyebrow: "Il tuo ordine e pronto!",
-    invoiceReference: "Riferimento fattura",
+    subjectPrefix: "Grazie per il tuo ordine",
+    htmlTitle: "Grazie per il tuo ordine",
+    headerEyebrow: "Ordine ricevuto",
+    orderReference: "Riferimento ordine",
     greeting: "Ciao",
     thanksLine:
-      "Grazie per il tuo ordine. La tua fattura di configurazione tecnica e pronta per il pagamento. Utilizza il nostro partner gateway di pagamento sicuro qui sotto per finalizzare il pagamento e attivare l allocazione dei tuoi asset digitali.",
-    billTo: "Fatturato a",
-    paymentInstructions: "Istruzioni di pagamento",
-    secureCheckoutLabel: "Nota:",
-    secureCheckoutText:
-      "Lascia vuoti eventuali campi opzionali di descrizione o note durante il checkout per garantire un provisioning automatico istantaneo. Le tue credenziali di accesso e i dati di configurazione saranno inviati direttamente alla tua casella di posta principale subito dopo la conferma di rete.",
-    ctaLabel: "Completa il pagamento sicuro tramite Whop",
+      "Grazie per aver inviato l ordine per {plan}. Abbiamo ricevuto la tua richiesta e ti aiuteremo a completare il pagamento a breve.",
+    billTo: "Cliente",
+    paymentOptionsTitle: "Il tuo metodo di pagamento",
+    paymentOptionsText:
+      "Hai scelto {method}. Usa il pulsante qui sotto per aprire i dettagli di pagamento e completare l ordine.",
+    discountTitle: "Sconto del 15%",
+    discountText:
+      "Pagando con bonifico bancario o criptovaluta ricevi uno sconto del 15% sul prezzo elencato. I totali sono mostrati di seguito.",
+    listedPriceLabel: "Prezzo elencato",
+    finalPriceLabel: "Prezzo finale (15% di sconto)",
+    replyTitle: "Dettagli di pagamento",
+    replyText:
+      "Clicca sul pulsante qui sotto per vedere i dettagli di pagamento {method}. Paga l importo finale scontato mostrato sopra.",
+    nextStepsTitle: "Prossimi passi",
+    nextStep1:
+      "Apri i dettagli di pagamento usando il pulsante qui sotto.",
+    nextStep2:
+      "Completa il pagamento dell importo finale scontato.",
+    nextStep3:
+      "Non appena il pagamento e ricevuto, forniamo subito il tuo account.",
+    selectedMethodLabel: "Metodo di pagamento selezionato",
+    methodBank: "Bonifico bancario",
+    methodCrypto: "Criptovaluta",
+    ctaBankLabel: "Vedi dettagli bonifico bancario",
+    ctaCryptoLabel: "Vedi dettagli criptovaluta",
     fallbackLinkHelp:
       "Se il pulsante non si apre, copia e incolla questo URL nel browser:",
-    stepGuideTitle: "Guida al pagamento passo dopo passo",
-    step1:
-      "Passo 1: Clicca sul link sicuro qui sopra per aprire la nostra pagina di checkout Whop ufficiale.",
-    step2:
-      "Passo 2: Accedi o crea un account Whop se richiesto.",
-    step3:
-      "Passo 3: Completa il pagamento con il metodo che preferisci (PayPal, Apple Pay, Google Pay o carta di credito). Lascia vuoti i campi opzionali di descrizione o note.",
-    criticalNotes: "Note critiche su consegna e sicurezza",
-    instantDeliveryTitle: "Consegna istantanea:",
-    instantDeliveryText:
-      "Le tue credenziali di accesso e i dati di configurazione saranno inviati direttamente alla tua casella di posta principale subito dopo la conferma di rete.",
-    communicationProtocolTitle: "Partner di pagamento sicuro:",
-    communicationProtocolText:
-      "Whop e il nostro partner gateway di pagamento sicuro. Tutte le transazioni vengono elaborate tramite il loro checkout crittografato per proteggere i tuoi dati di pagamento.",
-    supportTitle: "Supporto tecnico:",
+    deliveryTitle: "Attivazione immediata:",
+    deliveryText:
+      "Non appena il pagamento e confermato, le credenziali del tuo account vengono inviate subito a questa email.",
+    supportTitle: "Serve aiuto?",
     supportText:
-      "Per assistenza tecnica o supporto di configurazione, rispondi direttamente a questa email. Il nostro team di ingegneria gestisce il supporto fuori piattaforma per proteggere la tua privacy.",
-    lineItem: "Voce",
-    amount: "Importo",
+      "Rispondi direttamente a questa email per qualsiasi domanda. Il nostro team e a tua disposizione.",
+    lineItem: "Piano",
     spamReminder:
-      "Dopo il pagamento, controlla la cartella Spam o Promozioni nel caso in cui i dettagli di consegna vengano filtrati.",
+      "Se non vedi questo messaggio nella posta in arrivo, controlla le cartelle Spam o Promozioni.",
     ignoreNotice:
       "Se non hai richiesto questa email, puoi ignorarla in sicurezza.",
     refundPolicy: "Politica di rimborso",
     termsOfService: "Termini di servizio",
     plainHello: "Ciao",
-    plainSecureReady:
-      "Grazie per il tuo ordine. La tua fattura di configurazione tecnica e pronta per il pagamento. Utilizza il nostro partner gateway di pagamento sicuro qui sotto per finalizzare il pagamento e attivare l allocazione dei tuoi asset digitali.",
-    plainCheckoutNote:
-      "Nota: Lascia vuoti eventuali campi opzionali di descrizione o note durante il checkout per garantire un provisioning automatico istantaneo. Le tue credenziali di accesso e i dati di configurazione saranno inviati direttamente alla tua casella di posta principale subito dopo la conferma di rete.",
-    plainInvoiceReference: "Riferimento fattura",
-    plainOpenPayment: "Apri link di pagamento",
+    plainThanks:
+      "Grazie per aver inviato l ordine per {plan}. Abbiamo ricevuto la tua richiesta e ti aiuteremo a completare il pagamento a breve.",
+    plainPaymentOptions: "Metodo di pagamento selezionato: {method}",
+    plainDiscount:
+      "Paga con bonifico bancario o criptovaluta e ottieni il 15% di sconto sul prezzo elencato.",
+    plainListedPrice: "Prezzo elencato",
+    plainFinalPrice: "Prezzo finale (15% di sconto)",
+    plainReply:
+      "Apri i dettagli di pagamento {method} con il link qui sotto, poi paga l importo finale scontato.",
+    plainOpenPayment: "Apri dettagli di pagamento",
+    plainDelivery:
+      "Non appena il pagamento e ricevuto, forniamo subito il tuo account.",
+    plainOrderReference: "Riferimento ordine",
     plainPlan: "Piano",
     plainSpamCheck:
-      "Dopo il pagamento, controlla la cartella Spam se non vedi la nostra conferma.",
+      "Se non vedi il nostro messaggio, controlla le cartelle Spam o Promozioni.",
     plainIgnoreNotice:
       "Se non hai richiesto questa email, puoi ignorarla.",
   },
   pt: {
-    subjectPrefix: "Seu pedido esta pronto",
-    htmlTitle: "Seu pedido esta pronto",
-    headerEyebrow: "Seu pedido esta pronto!",
-    invoiceReference: "Referencia da fatura",
+    subjectPrefix: "Obrigado pelo seu pedido",
+    htmlTitle: "Obrigado pelo seu pedido",
+    headerEyebrow: "Pedido recebido",
+    orderReference: "Referencia do pedido",
     greeting: "Ola",
     thanksLine:
-      "Obrigado pelo seu pedido. Sua fatura de configuracao tecnica esta pronta para pagamento. Use nosso parceiro de gateway de pagamento seguro abaixo para finalizar seu pagamento e ativar sua alocacao de ativos digitais.",
-    billTo: "Faturar para",
-    paymentInstructions: "Instrucoes de pagamento",
-    secureCheckoutLabel: "Nota:",
-    secureCheckoutText:
-      "Deixe em branco quaisquer campos opcionais de descricao ou observacao durante o checkout para garantir provisionamento automatizado instantaneo. Suas credenciais de acesso e dados de configuracao serao enviados diretamente para sua caixa de entrada principal imediatamente apos a confirmacao da rede.",
-    ctaLabel: "Concluir pagamento seguro via Whop",
+      "Obrigado por enviar o pedido do plano {plan}. Recebemos sua solicitacao e ajudaremos voce a concluir o pagamento em breve.",
+    billTo: "Cliente",
+    paymentOptionsTitle: "Seu metodo de pagamento",
+    paymentOptionsText:
+      "Voce selecionou {method}. Use o botao abaixo para abrir os detalhes de pagamento e concluir seu pedido.",
+    discountTitle: "Desconto de 15%",
+    discountText:
+      "Pagar por transferencia bancaria ou criptomoeda inclui 15% de desconto sobre o preco listado. Os totais estao abaixo.",
+    listedPriceLabel: "Preco listado",
+    finalPriceLabel: "Preco final (15% de desconto)",
+    replyTitle: "Detalhes de pagamento",
+    replyText:
+      "Clique no botao abaixo para ver os detalhes de pagamento {method}. Pague o valor final com desconto mostrado acima.",
+    nextStepsTitle: "Proximos passos",
+    nextStep1:
+      "Abra os detalhes de pagamento usando o botao abaixo.",
+    nextStep2:
+      "Conclua o pagamento do valor final com desconto.",
+    nextStep3:
+      "Assim que o pagamento for recebido, fornecemos sua conta imediatamente.",
+    selectedMethodLabel: "Metodo de pagamento selecionado",
+    methodBank: "Transferencia bancaria",
+    methodCrypto: "Criptomoeda",
+    ctaBankLabel: "Ver detalhes da transferencia bancaria",
+    ctaCryptoLabel: "Ver detalhes de criptomoeda",
     fallbackLinkHelp:
       "Se o botao nao abrir, copie e cole esta URL no seu navegador:",
-    stepGuideTitle: "Guia de pagamento passo a passo",
-    step1:
-      "Passo 1: Clique no link seguro acima para abrir nossa pagina oficial de checkout Whop.",
-    step2:
-      "Passo 2: Faca login ou crie uma conta Whop se solicitado.",
-    step3:
-      "Passo 3: Conclua seu pagamento usando seu metodo preferido (PayPal, Apple Pay, Google Pay ou cartao de credito). Deixe em branco campos opcionais de descricao ou observacao.",
-    criticalNotes: "Notas criticas de entrega e seguranca",
-    instantDeliveryTitle: "Entrega instantanea:",
-    instantDeliveryText:
-      "Suas credenciais de acesso e dados de configuracao serao enviados diretamente para sua caixa de entrada principal imediatamente apos a confirmacao da rede.",
-    communicationProtocolTitle: "Parceiro de pagamento seguro:",
-    communicationProtocolText:
-      "A Whop e nossa parceira de gateway de pagamento seguro. Todas as transacoes sao processadas por meio do checkout criptografado para proteger seus dados de pagamento.",
-    supportTitle: "Suporte tecnico:",
+    deliveryTitle: "Ativacao imediata:",
+    deliveryText:
+      "Assim que o pagamento for confirmado, as credenciais da sua conta sao enviadas imediatamente para este email.",
+    supportTitle: "Precisa de ajuda?",
     supportText:
-      "Para ajuda tecnica ou configuracao, responda diretamente a este email. Nossa equipe de engenharia presta suporte fora da plataforma para manter sua privacidade.",
-    lineItem: "Item",
-    amount: "Valor",
+      "Responda diretamente a este email com qualquer duvida. Nossa equipe tera prazer em ajudar.",
+    lineItem: "Plano",
     spamReminder:
-      "Apos o pagamento, verifique sua pasta de Spam ou Promocoes caso os detalhes de entrega sejam filtrados.",
+      "Se nao encontrar esta mensagem na caixa de entrada, verifique as pastas de Spam ou Promocoes.",
     ignoreNotice:
       "Se voce nao solicitou este email, pode ignora-lo com seguranca.",
     refundPolicy: "Politica de reembolso",
     termsOfService: "Termos de servico",
     plainHello: "Ola",
-    plainSecureReady:
-      "Obrigado pelo seu pedido. Sua fatura de configuracao tecnica esta pronta para pagamento. Use nosso parceiro de gateway de pagamento seguro abaixo para finalizar seu pagamento e ativar sua alocacao de ativos digitais.",
-    plainCheckoutNote:
-      "Nota: Deixe em branco quaisquer campos opcionais de descricao ou observacao durante o checkout para garantir provisionamento automatizado instantaneo. Suas credenciais de acesso e dados de configuracao serao enviados diretamente para sua caixa de entrada principal imediatamente apos a confirmacao da rede.",
-    plainInvoiceReference: "Referencia da fatura",
-    plainOpenPayment: "Abrir link de pagamento",
+    plainThanks:
+      "Obrigado por enviar o pedido do plano {plan}. Recebemos sua solicitacao e ajudaremos voce a concluir o pagamento em breve.",
+    plainPaymentOptions: "Metodo de pagamento selecionado: {method}",
+    plainDiscount:
+      "Pague por transferencia bancaria ou criptomoeda e receba 15% de desconto sobre o preco listado.",
+    plainListedPrice: "Preco listado",
+    plainFinalPrice: "Preco final (15% de desconto)",
+    plainReply:
+      "Abra os detalhes de pagamento {method} pelo link abaixo e pague o valor final com desconto.",
+    plainOpenPayment: "Abrir detalhes de pagamento",
+    plainDelivery:
+      "Assim que o pagamento for recebido, fornecemos sua conta imediatamente.",
+    plainOrderReference: "Referencia do pedido",
     plainPlan: "Plano",
     plainSpamCheck:
-      "Apos o pagamento, verifique sua pasta de Spam se nao encontrar nossa confirmacao.",
+      "Se nao encontrar nossa mensagem, verifique as pastas de Spam ou Promocoes.",
     plainIgnoreNotice:
       "Se voce nao solicitou este email, pode ignora-lo.",
   },
+  no: {
+    subjectPrefix: "Takk for bestillingen din",
+    htmlTitle: "Takk for bestillingen din",
+    headerEyebrow: "Bestilling mottatt",
+    orderReference: "Bestillingsreferanse",
+    greeting: "Hei",
+    thanksLine:
+      "Takk for at du sendte inn bestillingen for {plan}. Vi har mottatt foresporselen din og hjelper deg snart med betalingen.",
+    billTo: "Kunde",
+    paymentOptionsTitle: "Din betalingsmetode",
+    paymentOptionsText:
+      "Du valgte {method}. Bruk knappen nedenfor for a apne betalingsdetaljene og fullfore bestillingen.",
+    discountTitle: "15 % rabatt",
+    discountText:
+      "Betaling med bankoverforing eller krypto gir 15 % rabatt pa listeprisen. Totalene dine vises nedenfor.",
+    listedPriceLabel: "Listepris",
+    finalPriceLabel: "Endelig pris (15 % rabatt)",
+    replyTitle: "Betalingsdetaljer",
+    replyText:
+      "Klikk pa knappen nedenfor for a se betalingsdetaljene for {method}. Betal det endelige belopet med rabatt vist ovenfor.",
+    nextStepsTitle: "Neste steg",
+    nextStep1:
+      "Apne betalingsdetaljene ved a bruke knappen nedenfor.",
+    nextStep2:
+      "Fullfor betalingen for det endelige belopet med rabatt.",
+    nextStep3:
+      "Sa snart betalingen er mottatt, gir vi deg kontoen umiddelbart.",
+    selectedMethodLabel: "Valgt betalingsmetode",
+    methodBank: "Bankoverforing",
+    methodCrypto: "Kryptovaluta",
+    ctaBankLabel: "Se bankoverforingsdetaljer",
+    ctaCryptoLabel: "Se kryptodetaljer",
+    fallbackLinkHelp:
+      "Hvis knappen ikke apner, kopier og lim inn denne URL-en i nettleseren:",
+    deliveryTitle: "Umiddelbar aktivering:",
+    deliveryText:
+      "Sa snart betalingen er bekreftet, sendes kontodetaljene dine med en gang til denne e-postadressen.",
+    supportTitle: "Trenger du hjelp?",
+    supportText:
+      "Svar direkte pa denne e-posten ved sporsmal. Teamet vart hjelper deg gjerne.",
+    lineItem: "Plan",
+    spamReminder:
+      "Hvis du ikke ser denne meldingen i innboksen, sjekk Spam- eller Markedsforingsmappen.",
+    ignoreNotice:
+      "Hvis du ikke ba om denne e-posten, kan du trygt ignorere den.",
+    refundPolicy: "Refusjonspolicy",
+    termsOfService: "Vilkar for bruk",
+    plainHello: "Hei",
+    plainThanks:
+      "Takk for at du sendte inn bestillingen for {plan}. Vi har mottatt foresporselen din og hjelper deg snart med betalingen.",
+    plainPaymentOptions: "Valgt betalingsmetode: {method}",
+    plainDiscount:
+      "Betal med bankoverforing eller krypto og fa 15 % rabatt pa listeprisen.",
+    plainListedPrice: "Listepris",
+    plainFinalPrice: "Endelig pris (15 % rabatt)",
+    plainReply:
+      "Apne betalingsdetaljene for {method} via lenken nedenfor, og betal det endelige belopet med rabatt.",
+    plainOpenPayment: "Apne betalingsdetaljer",
+    plainDelivery:
+      "Sa snart betalingen er mottatt, gir vi deg kontoen umiddelbart.",
+    plainOrderReference: "Bestillingsreferanse",
+    plainPlan: "Plan",
+    plainSpamCheck:
+      "Hvis du ikke ser meldingen var, sjekk Spam- eller Markedsforingsmappen.",
+    plainIgnoreNotice:
+      "Hvis du ikke ba om denne e-posten, kan du ignorere den.",
+  },
   es: {
-    subjectPrefix: "Tu pedido esta listo",
-    htmlTitle: "Tu pedido esta listo",
-    headerEyebrow: "Tu pedido esta listo!",
-    invoiceReference: "Referencia de factura",
+    subjectPrefix: "Gracias por tu pedido",
+    htmlTitle: "Gracias por tu pedido",
+    headerEyebrow: "Pedido recibido",
+    orderReference: "Referencia del pedido",
     greeting: "Hola",
     thanksLine:
-      "Gracias por tu pedido. Tu factura de configuracion tecnica esta lista para el pago. Utiliza nuestro socio de pasarela de pago seguro a continuacion para finalizar tu pago y activar tu asignacion de activos digitales.",
-    billTo: "Facturar a",
-    paymentInstructions: "Instrucciones de pago",
-    secureCheckoutLabel: "Nota:",
-    secureCheckoutText:
-      "Deja en blanco cualquier campo opcional de descripcion o nota durante el checkout para garantizar un aprovisionamiento automatizado instantaneo. Tus credenciales de acceso y datos de configuracion se enviaran directamente a tu bandeja de entrada principal inmediatamente despues de la confirmacion de red.",
-    ctaLabel: "Completar pago seguro por Whop",
+      "Gracias por enviar tu pedido de {plan}. Hemos recibido tu solicitud y te ayudaremos a completar el pago en breve.",
+    billTo: "Cliente",
+    paymentOptionsTitle: "Tu metodo de pago",
+    paymentOptionsText:
+      "Has seleccionado {method}. Usa el boton de abajo para abrir los detalles de pago y completar tu pedido.",
+    discountTitle: "Descuento del 15%",
+    discountText:
+      "Pagar por transferencia bancaria o criptomoneda incluye un 15% de descuento sobre el precio listado. Tus totales se muestran a continuacion.",
+    listedPriceLabel: "Precio listado",
+    finalPriceLabel: "Precio final (15% de descuento)",
+    replyTitle: "Detalles de pago",
+    replyText:
+      "Haz clic en el boton de abajo para ver los detalles de pago de {method}. Paga el importe final con descuento mostrado arriba.",
+    nextStepsTitle: "Proximos pasos",
+    nextStep1:
+      "Abre tus detalles de pago con el boton de abajo.",
+    nextStep2:
+      "Completa el pago del importe final con descuento.",
+    nextStep3:
+      "En cuanto se reciba el pago, proporcionamos tu cuenta de inmediato.",
+    selectedMethodLabel: "Metodo de pago seleccionado",
+    methodBank: "Transferencia bancaria",
+    methodCrypto: "Criptomoneda",
+    ctaBankLabel: "Ver detalles de transferencia bancaria",
+    ctaCryptoLabel: "Ver detalles de criptomoneda",
     fallbackLinkHelp:
       "Si el boton no se abre, copia y pega esta URL en tu navegador:",
-    stepGuideTitle: "Guia de pago paso a paso",
-    step1:
-      "Paso 1: Haz clic en el enlace seguro de arriba para abrir nuestra pagina oficial de checkout de Whop.",
-    step2:
-      "Paso 2: Inicia sesion o crea una cuenta de Whop si se te solicita.",
-    step3:
-      "Paso 3: Completa tu pago con tu metodo preferido (PayPal, Apple Pay, Google Pay o tarjeta). Deja en blanco los campos opcionales de descripcion o nota.",
-    criticalNotes: "Notas criticas de entrega y seguridad",
-    instantDeliveryTitle: "Entrega instantanea:",
-    instantDeliveryText:
-      "Tus credenciales de acceso y datos de configuracion se enviaran directamente a tu bandeja de entrada principal inmediatamente despues de la confirmacion de red.",
-    communicationProtocolTitle: "Socio de pago seguro:",
-    communicationProtocolText:
-      "Whop es nuestro socio de pasarela de pago seguro. Todas las transacciones se procesan a traves de su checkout cifrado para proteger tus datos de pago.",
-    supportTitle: "Soporte tecnico:",
+    deliveryTitle: "Activacion inmediata:",
+    deliveryText:
+      "En cuanto se confirme el pago, las credenciales de tu cuenta se envian de inmediato a este correo.",
+    supportTitle: "Necesitas ayuda?",
     supportText:
-      "Para cualquier ayuda tecnica o de configuracion, responde directamente a este correo. Nuestro equipo de ingenieria gestiona el soporte fuera de la plataforma para proteger tu privacidad.",
-    lineItem: "Concepto",
-    amount: "Importe",
+      "Responde directamente a este correo con cualquier pregunta. Nuestro equipo estara encantado de ayudarte.",
+    lineItem: "Plan",
     spamReminder:
-      "Despues del pago, revisa tu carpeta de Spam o Promociones por si los detalles de entrega se filtran.",
+      "Si no ves este mensaje en tu bandeja de entrada, revisa las carpetas de Spam o Promociones.",
     ignoreNotice:
       "Si no solicitaste este correo, puedes ignorarlo de forma segura.",
     refundPolicy: "Politica de reembolso",
     termsOfService: "Terminos del servicio",
     plainHello: "Hola",
-    plainSecureReady:
-      "Gracias por tu pedido. Tu factura de configuracion tecnica esta lista para el pago. Utiliza nuestro socio de pasarela de pago seguro a continuacion para finalizar tu pago y activar tu asignacion de activos digitales.",
-    plainCheckoutNote:
-      "Nota: Deja en blanco cualquier campo opcional de descripcion o nota durante el checkout para garantizar un aprovisionamiento automatizado instantaneo. Tus credenciales de acceso y datos de configuracion se enviaran directamente a tu bandeja de entrada principal inmediatamente despues de la confirmacion de red.",
-    plainInvoiceReference: "Referencia de factura",
-    plainOpenPayment: "Abrir enlace de pago",
+    plainThanks:
+      "Gracias por enviar tu pedido de {plan}. Hemos recibido tu solicitud y te ayudaremos a completar el pago en breve.",
+    plainPaymentOptions: "Metodo de pago seleccionado: {method}",
+    plainDiscount:
+      "Paga por transferencia bancaria o criptomoneda y recibe un 15% de descuento sobre el precio listado.",
+    plainListedPrice: "Precio listado",
+    plainFinalPrice: "Precio final (15% de descuento)",
+    plainReply:
+      "Abre los detalles de pago de {method} con el enlace de abajo y paga el importe final con descuento.",
+    plainOpenPayment: "Abrir detalles de pago",
+    plainDelivery:
+      "En cuanto se reciba el pago, proporcionamos tu cuenta de inmediato.",
+    plainOrderReference: "Referencia del pedido",
     plainPlan: "Plan",
     plainSpamCheck:
-      "Despues del pago, revisa la carpeta de Spam si no ves nuestra confirmacion.",
+      "Si no ves nuestro mensaje, revisa las carpetas de Spam o Promociones.",
     plainIgnoreNotice:
       "Si no solicitaste este correo, puedes ignorarlo.",
   },
 };
+
+function withPlan(template: string, plan: string): string {
+  return template.replace(/\{plan\}/g, plan);
+}
+
+function withMethod(template: string, method: string): string {
+  return template.replace(/\{method\}/g, method);
+}
 
 function normalizeCountry(value: string): string {
   return value.toLowerCase().replace(/[^a-z\s]/g, "").replace(/\s+/g, " ").trim();
 }
 
 const LOCALE_BY_COUNTRY: Record<string, BuyerLocale> = {
-  "france": "fr",
-  "belgium": "fr",
-  "switzerland": "fr",
-  "luxembourg": "fr",
-  "monaco": "fr",
-  "haiti": "fr",
-  "netherlands": "nl",
-  "germany": "de",
-  "austria": "de",
-  "liechtenstein": "de",
-  "italy": "it",
+  france: "fr",
+  belgium: "fr",
+  switzerland: "fr",
+  luxembourg: "fr",
+  monaco: "fr",
+  haiti: "fr",
+  netherlands: "nl",
+  germany: "de",
+  austria: "de",
+  liechtenstein: "de",
+  italy: "it",
   "san marino": "it",
   "vatican city": "it",
-  "portugal": "pt",
-  "brazil": "pt",
-  "spain": "es",
-  "andorra": "es",
-  "argentina": "es",
-  "bolivia": "es",
-  "chile": "es",
-  "colombia": "es",
+  portugal: "pt",
+  brazil: "pt",
+  norway: "no",
+  spain: "es",
+  andorra: "es",
+  argentina: "es",
+  bolivia: "es",
+  chile: "es",
+  colombia: "es",
   "costa rica": "es",
-  "cuba": "es",
+  cuba: "es",
   "dominican republic": "es",
-  "ecuador": "es",
+  ecuador: "es",
   "el salvador": "es",
-  "guatemala": "es",
-  "honduras": "es",
-  "mexico": "es",
-  "nicaragua": "es",
-  "panama": "es",
-  "paraguay": "es",
-  "peru": "es",
-  "uruguay": "es",
-  "venezuela": "es",
+  guatemala: "es",
+  honduras: "es",
+  mexico: "es",
+  nicaragua: "es",
+  panama: "es",
+  paraguay: "es",
+  peru: "es",
+  uruguay: "es",
+  venezuela: "es",
 };
 
 export function resolveBuyerLocaleFromCountry(country: string): BuyerLocale {
@@ -638,12 +788,16 @@ export type BuyerOrderEmailParams = {
   email: string;
   country: string;
   tierName: string;
-  sellAppLink: string;
-  /** e.g. "$14.59 /mo" from the pricing card */
-  priceDisplay: string;
+  /** Listed price display, e.g. "€67.48" */
+  listedPriceDisplay: string;
+  /** Final discounted price display, e.g. "€57.36" */
+  discountedPriceDisplay: string;
   invoiceRef: string;
   siteOrigin: string;
   locale: BuyerLocale;
+  paymentMethod: SelectablePaymentMethod;
+  /** Placeholder or real URL for bank / crypto details page */
+  paymentDetailsUrl: string;
 };
 
 function escapeHtml(s: string): string {
@@ -660,9 +814,19 @@ export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
   const mail = escapeHtml(p.email);
   const country = escapeHtml(p.country);
   const tier = escapeHtml(p.tierName);
-  const price = escapeHtml(p.priceDisplay || "—");
-  const link = escapeHtml(p.sellAppLink);
+  const listed = escapeHtml(p.listedPriceDisplay || "—");
+  const discounted = escapeHtml(p.discountedPriceDisplay || "—");
   const inv = escapeHtml(p.invoiceRef);
+  const methodLabel =
+    p.paymentMethod === "bank_transfer" ? t.methodBank : t.methodCrypto;
+  const ctaLabel =
+    p.paymentMethod === "bank_transfer" ? t.ctaBankLabel : t.ctaCryptoLabel;
+  const detailsUrl = escapeHtml(p.paymentDetailsUrl);
+  const thanks = escapeHtml(withPlan(t.thanksLine, p.tierName));
+  const paymentOptionsText = escapeHtml(
+    withMethod(t.paymentOptionsText, methodLabel),
+  );
+  const replyText = escapeHtml(withMethod(t.replyText, methodLabel));
   const origin = p.siteOrigin.replace(/\/$/, "");
   const localePrefix =
     p.locale === "fr" ||
@@ -692,122 +856,124 @@ ${EMAIL_DARK_MODE_STYLE}
   <tr>
     <td align="center">
       <table role="presentation" class="gf-email-card" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;background-color:${C.bgCard};border-radius:12px;overflow:hidden;border:1px solid ${C.border};">
-        <!-- Header: brand gradient (primary → primary-dark) -->
         <tr>
           <td class="gf-email-header" style="background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};padding:28px 32px;text-align:center;">
             <p style="margin:0 0 8px 0;font-size:11px;font-weight:600;letter-spacing:0.12em;color:${C.headerSub};text-transform:uppercase;">${escapeHtml(t.headerEyebrow)}</p>
             <p style="margin:0 0 10px 0;font-size:28px;font-weight:700;color:#ffffff;font-family:Georgia,'Times New Roman',Times,serif;line-height:1.2;">GiGa FliX</p>
-            <p style="margin:0;font-size:13px;color:${C.headerInvoice};">${escapeHtml(t.invoiceReference)}: <strong style="color:#ffffff;">${inv}</strong></p>
+            <p style="margin:0;font-size:13px;color:${C.headerInvoice};">${escapeHtml(t.orderReference)}: <strong style="color:#ffffff;">${inv}</strong></p>
           </td>
         </tr>
-        <!-- Body -->
         <tr>
           <td class="gf-email-main" style="padding:28px 32px 8px 32px;">
             <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:${C.text};">${escapeHtml(t.greeting)} <strong>${name}</strong>,</p>
-            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:${C.text};">${escapeHtml(t.thanksLine)}</p>
-            <!-- Bill to -->
+            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:${C.text};">${thanks}</p>
             <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
               <tr>
                 <td style="padding:16px 18px;">
                   <p class="gf-email-muted" style="margin:0 0 8px 0;font-size:11px;font-weight:600;letter-spacing:0.08em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.billTo)}</p>
                   <p style="margin:0 0 4px 0;font-size:16px;font-weight:700;color:${C.text};">${name}</p>
                   <p style="margin:0 0 4px 0;font-size:14px;"><a href="mailto:${mail}" style="color:${C.linkOnWhite};text-decoration:underline;">${mail}</a></p>
-                  <p class="gf-email-muted" style="margin:0;font-size:14px;color:${C.textGray};">${country}</p>
+                  <p class="gf-email-muted" style="margin:0 0 8px 0;font-size:14px;color:${C.textGray};">${country}</p>
+                  <p style="margin:0;font-size:14px;color:${C.text};"><strong>${escapeHtml(t.selectedMethodLabel)}:</strong> ${escapeHtml(methodLabel)}</p>
                 </td>
               </tr>
             </table>
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 24px 0;">
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 20px 0;">
               <tr>
                 <td style="padding:0 0 10px 0;">
-                  <p class="gf-email-heading" style="margin:0;font-size:20px;font-weight:800;color:${C.primaryDark};line-height:1.2;">${escapeHtml(t.paymentInstructions)}</p>
+                  <p class="gf-email-heading" style="margin:0;font-size:20px;font-weight:800;color:${C.primaryDark};line-height:1.2;">${escapeHtml(t.paymentOptionsTitle)}</p>
                 </td>
               </tr>
               <tr>
                 <td class="gf-email-alert" style="background-color:${C.alertBg};border:1px solid ${C.alertBorder};border-radius:10px;padding:14px 16px;">
-                  <p style="margin:0;font-size:14px;line-height:1.6;color:${C.text};"><strong style="color:${C.primaryDark};">${escapeHtml(t.secureCheckoutLabel)}</strong> ${escapeHtml(t.secureCheckoutText)}</p>
+                  <p style="margin:0 0 8px 0;font-size:14px;line-height:1.6;color:${C.text};">${paymentOptionsText}</p>
+                  <p style="margin:0;font-size:14px;line-height:1.6;color:${C.text};"><strong style="color:${C.primaryDark};">${escapeHtml(t.discountTitle)}:</strong> ${escapeHtml(t.discountText)}</p>
                 </td>
               </tr>
             </table>
-            <!-- Prominent escrow CTA -->
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 18px auto;">
-              <tr>
-                <td class="gf-email-cta-wrap" style="border-radius:50px;background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};">
-                  <a href="${link}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:15px 30px;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;text-transform:none;">${escapeHtml(t.ctaLabel)}</a>
-                </td>
-              </tr>
-            </table>
-            <p class="gf-email-muted" style="margin:0 0 22px 0;font-size:13px;color:${C.textGray};text-align:center;">${escapeHtml(t.fallbackLinkHelp)}<br/><a href="${link}" style="color:${C.linkOnWhite};text-decoration:underline;word-break:break-all;">${link}</a></p>
 
-            <!-- Step-by-step guide -->
             <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
-              <tr>
-                <td style="padding:14px 16px;border-bottom:1px solid ${C.border};">
-                  <p class="gf-email-heading" style="margin:0;font-size:14px;font-weight:700;color:${C.primaryDark};">${escapeHtml(t.stepGuideTitle)}</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:12px 16px;border-bottom:1px solid ${C.border};">
-                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.step1)}</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:12px 16px;border-bottom:1px solid ${C.border};">
-                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.step2)}</p>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:12px 16px;">
-                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.step3)}</p>
-                </td>
-              </tr>
-            </table>
-
-            <!-- Critical delivery/security notes -->
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:28px;">
-              <tr>
-                <td style="padding:0 0 10px 0;">
-                  <p class="gf-email-critical" style="margin:0;font-size:14px;font-weight:800;color:#b91c1c;text-transform:uppercase;letter-spacing:0.04em;">${escapeHtml(t.criticalNotes)}</p>
-                </td>
-              </tr>
-              <tr>
-                <td class="gf-email-callout-cyan" style="background-color:#ecfeff;border:1px solid #67e8f9;border-radius:10px;padding:13px 14px 12px 14px;">
-                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#0e7490;">${escapeHtml(t.instantDeliveryTitle)}</strong> ${escapeHtml(t.instantDeliveryText)}</p>
-                </td>
-              </tr>
-              <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
-              <tr>
-                <td class="gf-email-callout-amber" style="background-color:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:13px 14px 12px 14px;">
-                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#9a3412;">${escapeHtml(t.communicationProtocolTitle)}</strong> ${escapeHtml(t.communicationProtocolText)}</p>
-                </td>
-              </tr>
-              <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
-              <tr>
-                <td class="gf-email-callout-green" style="background-color:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:13px 14px 12px 14px;">
-                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#166534;">${escapeHtml(t.supportTitle)}</strong> ${escapeHtml(t.supportText)}</p>
-                </td>
-              </tr>
-            </table>
-            <!-- Line item -->
-            <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;">
               <tr>
                 <td colspan="2" style="padding:12px 18px;border-bottom:1px solid ${C.border};">
                   <table width="100%" cellspacing="0" cellpadding="0" border="0">
                     <tr>
                       <td class="gf-email-muted" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.lineItem)}</td>
-                      <td class="gf-email-muted" align="right" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.amount)}</td>
+                      <td class="gf-email-muted" align="right" style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:${C.textGray};text-transform:uppercase;">${escapeHtml(t.listedPriceLabel)} / ${escapeHtml(t.finalPriceLabel)}</td>
                     </tr>
                   </table>
                 </td>
               </tr>
               <tr>
                 <td style="padding:16px 18px;font-size:15px;font-weight:700;color:${C.text};vertical-align:top;">${tier}</td>
-                <td class="gf-email-price" align="right" style="padding:16px 18px;font-size:15px;font-weight:700;color:${C.primaryDark};white-space:nowrap;vertical-align:top;">${price}</td>
+                <td align="right" style="padding:16px 18px;vertical-align:top;">
+                  <p class="gf-email-muted" style="margin:0 0 4px 0;font-size:13px;color:${C.textGray};text-decoration:line-through;">${listed}</p>
+                  <p class="gf-email-price" style="margin:0;font-size:18px;font-weight:800;color:${C.primaryDark};white-space:nowrap;">${discounted}</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="padding:0 18px 16px 18px;">
+                  <p class="gf-email-muted" style="margin:0;font-size:13px;color:${C.textGray};">${escapeHtml(t.listedPriceLabel)}: ${listed} · ${escapeHtml(t.finalPriceLabel)}: <strong style="color:${C.text};">${discounted}</strong></p>
+                </td>
               </tr>
             </table>
-            <p class="gf-email-muted" style="margin:24px 0 0 0;font-size:13px;line-height:1.5;color:${C.textGray};">${escapeHtml(t.spamReminder)}</p>
+
+            <!-- Conditional payment details CTA -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 12px auto;">
+              <tr>
+                <td class="gf-email-cta-wrap" style="border-radius:50px;background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};">
+                  <a href="${detailsUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:15px 30px;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;">${escapeHtml(ctaLabel)}</a>
+                </td>
+              </tr>
+            </table>
+            <p class="gf-email-muted" style="margin:0 0 22px 0;font-size:13px;color:${C.textGray};text-align:center;">${escapeHtml(t.fallbackLinkHelp)}<br/><a href="${detailsUrl}" style="color:${C.linkOnWhite};text-decoration:underline;word-break:break-all;">${detailsUrl}</a></p>
+
+            <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
+              <tr>
+                <td style="padding:14px 16px;border-bottom:1px solid ${C.border};">
+                  <p class="gf-email-heading" style="margin:0;font-size:14px;font-weight:700;color:${C.primaryDark};">${escapeHtml(t.nextStepsTitle)}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;border-bottom:1px solid ${C.border};">
+                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.nextStep1)}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;border-bottom:1px solid ${C.border};">
+                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.nextStep2)}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:12px 16px;">
+                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.nextStep3)}</p>
+                </td>
+              </tr>
+            </table>
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:28px;">
+              <tr>
+                <td class="gf-email-callout-cyan" style="background-color:#ecfeff;border:1px solid #67e8f9;border-radius:10px;padding:13px 14px 12px 14px;">
+                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#0e7490;">${escapeHtml(t.replyTitle)}:</strong> ${replyText}</p>
+                </td>
+              </tr>
+              <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
+              <tr>
+                <td class="gf-email-callout-green" style="background-color:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:13px 14px 12px 14px;">
+                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#166534;">${escapeHtml(t.deliveryTitle)}</strong> ${escapeHtml(t.deliveryText)}</p>
+                </td>
+              </tr>
+              <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
+              <tr>
+                <td class="gf-email-alert" style="background-color:${C.alertBg};border:1px solid ${C.alertBorder};border-radius:10px;padding:13px 14px 12px 14px;">
+                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:${C.primaryDark};">${escapeHtml(t.supportTitle)}</strong> ${escapeHtml(t.supportText)}</p>
+                </td>
+              </tr>
+            </table>
+
+            <p class="gf-email-muted" style="margin:0 0 0 0;font-size:13px;line-height:1.5;color:${C.textGray};">${escapeHtml(t.spamReminder)}</p>
           </td>
         </tr>
-        <!-- Footer -->
         <tr>
           <td class="gf-email-footer" style="padding:8px 32px 28px 32px;border-top:1px solid ${C.border};">
             <p class="gf-email-muted" style="margin:0 0 16px 0;font-size:12px;color:${C.textGray};line-height:1.5;">${escapeHtml(t.ignoreNotice)}</p>
@@ -829,25 +995,39 @@ ${EMAIL_DARK_MODE_STYLE}
 export function buildBuyerOrderEmailText(
   p: Pick<
     BuyerOrderEmailParams,
-    "fullName" | "tierName" | "priceDisplay" | "sellAppLink" | "invoiceRef" | "locale"
+    | "fullName"
+    | "tierName"
+    | "listedPriceDisplay"
+    | "discountedPriceDisplay"
+    | "invoiceRef"
+    | "locale"
+    | "paymentMethod"
+    | "paymentDetailsUrl"
   >,
 ): string {
   const t = COPY[p.locale];
-  const planLine = p.priceDisplay
-    ? `${t.plainPlan}: ${p.tierName} — ${p.priceDisplay}`
-    : `${t.plainPlan}: ${p.tierName}`;
+  const methodLabel =
+    p.paymentMethod === "bank_transfer" ? t.methodBank : t.methodCrypto;
 
   return `${t.plainHello} ${p.fullName},
 
-${t.plainSecureReady}
+${withPlan(t.plainThanks, p.tierName)}
 
-${t.plainCheckoutNote}
+${withMethod(t.plainPaymentOptions, methodLabel)}
 
-${t.plainInvoiceReference}: ${p.invoiceRef}
+${t.plainDiscount}
 
-${t.plainOpenPayment}: ${p.sellAppLink}
+${t.plainPlan}: ${p.tierName}
+${t.plainListedPrice}: ${p.listedPriceDisplay || "—"}
+${t.plainFinalPrice}: ${p.discountedPriceDisplay || "—"}
 
-${planLine}
+${withMethod(t.plainReply, methodLabel)}
+
+${t.plainOpenPayment}: ${p.paymentDetailsUrl}
+
+${t.plainDelivery}
+
+${t.plainOrderReference}: ${p.invoiceRef}
 
 ${t.plainSpamCheck}
 

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-/** Checkout links are managed in `lib/sellapp-config.ts` and sent via the order lead modal. */
+/** Order lead modal sends a bank transfer / crypto follow-up email (no checkout links). */
 
 export function useCatchonTVUI() {
   useEffect(() => {
