@@ -57,7 +57,12 @@ export function getPaymentDetailsUrl(
       : process.env.CRYPTO_DETAILS_URL?.trim();
 
   const base = envBase || `${origin}${paymentPath(method)}`;
-  const url = new URL(base);
+  let url: URL;
+  try {
+    url = new URL(base);
+  } catch {
+    url = new URL(`${origin}${paymentPath(method)}`);
+  }
   url.searchParams.set("plan", params.plan);
   const amountStr =
     typeof params.amount === "number"

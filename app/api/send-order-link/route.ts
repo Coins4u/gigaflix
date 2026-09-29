@@ -12,6 +12,7 @@ import {
   getPaymentDetailsUrl,
   isSelectablePaymentMethod,
   PAYMENT_METHOD_LABELS,
+  type SelectablePaymentMethod,
 } from "../../../lib/payment-method";
 
 type Body = {
@@ -23,6 +24,14 @@ type Body = {
   priceDisplay?: string;
   paymentMethod?: string;
 };
+
+function normalizeSiteOrigin(raw: string | undefined): string {
+  const fallback = "https://gigaflixiptv.com";
+  const value = (raw || "").trim();
+  if (!value) return fallback;
+  if (/^https?:\/\//i.test(value)) return value.replace(/\/$/, "");
+  return `https://${value.replace(/\/$/, "")}`;
+}
 
 function buildTransporter() {
   const host = process.env.SMTP_HOST;
@@ -74,8 +83,10 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
-  const paymentMethod = paymentMethodRaw;
-  const paymentMethodLabel = PAYMENT_METHOD_LABELS[paymentMethod];
+
+  // Keep a uniquely named const (avoid object-shorthand minify bugs in prod).
+  const selectedPaymentMethod: SelectablePaymentMethod = paymentMethodRaw;
+  const paymentMethodLabel = PAYMENT_METHOD_LABELS[selectedPaymentMethod];
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   if (!emailOk) {
@@ -112,56 +123,57 @@ export async function POST(request: Request) {
     );
   }
 
-  const siteOrigin =
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://gigaflixiptv.com";
-  const invoiceRef = generateInvoiceRef();
-  const locale = resolveBuyerLocaleFromCountry(country);
-  const paymentDetailsUrl = getPaymentDetailsUrl(paymentMethod, {
-    siteOrigin,
-    plan: tierName,
-    amount: discountedAmount,
-    invoiceRef,
-  });
-
-  const buyerSubject = getBuyerEmailSubject(tierName, invoiceRef, locale);
-  const buyerHtml = buildBuyerOrderEmailHtml({
-    fullName,
-    email,
-    country,
-    tierName,
-    listedPriceDisplay,
-    discountedPriceDisplay,
-    invoiceRef,
-    siteOrigin,
-    locale,
-    paymentMethod,
-    paymentDetailsUrl,
-  });
-
-  const buyerText = buildBuyerOrderEmailText({
-    fullName,
-    tierName,
-    listedPriceDisplay,
-    discountedPriceDisplay,
-    invoiceRef,
-    locale,
-    paymentMethod,
-    paymentDetailsUrl,
-  });
-
-  const adminSubject = `NEW FORM FILLED: ${tierName} - ${fullName}`;
-  const adminText = `A user has filled the order form.
-Name: ${fullName}
-Email: ${email}
-Country: ${country}
-Tier Selected: ${tierName}
-Payment Method: ${paymentMethodLabel}
-Listed price: ${listedPriceDisplay}
-Discounted price (15% off bank transfer / crypto): ${discountedPriceDisplay}
-Status: Payment details follow-up email sent to the buyer (${paymentMethodLabel}).
-Payment page: ${paymentDetailsUrl}`;
-
   try {
+    const siteOrigin = normalizeSiteOrigin(process.env.NEXT_PUBLIC_SITE_URL);
+    const invoiceRef = generateInvoiceRef();
+    const locale = resolveBuyerLocaleFromCountry(country);
+    const paymentDetailsUrl = getPaymentDetailsUrl(selectedPaymentMethod, {
+      siteOrigin,
+      plan: tierName,
+      amount: discountedAmount,
+      invoiceRef,
+    });
+
+    const buyerSubject = getBuyerEmailSubject(tierName, invoiceRef, locale);
+    const buyerHtml = buildBuyerOrderEmailHtml({
+      fullName,
+      email,
+      country,
+      tierName,
+      listedPriceDisplay,
+      discountedPriceDisplay,
+      invoiceRef,
+      siteOrigin,
+      locale,
+      paymentMethod: selectedPaymentMethod,
+      paymentDetailsUrl,
+    });
+
+    const buyerText = buildBuyerOrderEmailText({
+      fullName,
+      tierName,
+      listedPriceDisplay,
+      discountedPriceDisplay,
+      invoiceRef,
+      locale,
+      paymentMethod: selectedPaymentMethod,
+      paymentDetailsUrl,
+    });
+
+    const adminSubject = `NEW FORM FILLED: ${tierName} - ${fullName}`;
+    const adminText = [
+      "A user has filled the order form.",
+      `Name: ${fullName}`,
+      `Email: ${email}`,
+      `Country: ${country}`,
+      `Tier Selected: ${tierName}`,
+      `Payment Method: ${paymentMethodLabel}`,
+      `Listed price: ${listedPriceDisplay}`,
+      `Discounted price (15% off bank transfer / crypto): ${discountedPriceDisplay}`,
+      `Status: Payment details follow-up email sent to the buyer (${paymentMethodLabel}).`,
+      `Payment page: ${paymentDetailsUrl}`,
+    ].join("\n");
+
     await Promise.all([
       transporter.sendMail({
         from,
@@ -177,18 +189,19 @@ Payment page: ${paymentDetailsUrl}`;
         text: adminText,
       }),
     ]);
-  } catch (err) {
-    console.error("send-order-link: SMTP send error:", err);
-    return NextResponse.json(
-      { error: "Failed to send emails. Please try again later." },
-      { status: 502 },
-    );
-  }
 
-  return NextResponse.json({
-    ok: true,
-    listedPriceDisplay,
-    discountedPriceDisplay,
-    paymentMethod,
-  });
+    return NextResponse.json({
+      ok: true,
+      listedPriceDisplay,
+      discountedPriceDisplay,
+      paymentMethod: selectedPaymentMethod,
+    });
+  } catch (err) {
+    console.error("send-order-link: order processing error:", err);
+    const message =
+      err instanceof Error && /smtp|mail|econn|auth/i.test(err.message)
+        ? "Failed to send emails. Please try again later."
+        : "Failed to process order. Please try again later.";
+    return NextResponse.json({ error: message }, { status: 502 });
+  }
 }
