@@ -3,12 +3,12 @@
  */
 
 export const BANK_PAYMENT_DETAILS = {
-  beneficiary: "AYOUB ESADIK",
-  bankName: "Clear Junction Limited",
-  iban: "GB05CLJU04130742245935",
-  bic: "CLJUGB21XXX",
+  beneficiary: "xxxxxxxxxxxxxxxxxx",
+  bankName: "xxxxxxxxxxxxxxxxxx",
+  iban: "xxxxxxxxxxxxxxxxxx",
+  bic: "xxxxxxxxxxxx",
   bankAddress:
-    "4th Floor Imperial House, 15 Kingsway, London, WC2B 6UN, United Kingdom",
+    "xxxxxxxxxxxxxxxxxx",
   transferType: "SEPA Instant Transfer",
 } as const;
 
