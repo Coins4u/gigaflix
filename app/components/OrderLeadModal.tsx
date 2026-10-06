@@ -130,6 +130,7 @@ export default function OrderLeadModal(_props: Props) {
     email: string;
     discountedPriceDisplay: string | null;
     paymentMethodLabel: string;
+    paymentMethod: SelectablePaymentMethod;
   } | null>(null);
 
   const close = useCallback(() => {
@@ -240,6 +241,7 @@ export default function OrderLeadModal(_props: Props) {
           localPrices?.discountedDisplay ??
           null,
         paymentMethodLabel: PAYMENT_METHOD_LABELS[paymentMethod],
+        paymentMethod,
       });
     } catch {
       setError("Network error. Please try again.");
@@ -279,13 +281,26 @@ export default function OrderLeadModal(_props: Props) {
               Thank you
             </h2>
             <p>
-              Thank you, {success.fullName}. We emailed {success.email} with
-              your {success.paymentMethodLabel.toLowerCase()} payment details
-              link
-              {success.discountedPriceDisplay
-                ? ` — your final price with 15% off is ${success.discountedPriceDisplay}`
-                : " and a 15% discount"}
-              . Open that email and use the button to complete payment.
+              {success.paymentMethod === "bank_transfer" ? (
+                <>
+                  Thank you, {success.fullName}. We emailed {success.email}
+                  {success.discountedPriceDisplay
+                    ? ` — your final price with 15% off is ${success.discountedPriceDisplay}`
+                    : ""}
+                  . Please reply to that email to confirm your order and receive
+                  your secure bank payment details privately.
+                </>
+              ) : (
+                <>
+                  Thank you, {success.fullName}. We emailed {success.email} with
+                  your {success.paymentMethodLabel.toLowerCase()} payment
+                  details link
+                  {success.discountedPriceDisplay
+                    ? ` — your final price with 15% off is ${success.discountedPriceDisplay}`
+                    : " and a 15% discount"}
+                  . Open that email and use the button to complete payment.
+                </>
+              )}
             </p>
             <button
               type="button"

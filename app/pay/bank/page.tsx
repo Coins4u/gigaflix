@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import CopyableField from "../../components/CopyableField";
 import PaymentOrderSummary from "../../components/PaymentOrderSummary";
 import PaymentPageShell from "../../components/PaymentPageShell";
-import PaymentWarnings from "../../components/PaymentWarnings";
-import {
-  BANK_PAYMENT_DETAILS,
-  paymentReferenceHint,
-} from "../../../lib/payment-details";
 import { parsePaymentPageParams } from "../../../lib/payment-method";
 
 export const metadata: Metadata = {
-  title: "Bank Transfer Payment | GiGa FliX",
+  title: "Bank Transfer | GiGa FliX",
   description:
-    "Complete your GiGa FliX order by SEPA Instant bank transfer. Pay the discounted plan total and reply with your receipt.",
+    "Bank transfer details are provided privately by email after you confirm your order.",
   robots: { index: false, follow: false },
 };
 
@@ -22,13 +16,11 @@ type PageProps = {
 
 export default async function BankPaymentPage({ searchParams }: PageProps) {
   const params = parsePaymentPageParams(await searchParams);
-  const b = BANK_PAYMENT_DETAILS;
-  const referenceHint = paymentReferenceHint(params.invoiceRef);
 
   return (
     <PaymentPageShell
-      title="Bank transfer (SEPA Instant)"
-      subtitle="Pay the final discounted amount below by SEPA Instant transfer, then reply to your order email with a receipt."
+      title="Bank transfer"
+      subtitle="Secure bank payment details are sent privately by email — they are not published on this page."
     >
       <PaymentOrderSummary
         plan={params.plan}
@@ -37,56 +29,41 @@ export default async function BankPaymentPage({ searchParams }: PageProps) {
       />
 
       <section className="pay-panel">
-        <h2 className="pay-panel__heading">SEPA Instant instructions</h2>
+        <h2 className="pay-panel__heading">How to complete payment</h2>
         <ol className="pay-steps">
-          <li>Open your banking app or online banking.</li>
           <li>
-            Choose <strong>{b.transferType}</strong> (not a standard delayed
-            SEPA credit transfer if Instant is available).
-          </li>
-          <li>Enter the beneficiary details below exactly as shown.</li>
-          <li>
-            Send exactly <strong>{params.amountDisplay}</strong> (final price
-            with 15% off).
+            Open the order confirmation email we sent you (check Spam /
+            Promotions if needed).
           </li>
           <li>
-            Set the payment reference to{" "}
-            <strong>{params.invoiceRef} + your full name</strong>. Do not
-            include words like &quot;TV&quot; or &quot;IPTV&quot; in the
-            payment reference or description.
+            Reply directly to that email to confirm your order and request your
+            secure bank payment details.
           </li>
           <li>
-            After the transfer, reply to your order confirmation email with a
-            screenshot or receipt so we can activate your account.
+            We will review your reply and send IBAN / transfer instructions
+            through that private email thread.
+          </li>
+          <li>
+            After payment is confirmed, we activate your account and send your
+            credentials.
           </li>
         </ol>
+        <p className="pay-panel__note">
+          For your security, bank account details are never shown on this
+          website or in the first automated email.
+        </p>
       </section>
 
-      <section className="pay-panel">
-        <h2 className="pay-panel__heading">Account details</h2>
-        <div className="pay-fields">
-          <CopyableField label="Beneficiary" value={b.beneficiary} mono={false} />
-          <CopyableField label="Bank name" value={b.bankName} mono={false} />
-          <CopyableField label="IBAN" value={b.iban} />
-          <CopyableField label="BIC / SWIFT" value={b.bic} />
-          <CopyableField
-            label="Bank address"
-            value={b.bankAddress}
-            mono={false}
-          />
-          <CopyableField
-            label="Amount to transfer"
-            value={params.amountDisplay}
-          />
-          <CopyableField
-            label="Reference / description"
-            value={referenceHint}
-            mono={false}
-          />
+      <section className="pay-warnings" aria-label="Important">
+        <div className="pay-warnings__box pay-warnings__box--action">
+          <h2>Reply to your order email</h2>
+          <p>
+            Please reply to your previous order confirmation email so we can
+            match your order reference <strong>{params.invoiceRef}</strong> and
+            send payment details safely.
+          </p>
         </div>
       </section>
-
-      <PaymentWarnings invoiceRef={params.invoiceRef} />
     </PaymentPageShell>
   );
 }

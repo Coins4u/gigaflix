@@ -727,6 +727,189 @@ function withMethod(template: string, method: string): string {
   return template.replace(/\{method\}/g, method);
 }
 
+/** Bank-transfer emails: reply for private details (no IBAN / public CTA). */
+type BankEmailCopy = {
+  greeting: string;
+  /** Body after "Hi Name," — English matches the requested wording. */
+  lead: string;
+  paymentOptionsTitle: string;
+  paymentOptionsText: string;
+  replyTitle: string;
+  replyText: string;
+  nextStepsTitle: string;
+  nextStep1: string;
+  nextStep2: string;
+  nextStep3: string;
+  plainLead: string;
+  plainReply: string;
+};
+
+const BANK_COPY: Record<BuyerLocale, BankEmailCopy> = {
+  en: {
+    greeting: "Hi",
+    lead: "thank you for your order! To complete your payment for your IPTV subscription via bank transfer, please reply directly to this email to confirm your order and receive your secure bank payment details.",
+    paymentOptionsTitle: "Bank transfer next step",
+    paymentOptionsText:
+      "Bank payment details are not included in this email for security. Reply to this message and we will send your secure bank credentials privately.",
+    replyTitle: "Action required",
+    replyText:
+      "Reply directly to this email to confirm your order. We will then send your secure bank payment details through this same private conversation.",
+    nextStepsTitle: "Next steps",
+    nextStep1: "Reply to this email to confirm your bank transfer order.",
+    nextStep2:
+      "We will send your secure bank payment details privately in that thread.",
+    nextStep3:
+      "As soon as payment is confirmed, we provide your account immediately.",
+    plainLead:
+      "thank you for your order! To complete your payment for your IPTV subscription via bank transfer, please reply directly to this email to confirm your order and receive your secure bank payment details.",
+    plainReply:
+      "Reply directly to this email to confirm your order and receive your secure bank payment details. Do not look for IBAN details on the website — they are sent privately after you reply.",
+  },
+  fr: {
+    greeting: "Bonjour",
+    lead: "merci pour votre commande ! Pour finaliser le paiement de votre abonnement IPTV par virement bancaire, repondez directement a cet email afin de confirmer votre commande et recevoir vos coordonnees bancaires securisees.",
+    paymentOptionsTitle: "Prochaine etape — virement",
+    paymentOptionsText:
+      "Les coordonnees bancaires ne sont pas incluses dans cet email pour des raisons de securite. Repondez a ce message et nous vous enverrons vos details de paiement en prive.",
+    replyTitle: "Action requise",
+    replyText:
+      "Repondez directement a cet email pour confirmer votre commande. Nous vous enverrons ensuite vos coordonnees bancaires securisees dans cette meme conversation privee.",
+    nextStepsTitle: "Prochaines etapes",
+    nextStep1: "Repondez a cet email pour confirmer votre commande par virement.",
+    nextStep2:
+      "Nous vous enverrons vos coordonnees bancaires securisees en prive dans ce fil.",
+    nextStep3:
+      "Des que le paiement est confirme, nous fournissons votre compte immediatement.",
+    plainLead:
+      "merci pour votre commande ! Pour finaliser le paiement de votre abonnement IPTV par virement bancaire, repondez directement a cet email afin de confirmer votre commande et recevoir vos coordonnees bancaires securisees.",
+    plainReply:
+      "Repondez directement a cet email pour confirmer votre commande et recevoir vos coordonnees bancaires securisees. Les IBAN ne sont pas publies sur le site — ils sont envoyes en prive apres votre reponse.",
+  },
+  nl: {
+    greeting: "Hallo",
+    lead: "bedankt voor je bestelling! Om je betaling voor je IPTV-abonnement via bankoverschrijving af te ronden, beantwoord je deze e-mail direct om je bestelling te bevestigen en je beveiligde bankgegevens te ontvangen.",
+    paymentOptionsTitle: "Volgende stap — bankoverschrijving",
+    paymentOptionsText:
+      "Bankgegevens staan om veiligheidsredenen niet in deze e-mail. Beantwoord dit bericht en we sturen je betaalgegevens prive.",
+    replyTitle: "Actie vereist",
+    replyText:
+      "Beantwoord deze e-mail direct om je bestelling te bevestigen. Daarna sturen we je beveiligde bankgegevens in ditzelfde privegesprek.",
+    nextStepsTitle: "Volgende stappen",
+    nextStep1: "Beantwoord deze e-mail om je bankoverschrijving te bevestigen.",
+    nextStep2:
+      "We sturen je beveiligde bankgegevens prive in die e-mailthread.",
+    nextStep3:
+      "Zodra de betaling is bevestigd, leveren we je account onmiddellijk.",
+    plainLead:
+      "bedankt voor je bestelling! Om je betaling voor je IPTV-abonnement via bankoverschrijving af te ronden, beantwoord je deze e-mail direct om je bestelling te bevestigen en je beveiligde bankgegevens te ontvangen.",
+    plainReply:
+      "Beantwoord deze e-mail direct om je bestelling te bevestigen en je beveiligde bankgegevens te ontvangen. IBAN-gegevens staan niet op de website — die sturen we prive na je antwoord.",
+  },
+  de: {
+    greeting: "Hallo",
+    lead: "vielen Dank fuer Ihre Bestellung! Um die Zahlung fuer Ihr IPTV-Abo per Bankueberweisung abzuschliessen, antworten Sie bitte direkt auf diese E-Mail, um Ihre Bestellung zu bestaetigen und Ihre sicheren Bankdaten zu erhalten.",
+    paymentOptionsTitle: "Naechster Schritt — Bankueberweisung",
+    paymentOptionsText:
+      "Bankdaten sind aus Sicherheitsgruenden nicht in dieser E-Mail enthalten. Antworten Sie auf diese Nachricht und wir senden Ihnen die Zahlungsdetails privat.",
+    replyTitle: "Aktion erforderlich",
+    replyText:
+      "Antworten Sie direkt auf diese E-Mail, um Ihre Bestellung zu bestaetigen. Anschliessend senden wir Ihre sicheren Bankdaten in derselben privaten Unterhaltung.",
+    nextStepsTitle: "Naechste Schritte",
+    nextStep1:
+      "Antworten Sie auf diese E-Mail, um Ihre Bankueberweisung zu bestaetigen.",
+    nextStep2:
+      "Wir senden Ihnen Ihre sicheren Bankdaten privat in diesem Thread.",
+    nextStep3:
+      "Sobald die Zahlung bestaetigt ist, stellen wir Ihr Konto sofort bereit.",
+    plainLead:
+      "vielen Dank fuer Ihre Bestellung! Um die Zahlung fuer Ihr IPTV-Abo per Bankueberweisung abzuschliessen, antworten Sie bitte direkt auf diese E-Mail, um Ihre Bestellung zu bestaetigen und Ihre sicheren Bankdaten zu erhalten.",
+    plainReply:
+      "Antworten Sie direkt auf diese E-Mail, um Ihre Bestellung zu bestaetigen und Ihre sicheren Bankdaten zu erhalten. IBAN-Daten stehen nicht auf der Website — sie werden nach Ihrer Antwort privat gesendet.",
+  },
+  it: {
+    greeting: "Ciao",
+    lead: "grazie per il tuo ordine! Per completare il pagamento del tuo abbonamento IPTV tramite bonifico bancario, rispondi direttamente a questa email per confermare l ordine e ricevere i dettagli di pagamento bancario sicuri.",
+    paymentOptionsTitle: "Prossimo passo — bonifico",
+    paymentOptionsText:
+      "I dettagli bancari non sono inclusi in questa email per motivi di sicurezza. Rispondi a questo messaggio e ti invieremo le coordinate in privato.",
+    replyTitle: "Azione richiesta",
+    replyText:
+      "Rispondi direttamente a questa email per confermare l ordine. Poi ti invieremo i dettagli bancari sicuri in questa stessa conversazione privata.",
+    nextStepsTitle: "Prossimi passi",
+    nextStep1: "Rispondi a questa email per confermare l ordine con bonifico.",
+    nextStep2:
+      "Ti invieremo i dettagli bancari sicuri in privato in questo thread.",
+    nextStep3:
+      "Non appena il pagamento e confermato, forniamo subito il tuo account.",
+    plainLead:
+      "grazie per il tuo ordine! Per completare il pagamento del tuo abbonamento IPTV tramite bonifico bancario, rispondi direttamente a questa email per confermare l ordine e ricevere i dettagli di pagamento bancario sicuri.",
+    plainReply:
+      "Rispondi direttamente a questa email per confermare l ordine e ricevere i dettagli bancari sicuri. L IBAN non e pubblicato sul sito — viene inviato in privato dopo la tua risposta.",
+  },
+  pt: {
+    greeting: "Ola",
+    lead: "obrigado pelo seu pedido! Para concluir o pagamento da sua assinatura IPTV por transferencia bancaria, responda diretamente a este email para confirmar o pedido e receber os detalhes bancarios seguros.",
+    paymentOptionsTitle: "Proximo passo — transferencia",
+    paymentOptionsText:
+      "Os dados bancarios nao estao neste email por seguranca. Responda a esta mensagem e enviaremos os detalhes de pagamento em privado.",
+    replyTitle: "Acao necessaria",
+    replyText:
+      "Responda diretamente a este email para confirmar o pedido. Em seguida enviaremos os detalhes bancarios seguros nesta mesma conversa privada.",
+    nextStepsTitle: "Proximos passos",
+    nextStep1:
+      "Responda a este email para confirmar o pedido por transferencia bancaria.",
+    nextStep2:
+      "Enviaremos os detalhes bancarios seguros em privado neste fio.",
+    nextStep3:
+      "Assim que o pagamento for confirmado, fornecemos sua conta imediatamente.",
+    plainLead:
+      "obrigado pelo seu pedido! Para concluir o pagamento da sua assinatura IPTV por transferencia bancaria, responda diretamente a este email para confirmar o pedido e receber os detalhes bancarios seguros.",
+    plainReply:
+      "Responda diretamente a este email para confirmar o pedido e receber os detalhes bancarios seguros. O IBAN nao e publicado no site — e enviado em privado apos a sua resposta.",
+  },
+  no: {
+    greeting: "Hei",
+    lead: "takk for bestillingen din! For a fullfore betalingen for IPTV-abonnementet ditt via bankoverforing, svar direkte pa denne e-posten for a bekrefte bestillingen og motta sikre bankbetalingsdetaljer.",
+    paymentOptionsTitle: "Neste steg — bankoverforing",
+    paymentOptionsText:
+      "Bankdetaljer er ikke inkludert i denne e-posten av sikkerhetshensyn. Svar pa denne meldingen, sa sender vi betalingsdetaljene privat.",
+    replyTitle: "Handling kreves",
+    replyText:
+      "Svar direkte pa denne e-posten for a bekrefte bestillingen. Deretter sender vi sikre bankdetaljer i samme private samtale.",
+    nextStepsTitle: "Neste steg",
+    nextStep1: "Svar pa denne e-posten for a bekrefte bankoverforingsbestillingen.",
+    nextStep2:
+      "Vi sender sikre bankdetaljer privat i den e-posttradelen.",
+    nextStep3:
+      "Sa snart betalingen er bekreftet, gir vi deg kontoen umiddelbart.",
+    plainLead:
+      "takk for bestillingen din! For a fullfore betalingen for IPTV-abonnementet ditt via bankoverforing, svar direkte pa denne e-posten for a bekrefte bestillingen og motta sikre bankbetalingsdetaljer.",
+    plainReply:
+      "Svar direkte pa denne e-posten for a bekrefte bestillingen og motta sikre bankdetaljer. IBAN publiseres ikke pa nettsiden — den sendes privat etter at du har svart.",
+  },
+  es: {
+    greeting: "Hola",
+    lead: "gracias por tu pedido! Para completar el pago de tu suscripcion IPTV por transferencia bancaria, responde directamente a este correo para confirmar tu pedido y recibir los datos bancarios seguros.",
+    paymentOptionsTitle: "Siguiente paso — transferencia",
+    paymentOptionsText:
+      "Los datos bancarios no se incluyen en este correo por seguridad. Responde a este mensaje y te enviaremos los detalles de pago en privado.",
+    replyTitle: "Accion requerida",
+    replyText:
+      "Responde directamente a este correo para confirmar tu pedido. Luego te enviaremos los datos bancarios seguros en esta misma conversacion privada.",
+    nextStepsTitle: "Proximos pasos",
+    nextStep1:
+      "Responde a este correo para confirmar tu pedido por transferencia bancaria.",
+    nextStep2:
+      "Te enviaremos los datos bancarios seguros en privado en ese hilo.",
+    nextStep3:
+      "En cuanto se confirme el pago, proporcionamos tu cuenta de inmediato.",
+    plainLead:
+      "gracias por tu pedido! Para completar el pago de tu suscripcion IPTV por transferencia bancaria, responde directamente a este correo para confirmar tu pedido y recibir los datos bancarios seguros.",
+    plainReply:
+      "Responde directamente a este correo para confirmar tu pedido y recibir los datos bancarios seguros. El IBAN no se publica en el sitio — se envia en privado despues de tu respuesta.",
+  },
+};
+
 function normalizeCountry(value: string): string {
   return value.toLowerCase().replace(/[^a-z\s]/g, "").replace(/\s+/g, " ").trim();
 }
@@ -796,7 +979,9 @@ export type BuyerOrderEmailParams = {
   siteOrigin: string;
   locale: BuyerLocale;
   paymentMethod: SelectablePaymentMethod;
-  /** Placeholder or real URL for bank / crypto details page */
+  /**
+   * Crypto payment page URL. Empty for bank transfer (no public bank CTA).
+   */
   paymentDetailsUrl: string;
 };
 
@@ -810,6 +995,8 @@ function escapeHtml(s: string): string {
 
 export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
   const t = COPY[p.locale];
+  const bank = BANK_COPY[p.locale];
+  const isBank = p.paymentMethod === "bank_transfer";
   const name = escapeHtml(p.fullName);
   const mail = escapeHtml(p.email);
   const country = escapeHtml(p.country);
@@ -817,16 +1004,31 @@ export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
   const listed = escapeHtml(p.listedPriceDisplay || "—");
   const discounted = escapeHtml(p.discountedPriceDisplay || "—");
   const inv = escapeHtml(p.invoiceRef);
-  const methodLabel =
-    p.paymentMethod === "bank_transfer" ? t.methodBank : t.methodCrypto;
-  const ctaLabel =
-    p.paymentMethod === "bank_transfer" ? t.ctaBankLabel : t.ctaCryptoLabel;
-  const detailsUrl = escapeHtml(p.paymentDetailsUrl);
-  const thanks = escapeHtml(withPlan(t.thanksLine, p.tierName));
-  const paymentOptionsText = escapeHtml(
-    withMethod(t.paymentOptionsText, methodLabel),
+  const methodLabel = isBank ? t.methodBank : t.methodCrypto;
+  const greeting = escapeHtml(isBank ? bank.greeting : t.greeting);
+  const leadHtml = isBank
+    ? escapeHtml(bank.lead)
+    : escapeHtml(withPlan(t.thanksLine, p.tierName));
+  const paymentOptionsTitle = escapeHtml(
+    isBank ? bank.paymentOptionsTitle : t.paymentOptionsTitle,
   );
-  const replyText = escapeHtml(withMethod(t.replyText, methodLabel));
+  const paymentOptionsText = escapeHtml(
+    isBank
+      ? bank.paymentOptionsText
+      : withMethod(t.paymentOptionsText, methodLabel),
+  );
+  const replyTitle = escapeHtml(isBank ? bank.replyTitle : t.replyTitle);
+  const replyText = escapeHtml(
+    isBank ? bank.replyText : withMethod(t.replyText, methodLabel),
+  );
+  const nextStepsTitle = escapeHtml(
+    isBank ? bank.nextStepsTitle : t.nextStepsTitle,
+  );
+  const nextStep1 = escapeHtml(isBank ? bank.nextStep1 : t.nextStep1);
+  const nextStep2 = escapeHtml(isBank ? bank.nextStep2 : t.nextStep2);
+  const nextStep3 = escapeHtml(isBank ? bank.nextStep3 : t.nextStep3);
+  const ctaLabel = escapeHtml(t.ctaCryptoLabel);
+  const detailsUrl = escapeHtml(p.paymentDetailsUrl);
   const origin = p.siteOrigin.replace(/\/$/, "");
   const localePrefix =
     p.locale === "fr" ||
@@ -838,6 +1040,26 @@ export function buildBuyerOrderEmailHtml(p: BuyerOrderEmailParams): string {
       : "";
   const refundUrl = `${origin}${localePrefix}/RefundPolicy`;
   const termsUrl = `${origin}${localePrefix}/TermsConditions`;
+
+  const cryptoCtaBlock = !isBank
+    ? `
+            <!-- Crypto payment details CTA -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 12px auto;">
+              <tr>
+                <td class="gf-email-cta-wrap" style="border-radius:50px;background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};">
+                  <a href="${detailsUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:15px 30px;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;">${ctaLabel}</a>
+                </td>
+              </tr>
+            </table>
+            <p class="gf-email-muted" style="margin:0 0 22px 0;font-size:13px;color:${C.textGray};text-align:center;">${escapeHtml(t.fallbackLinkHelp)}<br/><a href="${detailsUrl}" style="color:${C.linkOnWhite};text-decoration:underline;word-break:break-all;">${detailsUrl}</a></p>`
+    : `
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 22px 0;">
+              <tr>
+                <td class="gf-email-callout-cyan" style="background-color:#ecfeff;border:1px solid #67e8f9;border-radius:10px;padding:14px 16px;">
+                  <p style="margin:0;font-size:14px;line-height:1.6;color:${C.text};"><strong style="color:#0e7490;">${replyTitle}:</strong> ${replyText}</p>
+                </td>
+              </tr>
+            </table>`;
 
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -865,8 +1087,12 @@ ${EMAIL_DARK_MODE_STYLE}
         </tr>
         <tr>
           <td class="gf-email-main" style="padding:28px 32px 8px 32px;">
-            <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:${C.text};">${escapeHtml(t.greeting)} <strong>${name}</strong>,</p>
-            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:${C.text};">${thanks}</p>
+            ${
+              isBank
+                ? `<p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:${C.text};">${greeting} <strong>${name}</strong>, ${leadHtml}</p>`
+                : `<p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:${C.text};">${greeting} <strong>${name}</strong>,</p>
+            <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:${C.text};">${leadHtml}</p>`
+            }
             <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
               <tr>
                 <td style="padding:16px 18px;">
@@ -882,7 +1108,7 @@ ${EMAIL_DARK_MODE_STYLE}
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 20px 0;">
               <tr>
                 <td style="padding:0 0 10px 0;">
-                  <p class="gf-email-heading" style="margin:0;font-size:20px;font-weight:800;color:${C.primaryDark};line-height:1.2;">${escapeHtml(t.paymentOptionsTitle)}</p>
+                  <p class="gf-email-heading" style="margin:0;font-size:20px;font-weight:800;color:${C.primaryDark};line-height:1.2;">${paymentOptionsTitle}</p>
                 </td>
               </tr>
               <tr>
@@ -917,47 +1143,42 @@ ${EMAIL_DARK_MODE_STYLE}
                 </td>
               </tr>
             </table>
-
-            <!-- Conditional payment details CTA -->
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto 12px auto;">
-              <tr>
-                <td class="gf-email-cta-wrap" style="border-radius:50px;background:linear-gradient(135deg,${C.primary} 0%,${C.primaryDark} 100%);background-color:${C.primaryDark};">
-                  <a href="${detailsUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:15px 30px;font-size:15px;font-weight:800;color:#ffffff;text-decoration:none;">${escapeHtml(ctaLabel)}</a>
-                </td>
-              </tr>
-            </table>
-            <p class="gf-email-muted" style="margin:0 0 22px 0;font-size:13px;color:${C.textGray};text-align:center;">${escapeHtml(t.fallbackLinkHelp)}<br/><a href="${detailsUrl}" style="color:${C.linkOnWhite};text-decoration:underline;word-break:break-all;">${detailsUrl}</a></p>
+${cryptoCtaBlock}
 
             <table role="presentation" class="gf-email-surface" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${C.bgPage};border:1px solid ${C.border};border-radius:10px;margin-bottom:20px;">
               <tr>
                 <td style="padding:14px 16px;border-bottom:1px solid ${C.border};">
-                  <p class="gf-email-heading" style="margin:0;font-size:14px;font-weight:700;color:${C.primaryDark};">${escapeHtml(t.nextStepsTitle)}</p>
+                  <p class="gf-email-heading" style="margin:0;font-size:14px;font-weight:700;color:${C.primaryDark};">${nextStepsTitle}</p>
                 </td>
               </tr>
               <tr>
                 <td style="padding:12px 16px;border-bottom:1px solid ${C.border};">
-                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.nextStep1)}</p>
+                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${nextStep1}</p>
                 </td>
               </tr>
               <tr>
                 <td style="padding:12px 16px;border-bottom:1px solid ${C.border};">
-                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.nextStep2)}</p>
+                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${nextStep2}</p>
                 </td>
               </tr>
               <tr>
                 <td style="padding:12px 16px;">
-                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${escapeHtml(t.nextStep3)}</p>
+                  <p style="margin:0;font-size:14px;line-height:1.55;color:${C.text};">${nextStep3}</p>
                 </td>
               </tr>
             </table>
 
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:28px;">
-              <tr>
+              ${
+                isBank
+                  ? ""
+                  : `<tr>
                 <td class="gf-email-callout-cyan" style="background-color:#ecfeff;border:1px solid #67e8f9;border-radius:10px;padding:13px 14px 12px 14px;">
-                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#0e7490;">${escapeHtml(t.replyTitle)}:</strong> ${replyText}</p>
+                  <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#0e7490;">${replyTitle}:</strong> ${replyText}</p>
                 </td>
               </tr>
-              <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
+              <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>`
+              }
               <tr>
                 <td class="gf-email-callout-green" style="background-color:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:13px 14px 12px 14px;">
                   <p style="margin:0;font-size:13px;line-height:1.6;color:${C.text};"><strong style="color:#166534;">${escapeHtml(t.deliveryTitle)}</strong> ${escapeHtml(t.deliveryText)}</p>
@@ -1006,8 +1227,28 @@ export function buildBuyerOrderEmailText(
   >,
 ): string {
   const t = COPY[p.locale];
-  const methodLabel =
-    p.paymentMethod === "bank_transfer" ? t.methodBank : t.methodCrypto;
+  const bank = BANK_COPY[p.locale];
+  const isBank = p.paymentMethod === "bank_transfer";
+  const methodLabel = isBank ? t.methodBank : t.methodCrypto;
+
+  if (isBank) {
+    return `${bank.greeting} ${p.fullName}, ${bank.plainLead}
+
+${t.plainPlan}: ${p.tierName}
+${t.plainListedPrice}: ${p.listedPriceDisplay || "—"}
+${t.plainFinalPrice}: ${p.discountedPriceDisplay || "—"}
+${t.plainPaymentOptions.replace("{method}", methodLabel)}
+
+${bank.plainReply}
+
+${t.plainOrderReference}: ${p.invoiceRef}
+
+${t.plainSpamCheck}
+
+${t.plainIgnoreNotice}
+
+— GiGa FliX`;
+  }
 
   return `${t.plainHello} ${p.fullName},
 

@@ -1,16 +1,8 @@
 /**
- * Live destination account details shown on /pay/bank and /pay/crypto.
+ * Crypto payment page details (public).
+ * Bank account credentials are never shown on the website or in automated emails —
+ * they are sent manually after the customer replies to the order confirmation.
  */
-
-export const BANK_PAYMENT_DETAILS = {
-  beneficiary: "xxxxxxxxxxxxxxxxxx",
-  bankName: "xxxxxxxxxxxxxxxxxx",
-  iban: "xxxxxxxxxxxxxxxxxx",
-  bic: "xxxxxxxxxxxx",
-  bankAddress:
-    "xxxxxxxxxxxxxxxxxx",
-  transferType: "SEPA Instant Transfer",
-} as const;
 
 export const CRYPTO_PAYMENT_DETAILS = {
   asset: "USDT",

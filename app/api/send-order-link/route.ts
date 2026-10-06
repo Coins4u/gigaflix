@@ -33,6 +33,16 @@ function normalizeSiteOrigin(raw: string | undefined): string {
   return `https://${value.replace(/\/$/, "")}`;
 }
 
+/** Inbox that receives customer replies (bank verification loop). */
+function resolveReplyTo(from: string): string {
+  const explicit = process.env.SMTP_REPLY_TO?.trim();
+  if (explicit) return explicit;
+  const user = process.env.SMTP_USER?.trim();
+  if (user) return user;
+  const match = from.match(/<([^>]+)>/);
+  return match?.[1]?.trim() || from;
+}
+
 function buildTransporter() {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -87,6 +97,7 @@ export async function POST(request: Request) {
   // Keep a uniquely named const (avoid object-shorthand minify bugs in prod).
   const selectedPaymentMethod: SelectablePaymentMethod = paymentMethodRaw;
   const paymentMethodLabel = PAYMENT_METHOD_LABELS[selectedPaymentMethod];
+  const isBankTransfer = selectedPaymentMethod === "bank_transfer";
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   if (!emailOk) {
@@ -127,12 +138,17 @@ export async function POST(request: Request) {
     const siteOrigin = normalizeSiteOrigin(process.env.NEXT_PUBLIC_SITE_URL);
     const invoiceRef = generateInvoiceRef();
     const locale = resolveBuyerLocaleFromCountry(country);
-    const paymentDetailsUrl = getPaymentDetailsUrl(selectedPaymentMethod, {
-      siteOrigin,
-      plan: tierName,
-      amount: discountedAmount,
-      invoiceRef,
-    });
+    const replyTo = resolveReplyTo(from);
+
+    // Crypto: link to payment page. Bank: no public credentials / no CTA URL.
+    const paymentDetailsUrl = isBankTransfer
+      ? ""
+      : getPaymentDetailsUrl(selectedPaymentMethod, {
+          siteOrigin,
+          plan: tierName,
+          amount: discountedAmount,
+          invoiceRef,
+        });
 
     const buyerSubject = getBuyerEmailSubject(tierName, invoiceRef, locale);
     const buyerHtml = buildBuyerOrderEmailHtml({
@@ -161,6 +177,9 @@ export async function POST(request: Request) {
     });
 
     const adminSubject = `NEW FORM FILLED: ${tierName} - ${fullName}`;
+    const adminStatus = isBankTransfer
+      ? "Bank transfer order — customer was asked to REPLY to the confirmation email for private bank details (no IBAN in automated email). When they reply, send credentials manually in that thread."
+      : `Cryptocurrency follow-up email sent with payment page link.\nPayment page: ${paymentDetailsUrl}`;
     const adminText = [
       "A user has filled the order form.",
       `Name: ${fullName}`,
@@ -170,13 +189,15 @@ export async function POST(request: Request) {
       `Payment Method: ${paymentMethodLabel}`,
       `Listed price: ${listedPriceDisplay}`,
       `Discounted price (15% off bank transfer / crypto): ${discountedPriceDisplay}`,
-      `Status: Payment details follow-up email sent to the buyer (${paymentMethodLabel}).`,
-      `Payment page: ${paymentDetailsUrl}`,
+      `Order reference: ${invoiceRef}`,
+      `Reply-To on buyer email: ${replyTo}`,
+      `Status: ${adminStatus}`,
     ].join("\n");
 
     await Promise.all([
       transporter.sendMail({
         from,
+        replyTo,
         to: email,
         subject: buyerSubject,
         text: buyerText,
